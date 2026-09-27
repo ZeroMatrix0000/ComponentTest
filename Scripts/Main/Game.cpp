@@ -162,8 +162,8 @@ void Game::Initialize(const HWND& hWindow)
 	// 描画の初期化
 	m_renderer.Initialize(device, context, swapChain, commonStates);
 	// テキスト描画を初期化
-	m_renderer.InitializeTextRenderer(device, context, swapChain, m_resources.GetPixelShader("TextOutline"));
-	m_renderer.CreateFontCollection(L"Resources\\Fonts");
+	m_renderer.GetTextRenderer().Initialize(swapChain, m_deviceResources2D.GetContext(), m_deviceResources2D.GetBackBuffer());
+	m_renderer.GetTextRenderer().CreateFontCollection(L"Resources\\Fonts");
 
 	// タイマーの初期化
 	m_timer.Initialize();
@@ -281,9 +281,7 @@ void Game::OnWindowSizeChanged(const Math::Vector2Int& outputSize)
 		return;
 	}
 
-	// テキスト描画をリセット
-	m_renderer.ResetTextRenderer();
-
+	// 2Dリソースをリセット
 	m_deviceResources2D.Reset();
 
 	m_deviceResources.OnWindowSizeChanged(outputSize);
@@ -299,7 +297,7 @@ void Game::OnWindowSizeChanged(const Math::Vector2Int& outputSize)
 	auto* swapChain = m_deviceResources.GetSwapChain();
 
 	// テキスト描画を初期化
-	m_renderer.InitializeTextRenderer(device, context, swapChain, m_resources.GetPixelShader("TextOutline"));
+	m_renderer.GetTextRenderer().Initialize(swapChain, m_deviceResources2D.GetContext(), m_deviceResources2D.GetBackBuffer());
 
 	m_sceneManager.OnWindowSizeChanged(outputSize);
 }
@@ -310,33 +308,33 @@ void Game::RegisterComponents()
 	// 3Dモデル
 	m_componentManager.RegisterCreate<Renderings::Model3D>([&](const ComponentDesc& desc)
 	{
-		return std::make_unique<Renderings::Model3D>(desc, &m_renderer.GetIModelRenderer(), m_resources);
+		return std::make_unique<Renderings::Model3D>(desc, &m_renderer.GetModelRenderer(), m_resources);
 	});
 	// 画像
 	m_componentManager.RegisterCreate<Renderings::Image>([&](const ComponentDesc& desc)
 	{
-		return std::make_unique<Renderings::Image>(desc, &m_renderer.GetIImageRenderer(), m_resources);
+		return std::make_unique<Renderings::Image>(desc, &m_renderer.GetImageRenderer(), m_resources);
 	});
 	// テキスト
 	m_componentManager.RegisterCreate<Renderings::Text>([&](const ComponentDesc& desc)
 	{
-		return std::make_unique<Renderings::Text>(desc, &m_renderer.GetITextRenderer());
+		return std::make_unique<Renderings::Text>(desc, &m_renderer.GetTextRenderer());
 	});
 
 	// 長方形の当たり判定
 	m_componentManager.RegisterCreate<Colliders::BoxCollider>([&](const ComponentDesc& desc)
 	{
-		return std::make_unique<Colliders::BoxCollider>(desc, &m_renderer.GetIColliderRenderer());
+		return std::make_unique<Colliders::BoxCollider>(desc, &m_renderer.GetColliderRenderer());
 	});
 	// 球の当たり判定
 	m_componentManager.RegisterCreate<Colliders::SphereCollider>([&](const ComponentDesc& desc)
 	{
-		return std::make_unique<Colliders::SphereCollider>(desc, &m_renderer.GetIColliderRenderer());
+		return std::make_unique<Colliders::SphereCollider>(desc, &m_renderer.GetColliderRenderer());
 	});
 	// メッシュの当たり判定
 	m_componentManager.RegisterCreate<Colliders::MeshCollider>([&](const ComponentDesc& desc)
 	{
-		return std::make_unique<Colliders::MeshCollider>(desc, &m_renderer.GetIColliderRenderer(), m_resources);
+		return std::make_unique<Colliders::MeshCollider>(desc, &m_renderer.GetColliderRenderer(), m_resources);
 	});
 
 	// カメラ画面

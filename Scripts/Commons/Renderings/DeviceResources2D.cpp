@@ -1,7 +1,7 @@
 /*
  * FileName:     DeviceResources2D.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/27
+ * Last Updated: 2026/09/28
  *
  * Direct2D に必要なリソース
  */
@@ -36,6 +36,7 @@ void Renderings::DeviceResources2D::Initialize()
 // リセット
 void Renderings::DeviceResources2D::Reset()
 {
+	m_d2dContext->SetTarget(nullptr);
 	m_backBuffer.Reset();
 }
 
@@ -85,6 +86,8 @@ void Renderings::DeviceResources2D::CreateBackBuffer()
 	(
 		surface.Get(),
 		nullptr,
-		m_backBuffer.ReleaseAndGetAddressOf()
+		m_backBuffer.GetAddressOf()
 	));
+
+	m_d2dContext->SetTarget(m_backBuffer.Get());
 }

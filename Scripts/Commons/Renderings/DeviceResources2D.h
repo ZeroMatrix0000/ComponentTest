@@ -1,7 +1,7 @@
 /*
  * FileName:     DeviceResources2D.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/27
+ * Last Updated: 2026/09/28
  *
  * Direct2D に必要なリソース
  */
@@ -34,6 +34,15 @@ namespace Renderings
 
 		// ウィンドウサイズ変更時の処理
 		void OnWindowSizeChanged();
+
+		// ファクトリの取得
+		auto* GetFactory()  const { return m_d2dFactory.Get(); }
+
+		// コンテキストの取得
+		auto* GetContext()  const { return m_d2dContext.Get(); }
+
+		// 描画ターゲットの取得
+		auto* GetBackBuffer()  const { return m_backBuffer.Get(); }
 
 
 	private:

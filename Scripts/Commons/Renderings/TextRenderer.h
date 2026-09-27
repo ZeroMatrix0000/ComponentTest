@@ -1,7 +1,7 @@
 /*
  * FileName:     TextRenderer.h
  * Author:       Takao Hayata
- * Last Updated: 2026/07/10
+ * Last Updated: 2026/09/28
  *
  * テキスト描画
  */
@@ -28,13 +28,7 @@ namespace Renderings
 		TextRenderer();
 
 		// 初期化処理
-		void Initialize
-		(
-			ID3D11Device5*        pDevice,
-			ID3D11DeviceContext4* pContext,
-			IDXGISwapChain4*      pSwapChain,
-			const PixelShader*    pOutlineShader
-		);
+		void Initialize(IDXGISwapChain4* pSwapChain, ID2D1DeviceContext7* pContext, ID2D1Bitmap1* pBackBuffer);
 		// フォントコレクションの作成
 		void CreateFontCollection(const std::wstring& directoryPath);
 
@@ -44,9 +38,6 @@ namespace Renderings
 		void Draw(const Text* pText);
 		// 描画終了
 		void End();
-
-		// リセット
-		void Reset();
 
 		// テキストのポインタを追加
 		void AddPText(const Text* pText) override;
@@ -65,13 +56,11 @@ namespace Renderings
 
 		/* メンバ変数 */
 
-		// Direct2Dファクトリー
-		Microsoft::WRL::ComPtr<ID2D1Factory8>   m_d2DFactory;
 		// DirectWriteファクトリー
 		Microsoft::WRL::ComPtr<IDWriteFactory8> m_dWriteFactory;
 
-		// レンダーターゲット
-		Microsoft::WRL::ComPtr<ID2D1RenderTarget> m_renderTarget;
+		// テキスト用ビットマップ
+		Microsoft::WRL::ComPtr<ID2D1Bitmap1> m_textBitmap;
 
 		// フォントコレクション
 		Microsoft::WRL::ComPtr<IDWriteFontCollection3> m_fontCollection;
@@ -82,13 +71,10 @@ namespace Renderings
 		// テキストのポインタリスト
 		std::vector<const Text*> m_pTexts;
 
-		// デバイス
-		ID3D11Device5* m_pDevice;
-		// デバイスコンテキスト
-		ID3D11DeviceContext4* m_pContext;
-
-		// アウトラインシェーダ
-		const Renderings::PixelShader* m_pOutlineShader;
+		// デバイスコンテキストのポインタ
+		ID2D1DeviceContext7* m_pContext;
+		// バックバッファのポインタ
+		ID2D1Bitmap1* m_pBackBuffer;
 
 	};
 }

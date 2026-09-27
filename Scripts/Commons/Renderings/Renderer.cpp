@@ -1,7 +1,7 @@
 /*
  * FileName:     Renderer.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/25
+ * Last Updated: 2026/09/28
  *
  * 描画
  */
@@ -135,18 +135,6 @@ void Renderings::Renderer::Render()
 	// 描画終了
 	m_imageRenderer.End();
 	m_textRenderer.End();
-}
-
-// テキスト描画のリセット
-void Renderings::Renderer::ResetTextRenderer()
-{
-	m_textRenderer.Reset();
-}
-
-// テキスト描画の初期化
-void Renderings::Renderer::InitializeTextRenderer(ID3D11Device5* pDevice, ID3D11DeviceContext4* pContext, IDXGISwapChain4* pSwapChain, const PixelShader* pOutlineShader)
-{
-	m_textRenderer.Initialize(pDevice, pContext, pSwapChain, pOutlineShader);
 }
 
 // 描画モードを返る

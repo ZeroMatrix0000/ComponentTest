@@ -1,7 +1,7 @@
 /*
  * FileName:     TextRenderer.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/25
+ * Last Updated: 2026/09/28
  *
  * テキスト描画
  */
@@ -20,34 +20,21 @@
 // コンストラクタ
 Renderings::TextRenderer::TextRenderer()
 	: ITextRenderer{}
-	, m_d2DFactory{}
 	, m_dWriteFactory{}
-	, m_renderTarget{}
+	, m_textBitmap{}
 	, m_fontCollection{}
 	, m_strokeStyle{}
 	, m_pTexts{}
-	, m_pDevice{}
 	, m_pContext{}
-	, m_pOutlineShader{}
+	, m_pBackBuffer{}
 {
 }
 
 // 初期化処理
-void Renderings::TextRenderer::Initialize(ID3D11Device5* pDevice, ID3D11DeviceContext4* pContext, IDXGISwapChain4* pSwapChain, const Renderings::PixelShader* pOutlineShader)
+void Renderings::TextRenderer::Initialize(IDXGISwapChain4* pSwapChain, ID2D1DeviceContext7* pContext, ID2D1Bitmap1* pBackBuffer)
 {
-	m_pDevice = pDevice;
 	m_pContext = pContext;
-	m_pOutlineShader = pOutlineShader;
-
-	// Direct2Dファクトリー
-	if (m_d2DFactory.Get() == nullptr)
-	{
-		Utility::ThrowIfFailed(D2D1CreateFactory
-		(
-			D2D1_FACTORY_TYPE_SINGLE_THREADED,
-			m_d2DFactory.GetAddressOf()
-		));
-	}
+	m_pBackBuffer = pBackBuffer;
 
 	// DirectWrite
 	if (m_dWriteFactory.Get() == nullptr)
@@ -60,29 +47,33 @@ void Renderings::TextRenderer::Initialize(ID3D11Device5* pDevice, ID3D11DeviceCo
 		));
 	}
 
-	// バックバッファ
-	Microsoft::WRL::ComPtr<IDXGISurface2> pBackBuffer;
-	Utility::ThrowIfFailed(pSwapChain->GetBuffer(0, IID_PPV_ARGS(pBackBuffer.GetAddressOf())));
+	// 線のスタイルの詳細（角を丸める）
+	//D2D1_STROKE_STYLE_PROPERTIES strokeStyleProps{};
+	//strokeStyleProps.lineJoin = D2D1_LINE_JOIN_ROUND;
+	//m_d2DFactory.Get()->CreateStrokeStyle(
+	//	strokeStyleProps,
+	//	nullptr,
+	//	0,
+	//	m_strokeStyle.ReleaseAndGetAddressOf()
+	//);
 
-	// プロパティ
-	D2D1_RENDER_TARGET_PROPERTIES targetProps = D2D1::RenderTargetProperties
-	(
-		D2D1_RENDER_TARGET_TYPE_DEFAULT,
-		D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED)
+	// ビットマップの詳細
+	D2D1_BITMAP_PROPERTIES1 bitmapProperties = D2D1::BitmapProperties1(
+		D2D1_BITMAP_OPTIONS_TARGET,
+		D2D1::PixelFormat(
+			DXGI_FORMAT_R8G8B8A8_UNORM,
+			D2D1_ALPHA_MODE_PREMULTIPLIED
+		)
 	);
 
-	// レンダーターゲット
-	Utility::ThrowIfFailed(m_d2DFactory->CreateDxgiSurfaceRenderTarget(pBackBuffer.Get(), &targetProps, m_renderTarget.ReleaseAndGetAddressOf()));
-
-	// 線のスタイルの詳細（角を丸める）
-	D2D1_STROKE_STYLE_PROPERTIES strokeStyleProps{};
-	strokeStyleProps.lineJoin = D2D1_LINE_JOIN_ROUND;
-	m_d2DFactory.Get()->CreateStrokeStyle(
-		strokeStyleProps,
+	Utility::ThrowIfFailed(m_pContext->CreateBitmap
+	(
+		m_pBackBuffer->GetPixelSize(),
 		nullptr,
 		0,
-		m_strokeStyle.ReleaseAndGetAddressOf()
-	);
+		bitmapProperties,
+		m_textBitmap.ReleaseAndGetAddressOf()
+	));
 }
 
 // フォントコレクションの作成
@@ -149,8 +140,7 @@ void Renderings::TextRenderer::CreateFontCollection(const std::wstring& director
 // 描画開始
 void Renderings::TextRenderer::Begin()
 {
-	// 描画開始
-	m_renderTarget->BeginDraw();
+	m_pContext->BeginDraw();
 }
 
 // 描画処理
@@ -291,25 +281,39 @@ void Renderings::TextRenderer::Draw(const Text* pText)
 		textLayout.GetAddressOf()
 	);
 
+	// テキストブラシ
+	Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> textBrush;
+	m_pContext->CreateSolidColorBrush
+	(
+		pText->GetD2D1FontColor(),
+		textBrush.GetAddressOf()
+	);
+
+	if (pText->GetOutlineWidth() != 0.0f)
+	{
+		// 描画終了
+		m_pContext->EndDraw();
+
+		// 描画先を設定
+		m_pContext->SetTarget(m_textBitmap.Get());
+		// 描画開始
+		m_pContext->BeginDraw();
+		// 透明に
+		m_pContext->Clear();
+	}
+
+
 	// 角度
 	float angle = pRectTransform->GetAngle();
 	// 描画ターゲットを回転
 	if (angle != 0.0f)
 	{
-		m_renderTarget->SetTransform(D2D1::Matrix3x2F::Rotation
+		m_pContext->SetTransform(D2D1::Matrix3x2F::Rotation
 		(
 			angle,
 			D2D1::Point2F(rect.position.x, rect.position.y)
 		));
 	}
-
-	// テキストブラシ
-	Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> textBrush;
-	m_renderTarget->CreateSolidColorBrush
-	(
-		pText->GetD2D1FontColor(),
-		textBrush.GetAddressOf()
-	);
 
 	//// 文字列を描画
 	//TextOutlineRenderer outlineRenderer
@@ -326,7 +330,8 @@ void Renderings::TextRenderer::Draw(const Text* pText)
 	//textLayout->Draw(nullptr, &outlineRenderer, rect.position.x - rect.size.x / 2.0f, rect.position.y - rect.size.y / 2.0f);
 	//outlineRenderer.End();
 
-	m_renderTarget->DrawTextLayout
+	// 文字を描画
+	m_pContext->DrawTextLayout
 	(
 		D2D1::Point2F(rect.position.x - rect.size.x / 2.0f, rect.position.y - rect.size.y / 2.0f),
 		textLayout.Get(),
@@ -336,44 +341,54 @@ void Renderings::TextRenderer::Draw(const Text* pText)
 	// 描画ターゲットを元に戻す
 	if (angle != 0.0f)
 	{
-		m_renderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
+		m_pContext->SetTransform(D2D1::Matrix3x2F::Identity());
 	}
-	m_renderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
+	m_pContext->SetTransform(D2D1::Matrix3x2F::Identity());
+
+
+
+	if (pText->GetOutlineWidth() != 0.0f)
+	{
+		// 描画終了
+		m_pContext->EndDraw();
+
+		// 描画先を戻す
+		m_pContext->SetTarget(m_pBackBuffer);
+		// 描画開始
+		m_pContext->BeginDraw();
+
+		// 膨張エフェクト
+		Microsoft::WRL::ComPtr<ID2D1Effect> dilate;
+		m_pContext->CreateEffect(CLSID_D2D1Morphology, dilate.GetAddressOf());
+		dilate->SetInput(0, m_textBitmap.Get());
+		dilate->SetValue(D2D1_MORPHOLOGY_PROP_MODE, D2D1_MORPHOLOGY_MODE_DILATE);
+		dilate->SetValue(D2D1_MORPHOLOGY_PROP_WIDTH, 1 + Math::RoundInt(pText->GetOutlineWidth() * canvasRatio * 2.0f));
+		dilate->SetValue(D2D1_MORPHOLOGY_PROP_HEIGHT, 1 + Math::RoundInt(pText->GetOutlineWidth() * canvasRatio * 2.0f));
+		Microsoft::WRL::ComPtr<ID2D1Image> dilateImage;
+		dilate->GetOutput(dilateImage.GetAddressOf());
+		// 色変更エフェクト
+		Microsoft::WRL::ComPtr<ID2D1Effect> flood;
+		m_pContext->CreateEffect(CLSID_D2D1Flood, flood.GetAddressOf());
+		flood->SetValue(D2D1_FLOOD_PROP_COLOR, pText->GetD2D1OutlineColor());
+		Microsoft::WRL::ComPtr<ID2D1Image> floodImage;
+		flood->GetOutput(floodImage.GetAddressOf());
+		// エフェクト合体
+		Microsoft::WRL::ComPtr<ID2D1Effect> composite;
+		m_pContext->CreateEffect(CLSID_D2D1Composite, composite.GetAddressOf());
+		composite->SetInput(0, dilateImage.Get());
+		composite->SetInput(1, floodImage.Get());
+		composite->SetValue(D2D1_COMPOSITE_PROP_MODE, D2D1_COMPOSITE_MODE_SOURCE_IN);
+
+		// 文字を描画
+		m_pContext->DrawImage(composite.Get(), D2D1::Point2F());
+		m_pContext->DrawBitmap(m_textBitmap.Get());
+	}
 }
 
 // 描画終了
 void Renderings::TextRenderer::End()
 {
-	// ピクセルシェーダを設定
-	m_pContext->PSSetShader(m_pOutlineShader->GetD3DShader(), nullptr, 0);
-
-	auto& data = m_pOutlineShader->GetConstantBuffer()->GetData();
-
-	if (data.size() != 0)
-	{
-
-		// 定数バッファの詳細
-		CD3D11_BUFFER_DESC cbDesc{ static_cast<UINT>(data.size()), D3D11_BIND_CONSTANT_BUFFER };
-
-		// 定数バッファ
-		Microsoft::WRL::ComPtr<ID3D11Buffer> buffer;
-		Utility::ThrowIfFailed(m_pDevice->CreateBuffer(&cbDesc, nullptr, buffer.GetAddressOf()));
-
-		// 定数バッファを設定
-		m_pContext->UpdateSubresource(buffer.Get(), 0, nullptr, data.data(), 0, 0);
-		m_pContext->PSSetConstantBuffers(0, 1, buffer.GetAddressOf());
-	}
-
-	// 描画終了
-	m_renderTarget->EndDraw();
-
-	m_pContext->PSSetShader(nullptr, nullptr, 0);
-}
-
-// リセット
-void Renderings::TextRenderer::Reset()
-{
-	m_renderTarget.Reset();
+	m_pContext->EndDraw();
 }
 
 // テキストのポインタを追加

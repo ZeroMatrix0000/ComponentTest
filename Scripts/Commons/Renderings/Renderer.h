@@ -1,7 +1,7 @@
 /*
  * FileName:     Renderer.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/25
+ * Last Updated: 2026/09/28
  *
  * 描画
  */
@@ -46,30 +46,17 @@ namespace Renderings
 		// 描画処理
 		void Render();
 
-		// フォントコレクションの作成
-		void CreateFontCollection(const std::wstring& directoryPath) { m_textRenderer.CreateFontCollection(directoryPath); }
-		// テキスト描画のリセット
-		void ResetTextRenderer();
-		// テキスト描画の初期化
-		void InitializeTextRenderer
-		(
-			ID3D11Device5*        pDevice,
-			ID3D11DeviceContext4* pContext,
-			IDXGISwapChain4*      pSwapChain,
-			const PixelShader*    pOutlineShader
-		);
-
 		// 描画モードを返る
 		void ChangeRenderMode();
 
 		// モデル描画インタフェースを取得
-		Renderings::IModel3DRenderer&  GetIModelRenderer()    { return m_modelRenderer; }
+		Renderings::Model3DRenderer&  GetModelRenderer()    { return m_modelRenderer; }
 		// 画像描画インタフェースを取得
-		Renderings::IImageRenderer&    GetIImageRenderer()    { return m_imageRenderer; }
+		Renderings::ImageRenderer&    GetImageRenderer()    { return m_imageRenderer; }
 		// テキスト描画インタフェースを取得
-		Renderings::ITextRenderer&     GetITextRenderer()     { return m_textRenderer; }
+		Renderings::TextRenderer&     GetTextRenderer()     { return m_textRenderer; }
 		// 当たり判定描画インタフェースを取得
-		Renderings::IColliderRenderer& GetIColliderRenderer() { return m_colliderRenderer; }
+		Renderings::ColliderRenderer& GetColliderRenderer() { return m_colliderRenderer; }
 
 
 	private:
