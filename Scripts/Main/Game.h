@@ -11,6 +11,7 @@
 #include "Scripts/Commons/Systems/OnlyOne.h"
 #include "Scripts/Commons/Renderings/DeviceResources.h"
 #include "Scripts/Commons/Renderings/RenderingResources.h"
+#include "Scripts/Commons/Renderings/DeviceResources2D.h"
 #include "Scripts/Commons/Renderings/Renderer.h"
 #include "Scripts/Commons/Systems/Resources.h"
 #include "Scripts/Commons/Systems/WindowController.h"
@@ -69,6 +70,8 @@ private:
 	Renderings::DeviceResources m_deviceResources;
 	// 描画リソース
 	Renderings::RenderingResources m_renderingResources;
+	// 2Dデバイスリソース
+	Renderings::DeviceResources2D m_deviceResources2D;
 
 	// 描画
 	Renderings::Renderer m_renderer;

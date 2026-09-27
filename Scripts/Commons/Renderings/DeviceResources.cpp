@@ -131,6 +131,14 @@ void Renderings::DeviceResources::OnWindowSizeChanged(const Math::Vector2Int& ou
 	CreateDepthStencilView();
 }
 
+// DXGIデバイスを作成
+Microsoft::WRL::ComPtr<IDXGIDevice4> Renderings::DeviceResources::CreateDXGIDevice() const
+{
+	Microsoft::WRL::ComPtr<IDXGIDevice4> dxgiDevice{};
+	m_d3dDevice.As(&dxgiDevice);
+	return dxgiDevice;
+}
+
 // デバイスとコンテキストの作成
 void Renderings::DeviceResources::CreateDevice()
 {

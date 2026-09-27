@@ -43,6 +43,9 @@ namespace Renderings
 		// スワップチェインの取得
 		auto* GetSwapChain() const { return m_swapChain.Get(); }
 
+		// DXGIデバイスを作成
+		Microsoft::WRL::ComPtr<IDXGIDevice4> CreateDXGIDevice() const;
+
 
 	private:
 

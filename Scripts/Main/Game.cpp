@@ -40,6 +40,7 @@ Game::Game()
 	, m_hWindow{}
 	, m_deviceResources{}
 	, m_renderingResources{}
+	, m_deviceResources2D{ m_deviceResources }
 	, m_renderer{}
 	, m_resources{}
 	, m_timer{}
@@ -65,6 +66,7 @@ void Game::Initialize(const HWND& hWindow)
 
 	// デバイスリソースの初期化
 	m_deviceResources.Initialize(hWindow);
+	m_deviceResources2D.Initialize();
 
 	// デバイス
 	auto* device = m_deviceResources.GetD3DDevice();
@@ -282,8 +284,12 @@ void Game::OnWindowSizeChanged(const Math::Vector2Int& outputSize)
 	// テキスト描画をリセット
 	m_renderer.ResetTextRenderer();
 
+	m_deviceResources2D.Reset();
+
 	m_deviceResources.OnWindowSizeChanged(outputSize);
 	m_windowController.SetOutputSize(outputSize);
+
+	m_deviceResources2D.OnWindowSizeChanged();
 
 	// デバイス
 	auto* device = m_deviceResources.GetD3DDevice();
