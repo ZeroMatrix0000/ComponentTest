@@ -323,13 +323,17 @@ void Renderings::TextRenderer::Draw(const Text* pText)
 		m_textContext->Clear();
 
 		// 文字を描画
-		m_decorationRenderer.Initialize(m_textContext.Get(), brush.Get());
-		textLayout->Draw
+		DrawTextLayout
 		(
-			nullptr,
-			&m_decorationRenderer,
-			outlineWidth + 1.0f - metrics.left,
-			outlineWidth + 1.0f - metrics.top
+			Math::Vector2
+			{
+				outlineWidth + 1.0f - metrics.left,
+				outlineWidth + 1.0f - metrics.top
+			},
+			m_textContext.Get(),
+			textLayout.Get(),
+			brush.Get(),
+			pText
 		);
 
 		// 描画終了
@@ -410,13 +414,17 @@ void Renderings::TextRenderer::Draw(const Text* pText)
 		}
 
 		// 文字を描画
-		m_decorationRenderer.Initialize(m_pContext, brush.Get());
-		textLayout->Draw
+		DrawTextLayout
 		(
-			nullptr,
-			&m_decorationRenderer,
-			rect.position.x - rect.size.x / 2.0f,
-			rect.position.y - rect.size.y / 2.0f
+			Math::Vector2
+			{
+				rect.position.x - rect.size.x / 2.0f,
+				rect.position.y - rect.size.y / 2.0f
+			},
+			m_pContext,
+			textLayout.Get(),
+			brush.Get(),
+			pText
 		);
 
 		// コンテキストを元に戻す
@@ -462,4 +470,35 @@ void Renderings::TextRenderer::SortPTexts()
 {
 	// レイヤー順にソート
 	std::ranges::sort(m_pTexts, [](const Text* p1, const Text* p2) {return p1->GetOrderInLayer() < p2->GetOrderInLayer(); });
+}
+
+// 文字を描画
+void Renderings::TextRenderer::DrawTextLayout(const Math::Vector2& position, ID2D1DeviceContext7* pContext, IDWriteTextLayout* pTextLayout, ID2D1SolidColorBrush* pBrush, const Text* pText)
+{
+	// 色付け詳細リスト
+	const auto& colorDescList = pText->GetDecorationString(*this).GetColorDescList();
+
+	// エフェクトを追加
+	for (const auto& colorDesc : colorDescList)
+	{
+		pTextLayout->SetDrawingEffect
+		(
+			colorDesc.effect.Get(),
+			DWRITE_TEXT_RANGE
+			{
+				static_cast<UINT32>(colorDesc.beginIndex),
+				static_cast<UINT32>(colorDesc.length)
+			}
+		);
+	}
+
+	// 文字を描画
+	m_decorationRenderer.Initialize(pContext, pBrush);
+	pTextLayout->Draw
+	(
+		nullptr,
+		&m_decorationRenderer,
+		position.x,
+		position.y
+	);
 }

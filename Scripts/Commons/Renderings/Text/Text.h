@@ -66,6 +66,9 @@ namespace Renderings
 		// 文字列を取得
 		const std::wstring& GetStr() const { return m_str.GetStr(); }
 
+		// デコレーション文字列を取得
+		const DecorationString& GetDecorationString(ITextRenderer&) const { return m_str; }
+
 		// フォント名を取得
 		const std::wstring& GetFontName() const { return m_fontName; }
 		// フォントサイズを取得

@@ -8,7 +8,7 @@
 	{
 		"ActionType": "SetMessageWindowText",
 		"Params": {
-			"Text": "このテキストは<color=#FF0000>赤色</color>です。",
+			"Text": "このテキストは<color=#FFDD00>黄色</color>です。\nこのテキストは<color=#0044FF>青色</color>です。\n<color=#88FFFFFF>半透明</color>もいけます。",
 			"Character": "色付けテスト"
 		}
 	},

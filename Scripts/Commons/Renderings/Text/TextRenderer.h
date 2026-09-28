@@ -57,6 +57,19 @@ namespace Renderings
 	private:
 
 
+		/* メンバ関数 */
+
+		// 文字を描画
+		void DrawTextLayout
+		(
+			const Math::Vector2&  position,
+			ID2D1DeviceContext7*  pContext,
+			IDWriteTextLayout*    pTextLayout,
+			ID2D1SolidColorBrush* pBrush,
+			const Text*           pText
+		);
+
+
 		/* メンバ変数 */
 
 		// DirectWriteファクトリー

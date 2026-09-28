@@ -24,6 +24,16 @@ namespace Renderings
 
 		// コンストラクタ
 		TextColorEffect(const D2D1::ColorF& color);
+		
+		HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObject) override;
+
+		// 新たに参照されたときの処理
+		ULONG STDMETHODCALLTYPE AddRef() override { return ++m_refCount; }
+		// 参照解除されたときの処理
+		ULONG STDMETHODCALLTYPE Release() override;
+
+		// 色を取得
+		const D2D1::ColorF& GetColor() const { return m_color; }
 
 
 	private:

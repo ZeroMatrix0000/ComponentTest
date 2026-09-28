@@ -25,24 +25,24 @@ namespace Renderings
 		// 描画
 		HRESULT STDMETHODCALLTYPE DrawGlyphRun
 		(
-			void* clientDrawingContext,
+			void*                               clientDrawingContext,
 			FLOAT                               baselineOriginX,
 			FLOAT                               baselineOriginY,
 			DWRITE_MEASURING_MODE               measuringMode,
-			const DWRITE_GLYPH_RUN* glyphRun,
+			const DWRITE_GLYPH_RUN*             glyphRun,
 			const DWRITE_GLYPH_RUN_DESCRIPTION* glyphRunDescription,
-			IUnknown* clientDrawingEffect
+			IUnknown*                           clientDrawingEffect
 		) override;
 
 		HRESULT DrawInlineObject
 		(
-			void* clientDrawingContext,
+			void*                clientDrawingContext,
 			FLOAT                originX,
 			FLOAT                originY,
 			IDWriteInlineObject* inlineObject,
 			BOOL                 isSideways,
 			BOOL                 isRightToLeft,
-			IUnknown* clientDrawingEffect
+			IUnknown*            clientDrawingEffect
 		) override
 		{
 			return E_NOTIMPL;
@@ -50,11 +50,11 @@ namespace Renderings
 
 		HRESULT DrawStrikethrough
 		(
-			void* clientDrawingContext,
+			void*                       clientDrawingContext,
 			FLOAT                       baselineOriginX,
 			FLOAT                       baselineOriginY,
 			DWRITE_STRIKETHROUGH const* strikethrough,
-			IUnknown* clientDrawingEffect
+			IUnknown*                   clientDrawingEffect
 		) override
 		{
 			return E_NOTIMPL;
@@ -62,11 +62,11 @@ namespace Renderings
 
 		HRESULT DrawUnderline
 		(
-			void* clientDrawingContext,
+			void*                   clientDrawingContext,
 			FLOAT                   baselineOriginX,
 			FLOAT                   baselineOriginY,
 			DWRITE_UNDERLINE const* underline,
-			IUnknown* clientDrawingEffect
+			IUnknown*               clientDrawingEffect
 		) override
 		{
 			return E_NOTIMPL;

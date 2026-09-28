@@ -1,7 +1,7 @@
 /*
  * FileName:     BlackBelt.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/11
+ * Last Updated: 2026/09/28
  *
  * 上下の黒帯
  */
@@ -11,7 +11,7 @@
 
 #include "Scripts/Commons/Components/RectTransform.h"
 #include "Scripts/Commons/Renderings/Canvas.h"
-#include "Scripts/Commons/Renderings/Image.h"
+#include "Scripts/Commons/Renderings/Image/Image.h"
 #include "Scripts/Commons/Systems/JsonSerializer.h"
 
 // コンストラクタ

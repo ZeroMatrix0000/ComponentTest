@@ -21,6 +21,20 @@ Renderings::DecorationTextRenderer::DecorationTextRenderer()
 // 描画
 HRESULT __stdcall Renderings::DecorationTextRenderer::DrawGlyphRun(void* clientDrawingContext, FLOAT baselineOriginX, FLOAT baselineOriginY, DWRITE_MEASURING_MODE measuringMode, const DWRITE_GLYPH_RUN* glyphRun, const DWRITE_GLYPH_RUN_DESCRIPTION* glyphRunDescription, IUnknown* clientDrawingEffect)
 {
+	// 元の色
+	D2D1_COLOR_F oldColor = m_pBrush->GetColor();
+
+	// エフェクトを取得していたら
+	if (clientDrawingEffect)
+	{
+		// 色付けエフェクト
+		TextColorEffect* colorEffect = dynamic_cast<TextColorEffect*>(clientDrawingEffect);
+		if (colorEffect)
+		{
+			m_pBrush->SetColor(colorEffect->GetColor());
+		}
+	}
+
 	m_pContext->DrawGlyphRun
 	(
 		D2D1::Point2F(baselineOriginX, baselineOriginY),
@@ -28,6 +42,7 @@ HRESULT __stdcall Renderings::DecorationTextRenderer::DrawGlyphRun(void* clientD
 		m_pBrush,
 		measuringMode
 	);
+	m_pBrush->SetColor(oldColor);
 
 	return S_OK;
 }

@@ -1,7 +1,7 @@
 /*
  * FileName:     NPC.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/05
+ * Last Updated: 2026/09/28
  *
  * NPC
  */
@@ -13,7 +13,7 @@
 #include "Scripts/Commons/GameObjects/IGameObjectFinder.h"
 #include "Scripts/Commons/Components/Transform.h"
 #include "Scripts/Commons/Colliders/BoxCollider.h"
-#include "Scripts/Commons/Renderings/Text.h"
+#include "Scripts/Commons/Renderings/Text/Text.h"
 #include "Scripts/Commons/Systems/JsonSerializer.h"
 
 // コンストラクタ

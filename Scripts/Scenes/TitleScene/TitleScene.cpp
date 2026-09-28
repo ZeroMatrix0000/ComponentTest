@@ -1,7 +1,7 @@
 /*
  * FileName:     TitleScene.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/24
+ * Last Updated: 2026/09/28
  *
  * タイトルシーン
  */
@@ -13,7 +13,7 @@
 #include "Scripts/Commons/Systems/IWindowController.h"
 #include "Scripts/Commons/Systems/IInput.h"
 #include "Scripts/Commons/Scenes/ISceneManager.h"
-#include "Scripts/Commons/Renderings/Image.h"
+#include "Scripts/Commons/Renderings/Image/Image.h"
 #include "Scripts/Commons/Renderings/PixelShader.h"
 #include "Scripts/Commons/Renderings/Canvas.h"
 #include "Scripts/Commons/Renderings/CameraScreen.h"

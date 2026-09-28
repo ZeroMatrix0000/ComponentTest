@@ -14,7 +14,7 @@
 #include "Scripts/Commons/Components/RectTransform.h"
 #include "Scripts/Commons/Renderings/ICameraScreen.h"
 #include "Scripts/Commons/Renderings/Canvas.h"
-#include "Scripts/Commons/Renderings/Text.h"
+#include "Scripts/Commons/Renderings/Text/Text.h"
 #include "Scripts/Commons/Systems/JsonSerializer.h"
 
 // コンストラクタ
