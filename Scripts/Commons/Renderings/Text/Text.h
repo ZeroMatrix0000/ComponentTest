@@ -1,13 +1,14 @@
 /*
  * FileName:     Text.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/29
+ * Last Updated: 2026/09/28
  *
  * テキスト
  */
 
 #pragma once
 
+#include "DecorationString.h"
 #include "Scripts/Commons/Components/Component.h"
 
 namespace Renderings
@@ -33,7 +34,7 @@ namespace Renderings
 		void Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder) override;
 
 		// 文字列を設定
-		void SetStr(const std::wstring& str) { m_str = str; }
+		void SetStr(const std::wstring& str) { m_str.SetStr(str); }
 
 		// フォント名を設定
 		void SetFontName(const std::wstring& fontName)          { m_fontName = fontName; }
@@ -63,7 +64,7 @@ namespace Renderings
 		void SetCanvas(const Canvas& canvas) { m_pCanvas = &canvas; }
 
 		// 文字列を取得
-		const std::wstring& GetStr() const { return m_str; }
+		const std::wstring& GetStr() const { return m_str.GetStr(); }
 
 		// フォント名を取得
 		const std::wstring& GetFontName() const { return m_fontName; }
@@ -98,7 +99,7 @@ namespace Renderings
 		/* メンバ変数 */
 
 		// 文字列
-		std::wstring m_str;
+		DecorationString m_str;
 
 		// フォント名
 		std::wstring m_fontName;

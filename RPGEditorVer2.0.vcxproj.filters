@@ -349,6 +349,9 @@
     <ClCompile Include="Scripts\Commons\Renderings\Text\TextRenderer.cpp">
       <Filter>Scripts\Commons\Renderings\Text</Filter>
     </ClCompile>
+    <ClCompile Include="Scripts\Commons\Renderings\Text\TextColorEffect.cpp">
+      <Filter>Scripts\Commons\Renderings\Text</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Pch.h" />
@@ -700,6 +703,9 @@
     <ClInclude Include="Scripts\Commons\Renderings\Text\Text.h">
       <Filter>Scripts\Commons\Renderings\Text</Filter>
     </ClInclude>
+    <ClInclude Include="Scripts\Commons\Renderings\Text\TextColorEffect.h">
+      <Filter>Scripts\Commons\Renderings\Text</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -707,9 +713,6 @@
       <Filter>Jsons\Events</Filter>
     </None>
     <None Include="Resources\Jsons\Events\Event_TalkTest2.json">
-      <Filter>Jsons\Events</Filter>
-    </None>
-    <None Include="Resources\Jsons\Events\Event_TalkTest3.json">
       <Filter>Jsons\Events</Filter>
     </None>
     <None Include="Resources\Jsons\Scenes\Scene_Title.json">
@@ -762,6 +765,9 @@
     </None>
     <None Include="Resources\Jsons\Prefabs\Prefab_BlackBeltImage.json">
       <Filter>Jsons\Prefabs</Filter>
+    </None>
+    <None Include="Resources\Jsons\Events\Event_TalkTestColor.json">
+      <Filter>Jsons\Events</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -183,6 +183,7 @@
     <ClCompile Include="Scripts\Commons\Renderings\Renderer.cpp" />
     <ClCompile Include="Scripts\Commons\Renderings\RenderingResources.cpp" />
     <ClCompile Include="Scripts\Commons\Renderings\Text\Text.cpp" />
+    <ClCompile Include="Scripts\Commons\Renderings\Text\TextColorEffect.cpp" />
     <ClCompile Include="Scripts\Commons\Renderings\Text\TextRenderer.cpp" />
     <ClCompile Include="Scripts\Commons\Scenes\SceneTransitionAnimation.cpp" />
     <ClCompile Include="Scripts\Commons\Systems\ErrorMessage.cpp" />
@@ -222,6 +223,7 @@
     <ClCompile Include="Scripts\Scenes\SampleScene\SampleScene.cpp" />
     <ClCompile Include="Scripts\Scenes\TitleScene\TitleScene.cpp" />
     <ClCompile Include="Scripts\GameObjects\UIs\SelectMenu\SelectMenu.cpp" />
+    <None Include="Resources\Jsons\Events\Event_TalkTestColor.json" />
     <None Include="Resources\Jsons\Prefabs\Prefab_BlackBeltImage.json" />
     <None Include="Resources\Jsons\Prefabs\Prefab_InteractCursor.json" />
     <None Include="Resources\Jsons\Prefabs\Prefab_MessageWindowBackGround.json" />
@@ -273,6 +275,7 @@
     <ClInclude Include="Scripts\Commons\Renderings\RenderingResources.h" />
     <ClInclude Include="Scripts\Commons\Renderings\PixelShader.h" />
     <ClInclude Include="Scripts\Commons\Renderings\Text\Text.h" />
+    <ClInclude Include="Scripts\Commons\Renderings\Text\TextColorEffect.h" />
     <ClInclude Include="Scripts\Commons\Renderings\Text\TextRenderer.h" />
     <ClInclude Include="Scripts\Commons\Renderings\Renderer.h" />
     <ClInclude Include="Scripts\Commons\Scenes\SceneTransitionAnimation.h" />
@@ -368,7 +371,6 @@
     <None Include="packages.config" />
     <None Include="Resources\Jsons\Events\Event_TalkTest1.json" />
     <None Include="Resources\Jsons\Events\Event_TalkTest2.json" />
-    <None Include="Resources\Jsons\Events\Event_TalkTest3.json" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\PixelShaders\Test.hlsl">

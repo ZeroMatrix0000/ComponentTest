@@ -124,12 +124,56 @@
 		}
 	},
 	{
+		"Name": "NPC色付けテスト",
+		"Prefab": "Prefab_NPC",
+		"Components": {
+			"Transform": {
+				"Position": {
+					"X": 0.0,
+					"Y": 0.0,
+					"Z": -5.0
+				},
+				"Rotation": {
+					"X": 0.0,
+					"Y": 90.0,
+					"Z": 0.0
+				}
+			},
+			"Model3D": {
+				"ModelSourceName": "NPC",
+				"CameraScreens": [
+					"PlayerCamera"
+				]
+			},
+			"BoxCollider": {
+				"Position": {
+					"X": 0.0,
+					"Y": 1.0,
+					"Z": 0.0
+				},
+				"Size": {
+					"X": 1.0,
+					"Y": 2.0,
+					"Z": 1.0
+				},
+				"CameraScreens": [
+					"PlayerCamera"
+				]
+			},
+			"NPC": {
+				"Name": "色付けテスト",
+				"EventName": "Event_TalkTestColor"
+			}
+		}
+	},
+	{
 		"Name": "NPCManager",
 		"Components": {
 			"NPCManager": {
 				"NPCList": [
 					"NPCテスト",
-					"NPCTest"
+					"NPCTest",
+					"NPC色付けテスト"
 				],
 				"Canvas": "Canvas"
 			}

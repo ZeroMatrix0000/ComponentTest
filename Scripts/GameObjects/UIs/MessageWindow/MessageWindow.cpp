@@ -26,6 +26,8 @@ MessageWindow::MessageWindow(const ComponentDesc& desc)
 	, m_characterFontSize{}
 	, m_textFontSize{}
 	, m_moveRate{}
+	, m_text{}
+	, m_textCount{}
 	, m_pBackgroundTransform{ GetPOwner()->GetNullReferences<RectTransform>() }
 	, m_pBackground{ GetPOwner()->GetNullReferences<Renderings::Image>() }
 	, m_pTextTransform{ GetPOwner()->GetNullReferences<RectTransform>() }
@@ -106,8 +108,47 @@ void MessageWindow::Update(float elapsedTime)
 	color.w = moveRate;
 	m_pText->SetFontColor(color);
 
+	// 古い文字数
+	size_t oldTextCount = Math::RoundInt(m_textCount);
 	// 文字数を計算
 	m_textCount += m_textVelocity * elapsedTime;
+	// 新しく表示する文字数
+	size_t newCharCount = Math::RoundInt(m_textCount) - oldTextCount;
+
+	// 検索番号
+	size_t index = oldTextCount;
+
+	// <> の間か
+	bool isAngleBracket = false;
+
+	while (newCharCount != 0 && !m_textCount.IsMax())
+	{
+		// 文字
+		wchar_t c = m_text.at(index);
+
+		if (isAngleBracket)
+		{
+			m_textCount += 1.0f;
+			if (c == L'>')
+			{
+				isAngleBracket = false;
+			}
+		}
+		else
+		{
+			if (c == L'<')
+			{
+				isAngleBracket = true;
+				m_textCount += 1.0f;
+			}
+			else
+			{
+				newCharCount--;
+			}
+		}
+
+		index++;
+	}
 
 	// 移動率が 0 なら以降何もしない
 	if (moveRate == 0.0f)
