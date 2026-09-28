@@ -181,7 +181,6 @@
     <ClCompile Include="Scripts\Commons\Renderings\Renderer.cpp" />
     <ClCompile Include="Scripts\Commons\Renderings\RenderingResources.cpp" />
     <ClCompile Include="Scripts\Commons\Renderings\Text.cpp" />
-    <ClCompile Include="Scripts\Commons\Renderings\TextOutlineRenderer.cpp" />
     <ClCompile Include="Scripts\Commons\Renderings\TextRenderer.cpp" />
     <ClCompile Include="Scripts\Commons\Scenes\SceneTransitionAnimation.cpp" />
     <ClCompile Include="Scripts\Commons\Systems\ErrorMessage.cpp" />
@@ -270,7 +269,6 @@
     <ClInclude Include="Scripts\Commons\Renderings\RenderingResources.h" />
     <ClInclude Include="Scripts\Commons\Renderings\PixelShader.h" />
     <ClInclude Include="Scripts\Commons\Renderings\Text.h" />
-    <ClInclude Include="Scripts\Commons\Renderings\TextOutlineRenderer.h" />
     <ClInclude Include="Scripts\Commons\Renderings\TextRenderer.h" />
     <ClInclude Include="Scripts\Commons\Renderings\Renderer.h" />
     <ClInclude Include="Scripts\Commons\Scenes\SceneTransitionAnimation.h" />
