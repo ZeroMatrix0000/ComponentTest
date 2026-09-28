@@ -162,7 +162,12 @@ void Game::Initialize(const HWND& hWindow)
 	// 描画の初期化
 	m_renderer.Initialize(device, context, swapChain, commonStates);
 	// テキスト描画を初期化
-	m_renderer.GetTextRenderer().Initialize(swapChain, m_deviceResources2D.GetContext(), m_deviceResources2D.GetBackBuffer());
+	m_renderer.GetTextRenderer().Initialize
+	(
+		m_deviceResources2D.GetDevice(),
+		m_deviceResources2D.GetContext(),
+		m_deviceResources2D.GetBackBuffer()
+	);
 	m_renderer.GetTextRenderer().CreateFontCollection(L"Resources\\Fonts");
 
 	// タイマーの初期化
@@ -296,8 +301,7 @@ void Game::OnWindowSizeChanged(const Math::Vector2Int& outputSize)
 	// スワップチェイン
 	auto* swapChain = m_deviceResources.GetSwapChain();
 
-	// テキスト描画を初期化
-	m_renderer.GetTextRenderer().Initialize(swapChain, m_deviceResources2D.GetContext(), m_deviceResources2D.GetBackBuffer());
+	m_renderer.GetTextRenderer().OnWindowSizeChanged(m_deviceResources2D.GetContext(), m_deviceResources2D.GetBackBuffer());
 
 	m_sceneManager.OnWindowSizeChanged(outputSize);
 }

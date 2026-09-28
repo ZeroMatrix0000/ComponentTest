@@ -21,9 +21,11 @@
 Renderings::TextRenderer::TextRenderer()
 	: ITextRenderer{}
 	, m_dWriteFactory{}
-	, m_textBitmap{}
+	, m_textContext{}
 	, m_fontCollection{}
-	, m_strokeStyle{}
+	, m_dilateEffect{}
+	, m_floodEffect{}
+	, m_compositeEffect{}
 	, m_pTexts{}
 	, m_pContext{}
 	, m_pBackBuffer{}
@@ -31,49 +33,32 @@ Renderings::TextRenderer::TextRenderer()
 }
 
 // 初期化処理
-void Renderings::TextRenderer::Initialize(IDXGISwapChain4* pSwapChain, ID2D1DeviceContext7* pContext, ID2D1Bitmap1* pBackBuffer)
+void Renderings::TextRenderer::Initialize(ID2D1Device7* pDevice, ID2D1DeviceContext7* pContext, ID2D1Bitmap1* pBackBuffer)
 {
 	m_pContext = pContext;
 	m_pBackBuffer = pBackBuffer;
 
 	// DirectWrite
-	if (m_dWriteFactory.Get() == nullptr)
-	{
-		Utility::ThrowIfFailed(DWriteCreateFactory
-		(
-			DWRITE_FACTORY_TYPE_SHARED,
-			__uuidof(IDWriteFactory8),
-			reinterpret_cast<IUnknown**>(m_dWriteFactory.GetAddressOf())
-		));
-	}
-
-	// 線のスタイルの詳細（角を丸める）
-	//D2D1_STROKE_STYLE_PROPERTIES strokeStyleProps{};
-	//strokeStyleProps.lineJoin = D2D1_LINE_JOIN_ROUND;
-	//m_d2DFactory.Get()->CreateStrokeStyle(
-	//	strokeStyleProps,
-	//	nullptr,
-	//	0,
-	//	m_strokeStyle.ReleaseAndGetAddressOf()
-	//);
-
-	// ビットマップの詳細
-	D2D1_BITMAP_PROPERTIES1 bitmapProperties = D2D1::BitmapProperties1(
-		D2D1_BITMAP_OPTIONS_TARGET,
-		D2D1::PixelFormat(
-			DXGI_FORMAT_R8G8B8A8_UNORM,
-			D2D1_ALPHA_MODE_PREMULTIPLIED
-		)
-	);
-
-	Utility::ThrowIfFailed(m_pContext->CreateBitmap
+	Utility::ThrowIfFailed(DWriteCreateFactory
 	(
-		m_pBackBuffer->GetPixelSize(),
-		nullptr,
-		0,
-		bitmapProperties,
-		m_textBitmap.ReleaseAndGetAddressOf()
+		DWRITE_FACTORY_TYPE_SHARED,
+		__uuidof(IDWriteFactory8),
+		reinterpret_cast<IUnknown**>(m_dWriteFactory.GetAddressOf())
 	));
+
+	// コンテキスト
+	Utility::ThrowIfFailed(pDevice->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE, m_textContext.GetAddressOf()));
+
+	// 膨張エフェクト
+	m_textContext->CreateEffect(CLSID_D2D1Morphology, m_dilateEffect.GetAddressOf());
+	m_dilateEffect->SetValue(D2D1_MORPHOLOGY_PROP_MODE, D2D1_MORPHOLOGY_MODE_DILATE);
+	// 色変更エフェクト
+	m_textContext->CreateEffect(CLSID_D2D1Flood, m_floodEffect.GetAddressOf());
+	// エフェクト合体
+	m_textContext->CreateEffect(CLSID_D2D1Composite, m_compositeEffect.GetAddressOf());
+	m_compositeEffect->SetValue(D2D1_COMPOSITE_PROP_MODE, D2D1_COMPOSITE_MODE_SOURCE_IN);
+
+	OnWindowSizeChanged(pContext, pBackBuffer);
 }
 
 // フォントコレクションの作成
@@ -146,8 +131,14 @@ void Renderings::TextRenderer::Begin()
 // 描画処理
 void Renderings::TextRenderer::Draw(const Text* pText)
 {
-	// 空文字列または透明なら何もしない
+	// 空文字列なら何もしない
 	if (pText->GetStr().empty())
+	{
+		return;
+	}
+
+	// テキストが透明なら何もしない
+	if (pText->GetFontColor().A() == 0.0f)
 	{
 		return;
 	}
@@ -289,99 +280,146 @@ void Renderings::TextRenderer::Draw(const Text* pText)
 		textBrush.GetAddressOf()
 	);
 
-	if (pText->GetOutlineWidth() != 0.0f)
+	float outlineWidth = pText->GetOutlineWidth() * canvasRatio;
+
+	// アウトライン幅があるなら
+	if (outlineWidth != 0.0f)
 	{
-		// 描画終了
-		m_pContext->EndDraw();
+		// ビットマップの詳細
+		D2D1_BITMAP_PROPERTIES1 bitmapProperties = D2D1::BitmapProperties1(
+			D2D1_BITMAP_OPTIONS_TARGET,
+			D2D1::PixelFormat(DXGI_FORMAT_R8G8B8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED)
+		);
 
-		// 描画先を設定
-		m_pContext->SetTarget(m_textBitmap.Get());
-		// 描画開始
-		m_pContext->BeginDraw();
-		// 透明に
-		m_pContext->Clear();
-	}
+		// テキスト詳細
+		DWRITE_TEXT_METRICS metrics{};
+		Utility::ThrowIfFailed(textLayout->GetMetrics(&metrics));
 
+		// ビットマップサイズ
+		D2D1_SIZE_U bitmapSize
+		{
+			Math::Min(static_cast<UINT32>(metrics.width + outlineWidth * 2.0f + 2.0f), m_pBackBuffer->GetPixelSize().width),
+			Math::Min(static_cast<UINT32>(metrics.height + outlineWidth * 2.0f + 2.0f), m_pBackBuffer->GetPixelSize().height)
+		};
 
-	// 角度
-	float angle = pRectTransform->GetAngle();
-	// 描画ターゲットを回転
-	if (angle != 0.0f)
-	{
-		m_pContext->SetTransform(D2D1::Matrix3x2F::Rotation
+		// テキスト用ビットマップ
+		Microsoft::WRL::ComPtr<ID2D1Bitmap1> textBitmap{};
+		Utility::ThrowIfFailed(m_textContext->CreateBitmap
 		(
-			angle,
-			D2D1::Point2F(rect.position.x, rect.position.y)
+			bitmapSize,
+			nullptr,
+			0,
+			bitmapProperties,
+			textBitmap.ReleaseAndGetAddressOf()
 		));
-	}
 
-	//// 文字列を描画
-	//TextOutlineRenderer outlineRenderer
-	//{
-	//	canvasRatio,
-	//	m_d2DFactory.Get(),
-	//	m_renderTarget.Get(),
-	//	textBrush.Get(),
-	//	outlineBrush.Get(),
-	//	m_strokeStyle.Get(),
-	//	*pText
-	//};
-	//outlineRenderer.Begin();
-	//textLayout->Draw(nullptr, &outlineRenderer, rect.position.x - rect.size.x / 2.0f, rect.position.y - rect.size.y / 2.0f);
-	//outlineRenderer.End();
+		// ターゲットを設定
+		m_textContext->SetTarget(textBitmap.Get());
 
-	// 文字を描画
-	m_pContext->DrawTextLayout
-	(
-		D2D1::Point2F(rect.position.x - rect.size.x / 2.0f, rect.position.y - rect.size.y / 2.0f),
-		textLayout.Get(),
-		textBrush.Get()
-	);
-
-	// 描画ターゲットを元に戻す
-	if (angle != 0.0f)
-	{
-		m_pContext->SetTransform(D2D1::Matrix3x2F::Identity());
-	}
-	m_pContext->SetTransform(D2D1::Matrix3x2F::Identity());
-
-
-
-	if (pText->GetOutlineWidth() != 0.0f)
-	{
-		// 描画終了
-		m_pContext->EndDraw();
-
-		// 描画先を戻す
-		m_pContext->SetTarget(m_pBackBuffer);
 		// 描画開始
-		m_pContext->BeginDraw();
-
-		// 膨張エフェクト
-		Microsoft::WRL::ComPtr<ID2D1Effect> dilate;
-		m_pContext->CreateEffect(CLSID_D2D1Morphology, dilate.GetAddressOf());
-		dilate->SetInput(0, m_textBitmap.Get());
-		dilate->SetValue(D2D1_MORPHOLOGY_PROP_MODE, D2D1_MORPHOLOGY_MODE_DILATE);
-		dilate->SetValue(D2D1_MORPHOLOGY_PROP_WIDTH, 1 + Math::RoundInt(pText->GetOutlineWidth() * canvasRatio * 2.0f));
-		dilate->SetValue(D2D1_MORPHOLOGY_PROP_HEIGHT, 1 + Math::RoundInt(pText->GetOutlineWidth() * canvasRatio * 2.0f));
-		Microsoft::WRL::ComPtr<ID2D1Image> dilateImage;
-		dilate->GetOutput(dilateImage.GetAddressOf());
-		// 色変更エフェクト
-		Microsoft::WRL::ComPtr<ID2D1Effect> flood;
-		m_pContext->CreateEffect(CLSID_D2D1Flood, flood.GetAddressOf());
-		flood->SetValue(D2D1_FLOOD_PROP_COLOR, pText->GetD2D1OutlineColor());
-		Microsoft::WRL::ComPtr<ID2D1Image> floodImage;
-		flood->GetOutput(floodImage.GetAddressOf());
-		// エフェクト合体
-		Microsoft::WRL::ComPtr<ID2D1Effect> composite;
-		m_pContext->CreateEffect(CLSID_D2D1Composite, composite.GetAddressOf());
-		composite->SetInput(0, dilateImage.Get());
-		composite->SetInput(1, floodImage.Get());
-		composite->SetValue(D2D1_COMPOSITE_PROP_MODE, D2D1_COMPOSITE_MODE_SOURCE_IN);
+		m_textContext->BeginDraw();
+		// 透明に
+		m_textContext->Clear();
 
 		// 文字を描画
-		m_pContext->DrawImage(composite.Get(), D2D1::Point2F());
-		m_pContext->DrawBitmap(m_textBitmap.Get());
+		m_textContext->DrawTextLayout
+		(
+			D2D1::Point2F(outlineWidth + 1.0f - metrics.left, outlineWidth + 1.0f - metrics.top),
+			textLayout.Get(),
+			textBrush.Get()
+		);
+
+		// 描画終了
+		m_textContext->EndDraw();
+
+		// 膨張エフェクト
+		m_dilateEffect->SetInput(0, textBitmap.Get());
+		m_dilateEffect->SetValue(D2D1_MORPHOLOGY_PROP_WIDTH, 1 + 2 * Math::RoundInt(outlineWidth));
+		m_dilateEffect->SetValue(D2D1_MORPHOLOGY_PROP_HEIGHT, 1 + 2 * Math::RoundInt(outlineWidth));
+		Microsoft::WRL::ComPtr<ID2D1Image> dilateImage;
+		m_dilateEffect->GetOutput(dilateImage.GetAddressOf());
+		// 色変更エフェクト
+		m_floodEffect->SetValue(D2D1_FLOOD_PROP_COLOR, pText->GetD2D1OutlineColor());
+		Microsoft::WRL::ComPtr<ID2D1Image> floodImage;
+		m_floodEffect->GetOutput(floodImage.GetAddressOf());
+		// 画像合体エフェクト
+		m_compositeEffect->SetInput(0, dilateImage.Get());
+		m_compositeEffect->SetInput(1, floodImage.Get());
+
+		// 角度
+		float angle = pRectTransform->GetAngle();
+		// 描画ターゲットを回転
+		if (angle != 0.0f)
+		{
+			m_pContext->SetTransform(D2D1::Matrix3x2F::Rotation
+			(
+				angle,
+				D2D1::Point2F(rect.position.x, rect.position.y)
+			));
+		}
+
+		Math::Vector2 position
+		{
+			rect.position.x - rect.size.x / 2.0f - outlineWidth - 1.0f + metrics.left,
+			rect.position.y - rect.size.y / 2.0f - outlineWidth - 1.0f + metrics.top
+		};
+
+		// 文字を描画
+		m_pContext->DrawImage
+		(
+			m_compositeEffect.Get(),
+			D2D1::Point2F
+			(
+				position.x,
+				position.y
+			)
+		);
+		m_pContext->DrawBitmap
+		(
+			textBitmap.Get(),
+			D2D1::RectF
+			(
+				position.x,
+				position.y,
+				position.x + bitmapSize.width,
+				position.y + bitmapSize.height
+			)
+		);
+
+		// コンテキストを元に戻す
+		if (angle != 0.0f)
+		{
+			m_pContext->SetTransform(D2D1::Matrix3x2F::Identity());
+		}
+	}
+	else
+	{
+		// 角度
+		float angle = pRectTransform->GetAngle();
+		// 描画ターゲットを回転
+		if (angle != 0.0f)
+		{
+			m_pContext->SetTransform(D2D1::Matrix3x2F::Rotation
+			(
+				angle,
+				D2D1::Point2F(rect.position.x, rect.position.y)
+			));
+		}
+
+		// 文字を描画
+		m_pContext->DrawTextLayout
+		(
+			D2D1::Point2F(rect.position.x - rect.size.x / 2.0f, rect.position.y - rect.size.y / 2.0f),
+			textLayout.Get(),
+			textBrush.Get()
+		);
+
+		// コンテキストを元に戻す
+		if (angle != 0.0f)
+		{
+			m_pContext->SetTransform(D2D1::Matrix3x2F::Identity());
+		}
+		m_pContext->SetTransform(D2D1::Matrix3x2F::Identity());
 	}
 }
 
@@ -389,6 +427,13 @@ void Renderings::TextRenderer::Draw(const Text* pText)
 void Renderings::TextRenderer::End()
 {
 	m_pContext->EndDraw();
+}
+
+// ウィンドウサイズ変更時の処理
+void Renderings::TextRenderer::OnWindowSizeChanged(ID2D1DeviceContext7* pContext, ID2D1Bitmap1* pBackBuffer)
+{
+	m_pContext = pContext;
+	m_pBackBuffer = pBackBuffer;
 }
 
 // テキストのポインタを追加

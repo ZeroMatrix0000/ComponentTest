@@ -17,12 +17,6 @@
 			"A": 0.0
 		},
 		"TextAlignment": "DWRITE_TEXT_ALIGNMENT_CENTER",
-		"OutlineWidth": 2.0,
-		"OutlineColor": {
-			"R": 0.0,
-			"G": 0.0,
-			"B": 0.0,
-			"A": 0.0
-		}
+		"OutlineWidth": 2.0
 	}
 }

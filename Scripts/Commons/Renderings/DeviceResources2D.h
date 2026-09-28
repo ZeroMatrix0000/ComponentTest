@@ -36,13 +36,15 @@ namespace Renderings
 		void OnWindowSizeChanged();
 
 		// ファクトリの取得
-		auto* GetFactory()  const { return m_d2dFactory.Get(); }
+		auto* GetFactory() const { return m_d2dFactory.Get(); }
 
+		// デバイスの取得
+		auto* GetDevice()  const { return m_d2dDevice.Get(); }
 		// コンテキストの取得
-		auto* GetContext()  const { return m_d2dContext.Get(); }
+		auto* GetContext() const { return m_d2dContext.Get(); }
 
 		// 描画ターゲットの取得
-		auto* GetBackBuffer()  const { return m_backBuffer.Get(); }
+		auto* GetBackBuffer() const { return m_backBuffer.Get(); }
 
 
 	private:

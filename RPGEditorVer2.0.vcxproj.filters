@@ -334,6 +334,9 @@
     <ClCompile Include="Scripts\Commons\Renderings\ConstantBuffer.cpp">
       <Filter>Scripts\Commons\Renderings</Filter>
     </ClCompile>
+    <ClCompile Include="Scripts\Commons\Renderings\DeviceResources2D.cpp">
+      <Filter>Scripts\Commons\Renderings</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Pch.h" />
@@ -677,6 +680,9 @@
       <Filter>Scripts\Commons\Renderings</Filter>
     </ClInclude>
     <ClInclude Include="Scripts\Commons\Renderings\ConstantBuffer.h">
+      <Filter>Scripts\Commons\Renderings</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Commons\Renderings\DeviceResources2D.h">
       <Filter>Scripts\Commons\Renderings</Filter>
     </ClInclude>
   </ItemGroup>

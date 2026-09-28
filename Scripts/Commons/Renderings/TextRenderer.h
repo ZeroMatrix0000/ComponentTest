@@ -28,7 +28,7 @@ namespace Renderings
 		TextRenderer();
 
 		// 初期化処理
-		void Initialize(IDXGISwapChain4* pSwapChain, ID2D1DeviceContext7* pContext, ID2D1Bitmap1* pBackBuffer);
+		void Initialize(ID2D1Device7* pDevice, ID2D1DeviceContext7* pContext, ID2D1Bitmap1* pBackBuffer);
 		// フォントコレクションの作成
 		void CreateFontCollection(const std::wstring& directoryPath);
 
@@ -38,6 +38,9 @@ namespace Renderings
 		void Draw(const Text* pText);
 		// 描画終了
 		void End();
+
+		// ウィンドウサイズ変更時の処理
+		void OnWindowSizeChanged(ID2D1DeviceContext7* pContext, ID2D1Bitmap1* pBackBuffer);
 
 		// テキストのポインタを追加
 		void AddPText(const Text* pText) override;
@@ -59,14 +62,18 @@ namespace Renderings
 		// DirectWriteファクトリー
 		Microsoft::WRL::ComPtr<IDWriteFactory8> m_dWriteFactory;
 
-		// テキスト用ビットマップ
-		Microsoft::WRL::ComPtr<ID2D1Bitmap1> m_textBitmap;
+		// テキスト用コンテキスト
+		Microsoft::WRL::ComPtr<ID2D1DeviceContext7> m_textContext;
 
 		// フォントコレクション
 		Microsoft::WRL::ComPtr<IDWriteFontCollection3> m_fontCollection;
 
-		// 線のスタイル
-		Microsoft::WRL::ComPtr<ID2D1StrokeStyle> m_strokeStyle;
+		// 膨張エフェクト
+		Microsoft::WRL::ComPtr<ID2D1Effect> m_dilateEffect;
+		// 色変更エフェクト
+		Microsoft::WRL::ComPtr<ID2D1Effect> m_floodEffect;
+		// 画像合体エフェクト
+		Microsoft::WRL::ComPtr<ID2D1Effect> m_compositeEffect;
 
 		// テキストのポインタリスト
 		std::vector<const Text*> m_pTexts;

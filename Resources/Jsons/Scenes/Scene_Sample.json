@@ -123,6 +123,13 @@
 				"FontSize": 256.0,
 				"TextAlignment": "DWRITE_TEXT_ALIGNMENT_CENTER",
 				"ParagraphAlignment": "DWRITE_PARAGRAPH_ALIGNMENT_CENTER",
+				"OutlineWidth": 10.0,
+				"OutlineColor": {
+					"R": 1.0,
+					"G": 0.0,
+					"B": 0.5,
+					"A": 1.0
+				},
 				"Canvas": "Canvas"
 			}
 		}
