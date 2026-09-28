@@ -1,7 +1,7 @@
 /*
  * FileName:     Model3DRenderer.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/23
+ * Last Updated: 2026/09/28
  *
  * 3Dモデル描画
  */
@@ -11,10 +11,10 @@
 
 #include "Model3D.h"
 #include "Model3DSource.h"
-#include "ICameraScreen.h"
-#include "../GameObjects/GameObject.h"
-#include "../Components/Transform.h"
-#include "../Systems/IResources.h"
+#include "../ICameraScreen.h"
+#include "Scripts/Commons/GameObjects/GameObject.h"
+#include "Scripts/Commons/Components/Transform.h"
+#include "Scripts/Commons/Systems/IResources.h"
 
  // コンストラクタ
 Renderings::Model3DRenderer::Model3DRenderer()

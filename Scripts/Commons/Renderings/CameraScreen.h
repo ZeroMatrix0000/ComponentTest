@@ -9,7 +9,7 @@
 #pragma once
 
 #include "ICameraScreen.h"
-#include "IModel3DRenderer.h"
+#include "Model3D/IModel3DRenderer.h"
 #include "../Systems/JsonSerializer.h"
 
 namespace Renderings

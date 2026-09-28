@@ -109,6 +109,15 @@
     <Filter Include="Scripts\GameObjects\UIs\BlackBelt">
       <UniqueIdentifier>{d03a3141-a102-42dc-af80-e6a797ce8139}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scripts\Commons\Renderings\Text">
+      <UniqueIdentifier>{6cdd33d6-3a4e-44fb-8158-6b5a6d7f3bde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scripts\Commons\Renderings\Image">
+      <UniqueIdentifier>{55a8ad60-d6d1-4986-a04d-f07003f93d73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scripts\Commons\Renderings\Model3D">
+      <UniqueIdentifier>{9c78f9b8-0a17-496a-ad39-6c56135cfe46}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Scripts\Main\WinMain.cpp">
@@ -169,17 +178,8 @@
     <ClCompile Include="Scripts\Commons\Renderings\RenderingResources.cpp">
       <Filter>Scripts\Commons\Renderings</Filter>
     </ClCompile>
-    <ClCompile Include="Scripts\Commons\Renderings\Model3DSource.cpp">
-      <Filter>Scripts\Commons\Renderings</Filter>
-    </ClCompile>
     <ClCompile Include="Scripts\Commons\Systems\Resources.cpp">
       <Filter>Scripts\Commons\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="Scripts\Commons\Renderings\Model3D.cpp">
-      <Filter>Scripts\Commons\Renderings</Filter>
-    </ClCompile>
-    <ClCompile Include="Scripts\Commons\Renderings\Model3DRenderer.cpp">
-      <Filter>Scripts\Commons\Renderings</Filter>
     </ClCompile>
     <ClCompile Include="Scripts\Commons\Systems\WindowController.cpp">
       <Filter>Scripts\Commons\Systems</Filter>
@@ -190,22 +190,7 @@
     <ClCompile Include="Scripts\Commons\Systems\Timer.cpp">
       <Filter>Scripts\Commons\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Scripts\Commons\Renderings\ImageSource.cpp">
-      <Filter>Scripts\Commons\Renderings</Filter>
-    </ClCompile>
     <ClCompile Include="Scripts\Commons\Renderings\Canvas.cpp">
-      <Filter>Scripts\Commons\Renderings</Filter>
-    </ClCompile>
-    <ClCompile Include="Scripts\Commons\Renderings\Image.cpp">
-      <Filter>Scripts\Commons\Renderings</Filter>
-    </ClCompile>
-    <ClCompile Include="Scripts\Commons\Renderings\ImageRenderer.cpp">
-      <Filter>Scripts\Commons\Renderings</Filter>
-    </ClCompile>
-    <ClCompile Include="Scripts\Commons\Renderings\Text.cpp">
-      <Filter>Scripts\Commons\Renderings</Filter>
-    </ClCompile>
-    <ClCompile Include="Scripts\Commons\Renderings\TextRenderer.cpp">
       <Filter>Scripts\Commons\Renderings</Filter>
     </ClCompile>
     <ClCompile Include="Scripts\Commons\Renderings\Renderer.cpp">
@@ -334,6 +319,36 @@
     <ClCompile Include="Scripts\Commons\Renderings\DeviceResources2D.cpp">
       <Filter>Scripts\Commons\Renderings</Filter>
     </ClCompile>
+    <ClCompile Include="Scripts\Commons\Renderings\Text\DecorationString.cpp">
+      <Filter>Scripts\Commons\Renderings\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Commons\Renderings\Text\DecorationTextRenderer.cpp">
+      <Filter>Scripts\Commons\Renderings\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Commons\Renderings\Image\Image.cpp">
+      <Filter>Scripts\Commons\Renderings\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Commons\Renderings\Image\ImageRenderer.cpp">
+      <Filter>Scripts\Commons\Renderings\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Commons\Renderings\Image\ImageSource.cpp">
+      <Filter>Scripts\Commons\Renderings\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Commons\Renderings\Model3D\Model3D.cpp">
+      <Filter>Scripts\Commons\Renderings\Model3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Commons\Renderings\Model3D\Model3DRenderer.cpp">
+      <Filter>Scripts\Commons\Renderings\Model3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Commons\Renderings\Model3D\Model3DSource.cpp">
+      <Filter>Scripts\Commons\Renderings\Model3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Commons\Renderings\Text\Text.cpp">
+      <Filter>Scripts\Commons\Renderings\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Commons\Renderings\Text\TextRenderer.cpp">
+      <Filter>Scripts\Commons\Renderings\Text</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Pch.h" />
@@ -436,23 +451,11 @@
     <ClInclude Include="Scripts\Commons\Renderings\RenderingResources.h">
       <Filter>Scripts\Commons\Renderings</Filter>
     </ClInclude>
-    <ClInclude Include="Scripts\Commons\Renderings\Model3DSource.h">
-      <Filter>Scripts\Commons\Renderings</Filter>
-    </ClInclude>
     <ClInclude Include="Scripts\Commons\Systems\IResources.h">
       <Filter>Scripts\Commons\Systems</Filter>
     </ClInclude>
     <ClInclude Include="Scripts\Commons\Systems\Resources.h">
       <Filter>Scripts\Commons\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="Scripts\Commons\Renderings\Model3D.h">
-      <Filter>Scripts\Commons\Renderings</Filter>
-    </ClInclude>
-    <ClInclude Include="Scripts\Commons\Renderings\Model3DRenderer.h">
-      <Filter>Scripts\Commons\Renderings</Filter>
-    </ClInclude>
-    <ClInclude Include="Scripts\Commons\Renderings\IModel3DRenderer.h">
-      <Filter>Scripts\Commons\Renderings</Filter>
     </ClInclude>
     <ClInclude Include="Scripts\Commons\Renderings\CameraScreen.h">
       <Filter>Scripts\Commons\Renderings</Filter>
@@ -478,28 +481,7 @@
     <ClInclude Include="Scripts\Commons\Systems\Timer.h">
       <Filter>Scripts\Commons\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Scripts\Commons\Renderings\ImageSource.h">
-      <Filter>Scripts\Commons\Renderings</Filter>
-    </ClInclude>
     <ClInclude Include="Scripts\Commons\Renderings\Canvas.h">
-      <Filter>Scripts\Commons\Renderings</Filter>
-    </ClInclude>
-    <ClInclude Include="Scripts\Commons\Renderings\Image.h">
-      <Filter>Scripts\Commons\Renderings</Filter>
-    </ClInclude>
-    <ClInclude Include="Scripts\Commons\Renderings\ImageRenderer.h">
-      <Filter>Scripts\Commons\Renderings</Filter>
-    </ClInclude>
-    <ClInclude Include="Scripts\Commons\Renderings\IImageRenderer.h">
-      <Filter>Scripts\Commons\Renderings</Filter>
-    </ClInclude>
-    <ClInclude Include="Scripts\Commons\Renderings\TextRenderer.h">
-      <Filter>Scripts\Commons\Renderings</Filter>
-    </ClInclude>
-    <ClInclude Include="Scripts\Commons\Renderings\ITextRenderer.h">
-      <Filter>Scripts\Commons\Renderings</Filter>
-    </ClInclude>
-    <ClInclude Include="Scripts\Commons\Renderings\Text.h">
       <Filter>Scripts\Commons\Renderings</Filter>
     </ClInclude>
     <ClInclude Include="Scripts\Commons\Renderings\Renderer.h">
@@ -678,6 +660,45 @@
     </ClInclude>
     <ClInclude Include="Scripts\Commons\Renderings\DeviceResources2D.h">
       <Filter>Scripts\Commons\Renderings</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Commons\Renderings\Text\DecorationString.h">
+      <Filter>Scripts\Commons\Renderings\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Commons\Renderings\Text\DecorationTextRenderer.h">
+      <Filter>Scripts\Commons\Renderings\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Commons\Renderings\Image\IImageRenderer.h">
+      <Filter>Scripts\Commons\Renderings\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Commons\Renderings\Image\Image.h">
+      <Filter>Scripts\Commons\Renderings\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Commons\Renderings\Image\ImageRenderer.h">
+      <Filter>Scripts\Commons\Renderings\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Commons\Renderings\Image\ImageSource.h">
+      <Filter>Scripts\Commons\Renderings\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Commons\Renderings\Text\ITextRenderer.h">
+      <Filter>Scripts\Commons\Renderings\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Commons\Renderings\Model3D\IModel3DRenderer.h">
+      <Filter>Scripts\Commons\Renderings\Model3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Commons\Renderings\Model3D\Model3D.h">
+      <Filter>Scripts\Commons\Renderings\Model3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Commons\Renderings\Model3D\Model3DRenderer.h">
+      <Filter>Scripts\Commons\Renderings\Model3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Commons\Renderings\Model3D\Model3DSource.h">
+      <Filter>Scripts\Commons\Renderings\Model3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Commons\Renderings\Text\TextRenderer.h">
+      <Filter>Scripts\Commons\Renderings\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Commons\Renderings\Text\Text.h">
+      <Filter>Scripts\Commons\Renderings\Text</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,7 @@
 /*
  * FileName:     ImageRenderer.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/24
+ * Last Updated: 2026/09/29
  *
  * 画像描画
  */
@@ -10,12 +10,12 @@
 #include "ImageRenderer.h"
 
 #include "ImageSource.h"
-#include "PixelShader.h"
+#include "../PixelShader.h"
 #include "Image.h"
-#include "Canvas.h"
-#include "../Systems/IResources.h"
-#include "../GameObjects/GameObject.h"
-#include "../Components/RectTransform.h"
+#include "../Canvas.h"
+#include "Scripts/Commons/Systems/IResources.h"
+#include "Scripts/Commons/GameObjects/GameObject.h"
+#include "Scripts/Commons/Components/RectTransform.h"
 
 // コンストラクタ
 Renderings::ImageRenderer::ImageRenderer()

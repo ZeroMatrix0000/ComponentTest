@@ -1,7 +1,7 @@
 /*
  * FileName:     Player.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/11
+ * Last Updated: 2026/09/28
  * 
  *
  * プレイヤー
@@ -13,7 +13,7 @@
 #include "PlayerModel.h"
 #include "Scripts/Commons/GameObjects/GameObject.h"
 #include "Scripts/Commons/GameObjects/IGameObjectFinder.h"
-#include "Scripts/Commons/Renderings/Model3D.h"
+#include "Scripts/Commons/Renderings/Model3D/Model3D.h"
 #include "Scripts/Commons/Components/Transform.h"
 #include "Scripts/Commons/Colliders/BoxCollider.h"
 #include "Scripts/Commons/Systems/JsonSerializer.h"

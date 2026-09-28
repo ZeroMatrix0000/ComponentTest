@@ -1,7 +1,7 @@
 /*
  * FileName:     Text.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/14
+ * Last Updated: 2026/09/28
  *
  * テキスト
  */
@@ -10,10 +10,10 @@
 #include "Text.h"
 
 #include "ITextRenderer.h"
-#include "../GameObjects/GameObject.h"
-#include "../GameObjects/IGameObjectFinder.h"
-#include "../Renderings/Canvas.h"
-#include "../Systems/JsonSerializer.h"
+#include "Scripts/Commons/GameObjects/GameObject.h"
+#include "Scripts/Commons/GameObjects/IGameObjectFinder.h"
+#include "Scripts/Commons/Renderings/Canvas.h"
+#include "Scripts/Commons/Systems/JsonSerializer.h"
 
 // コンストラクタ
 Renderings::Text::Text(const ComponentDesc& desc, ITextRenderer* pITextRenderer)

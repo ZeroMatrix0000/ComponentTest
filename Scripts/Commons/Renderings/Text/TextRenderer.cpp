@@ -11,11 +11,11 @@
 
 #include "TextOutlineRenderer.h"
 #include "Text.h"
-#include "Canvas.h"
-#include "PixelShader.h"
-#include "../GameObjects/GameObject.h"
-#include "../Components/RectTransform.h"
-#include "../Systems/IErrorMessage.h"
+#include "../Canvas.h"
+#include "../PixelShader.h"
+#include "Scripts/Commons/GameObjects/GameObject.h"
+#include "Scripts/Commons/Components/RectTransform.h"
+#include "Scripts/Commons/Systems/IErrorMessage.h"
 
 // コンストラクタ
 Renderings::TextRenderer::TextRenderer()
@@ -26,6 +26,7 @@ Renderings::TextRenderer::TextRenderer()
 	, m_dilateEffect{}
 	, m_floodEffect{}
 	, m_compositeEffect{}
+	, m_decorationRenderer{}
 	, m_pTexts{}
 	, m_pContext{}
 	, m_pBackBuffer{}
@@ -272,12 +273,12 @@ void Renderings::TextRenderer::Draw(const Text* pText)
 		textLayout.GetAddressOf()
 	);
 
-	// テキストブラシ
-	Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> textBrush;
+	// ブラシ
+	Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> brush;
 	m_pContext->CreateSolidColorBrush
 	(
 		pText->GetD2D1FontColor(),
-		textBrush.GetAddressOf()
+		brush.GetAddressOf()
 	);
 
 	float outlineWidth = pText->GetOutlineWidth() * canvasRatio;
@@ -322,11 +323,13 @@ void Renderings::TextRenderer::Draw(const Text* pText)
 		m_textContext->Clear();
 
 		// 文字を描画
-		m_textContext->DrawTextLayout
+		m_decorationRenderer.Initialize(m_textContext.Get(), brush.Get());
+		textLayout->Draw
 		(
-			D2D1::Point2F(outlineWidth + 1.0f - metrics.left, outlineWidth + 1.0f - metrics.top),
-			textLayout.Get(),
-			textBrush.Get()
+			nullptr,
+			&m_decorationRenderer,
+			outlineWidth + 1.0f - metrics.left,
+			outlineWidth + 1.0f - metrics.top
 		);
 
 		// 描画終了
@@ -407,11 +410,13 @@ void Renderings::TextRenderer::Draw(const Text* pText)
 		}
 
 		// 文字を描画
-		m_pContext->DrawTextLayout
+		m_decorationRenderer.Initialize(m_pContext, brush.Get());
+		textLayout->Draw
 		(
-			D2D1::Point2F(rect.position.x - rect.size.x / 2.0f, rect.position.y - rect.size.y / 2.0f),
-			textLayout.Get(),
-			textBrush.Get()
+			nullptr,
+			&m_decorationRenderer,
+			rect.position.x - rect.size.x / 2.0f,
+			rect.position.y - rect.size.y / 2.0f
 		);
 
 		// コンテキストを元に戻す

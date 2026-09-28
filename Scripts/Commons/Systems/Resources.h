@@ -1,7 +1,7 @@
 /*
  * FileName:     Resources.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/07
+ * Last Updated: 2026/09/29
  *
  * リソース管理
  */
@@ -9,8 +9,8 @@
 #pragma once
 
 #include "IResources.h"
-#include "../Renderings/Model3DSource.h"
-#include "../Renderings/ImageSource.h"
+#include "../Renderings/Model3D/Model3DSource.h"
+#include "../Renderings/Image/ImageSource.h"
 #include "../Renderings/PixelShader.h"
 
 namespace Systems

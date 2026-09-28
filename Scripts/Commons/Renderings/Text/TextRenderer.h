@@ -9,7 +9,7 @@
 #pragma once
 
 #include "ITextRenderer.h"
-#include "TextOutlineRenderer.h"
+#include "DecorationTextRenderer.h"
 
 namespace Renderings
 {
@@ -74,6 +74,9 @@ namespace Renderings
 		Microsoft::WRL::ComPtr<ID2D1Effect> m_floodEffect;
 		// 画像合体エフェクト
 		Microsoft::WRL::ComPtr<ID2D1Effect> m_compositeEffect;
+
+		// デコレーション描画
+		DecorationTextRenderer m_decorationRenderer;
 
 		// テキストのポインタリスト
 		std::vector<const Text*> m_pTexts;

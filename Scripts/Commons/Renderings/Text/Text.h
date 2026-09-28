@@ -1,14 +1,14 @@
 /*
  * FileName:     Text.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/14
+ * Last Updated: 2026/09/29
  *
  * テキスト
  */
 
 #pragma once
 
-#include "../Components/Component.h"
+#include "Scripts/Commons/Components/Component.h"
 
 namespace Renderings
 {

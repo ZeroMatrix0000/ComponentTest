@@ -1,14 +1,14 @@
 /*
  * FileName:     IImageRenderer.h
  * Author:       Takao Hayata
- * Last Updated: 2026/07/07
+ * Last Updated: 2026/09/28
  *
  * 画像描画のインタフェース
  */
 
 #pragma once
 
-#include "../Systems/OnlyOne.h"
+#include "Scripts/Commons/Systems/OnlyOne.h"
 
 namespace Renderings
 {

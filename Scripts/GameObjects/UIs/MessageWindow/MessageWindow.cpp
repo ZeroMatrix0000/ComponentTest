@@ -1,7 +1,7 @@
 /*
  * FileName:     MessageWindow.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/11
+ * Last Updated: 2026/09/28
  *
  * メッセージウィンドウ
  */
@@ -11,8 +11,8 @@
 
 #include "Scripts/Commons/Components/RectTransform.h"
 #include "Scripts/Commons/Renderings/Canvas.h"
-#include "Scripts/Commons/Renderings/Image.h"
-#include "Scripts/Commons/Renderings/Text.h"
+#include "Scripts/Commons/Renderings/Image/Image.h"
+#include "Scripts/Commons/Renderings/Text/Text.h"
 #include "Scripts/Commons/Systems/JsonSerializer.h"
 
 // コンストラクタ

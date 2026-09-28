@@ -1,14 +1,14 @@
 /*
  * FileName:     Model3D.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/23
+ * Last Updated: 2026/09/28
  *
  * 3Dモデル
  */
 
 #pragma once
 
-#include "../Components/Component.h"
+#include "Scripts/Commons/Components/Component.h"
 
 namespace Systems
 {

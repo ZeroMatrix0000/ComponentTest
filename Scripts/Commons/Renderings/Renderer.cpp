@@ -9,8 +9,8 @@
 #include "Pch.h"
 #include "Renderer.h"
 
-#include "Image.h"
-#include "Text.h"
+#include "Image/Image.h"
+#include "Text/Text.h"
 
 // コンストラクタ
 Renderings::Renderer::Renderer()

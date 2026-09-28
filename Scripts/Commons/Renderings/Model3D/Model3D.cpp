@@ -1,7 +1,7 @@
 /*
  * FileName:     Model3D.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/23
+ * Last Updated: 2026/09/28
  *
  * 3Dモデル
  */
@@ -10,11 +10,11 @@
 #include "Model3D.h"
 
 #include "IModel3DRenderer.h"
-#include "../GameObjects/GameObject.h"
-#include "../GameObjects/IGameObjectFinder.h"
-#include "../Renderings/CameraScreen.h"
-#include "../Systems/IResources.h"
-#include "../Systems/JsonSerializer.h"
+#include "Scripts/Commons/GameObjects/GameObject.h"
+#include "Scripts/Commons/GameObjects/IGameObjectFinder.h"
+#include "Scripts/Commons/Renderings/CameraScreen.h"
+#include "Scripts/Commons/Systems/IResources.h"
+#include "Scripts/Commons/Systems/JsonSerializer.h"
 
 Renderings::Model3D::Model3D(const ComponentDesc& desc, IModel3DRenderer* pIModelRenderer, const Systems::IResources& iResources)
 	: Component{ desc }

@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "Model3DRenderer.h"
-#include "ImageRenderer.h"
-#include "TextRenderer.h"
+#include "Model3D/Model3DRenderer.h"
+#include "Image/ImageRenderer.h"
+#include "Text/TextRenderer.h"
 #include "ColliderRenderer.h"
 #include "../Systems/OnlyOne.h"
 

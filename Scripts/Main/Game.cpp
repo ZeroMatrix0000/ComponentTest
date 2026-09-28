@@ -1,7 +1,7 @@
 /*
  * FileName:     Game.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/24
+ * Last Updated: 2026/09/28
  *
  * ゲーム
  */
@@ -23,9 +23,9 @@
 #include "Scripts/GameObjects/Objects/Player/PlayerCamera.h"
 #include "Scripts/GameObjects/Objects/NPC/NPC.h"
 #include "Scripts/GameObjects/Objects/NPC/NPCManager.h"
-#include "Scripts/Commons/Renderings/Model3D.h"
-#include "Scripts/Commons/Renderings/Image.h"
-#include "Scripts/Commons/Renderings/Text.h"
+#include "Scripts/Commons/Renderings/Model3D/Model3D.h"
+#include "Scripts/Commons/Renderings/Image/Image.h"
+#include "Scripts/Commons/Renderings/Text/Text.h"
 #include "Scripts/Commons/Renderings/Canvas.h"
 #include "Scripts/Commons/Renderings/CameraScreen.h"
 #include "Scripts/Commons/Colliders/BoxCollider.h"

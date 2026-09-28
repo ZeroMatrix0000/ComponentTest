@@ -1,7 +1,7 @@
 /*
  * FileName:     Z2Talk.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/14
+ * Last Updated: 2026/09/28
  *
  * Z: はなす
  */
@@ -45,12 +45,9 @@ void Z2Talk::Update(float elapsedTime, bool isFocused)
 	// 不透明度を設定
 	m_alpha += m_alphaVelocity * elapsedTime * (isFocused ? 1.0f : -1.0f);
 
-	Math::Color textColor = m_pText->GetFontColor();
-	textColor.w = m_alpha;
-	m_pText->SetFontColor(textColor);
-	Math::Color outlineColor = m_pText->GetOutlineColor();
-	outlineColor.w = m_alpha;
-	m_pText->SetOutlineColor(outlineColor);
+	Math::Color color = m_pText->GetFontColor();
+	color.w = m_alpha;
+	m_pText->SetFontColor(color);
 }
 
 // 座標を設定

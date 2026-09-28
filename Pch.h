@@ -1,14 +1,14 @@
 /*
  * FileName:     Pch.h
  * Author:       Takao Hayata
- * Last Updated: 2026/08/04
+ * Last Updated: 2026/09/28
  * 
  * プリコンパイル済みヘッダファイル
  */
 
 #pragma once
 
- // 型チェックを厳密に
+// 型チェックを厳密に
 #define STRICT
 // あまり使われない関数を省く
 #define WIN32_LEAN_AND_MEAN
@@ -25,7 +25,9 @@
 // Direct3D Compiler
 #include <d3dcompiler.h>
 // Direct2D
+#include <initguid.h>
 #include <d2d1_3.h>
+#include <d2d1effects.h>
 // DirectWrite
 #include <dwrite_3.h>
 

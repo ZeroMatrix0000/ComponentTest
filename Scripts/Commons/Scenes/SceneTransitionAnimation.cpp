@@ -1,7 +1,7 @@
 /*
  * FileName:     SceneTransitionAnimation.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/07/24
+ * Last Updated: 2026/09/28
  *
  * シーン遷移時のアニメーション
  */
@@ -10,7 +10,7 @@
 #include "SceneTransitionAnimation.h"
 
 #include "../Renderings/Canvas.h"
-#include "../Renderings/Image.h"
+#include "../Renderings/Image/Image.h"
 #include "../GameObjects/GameObject.h"
 #include "../GameObjects/IGameObjectInstantiator.h"
 #include "../Components/RectTransform.h"

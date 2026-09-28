@@ -1,7 +1,7 @@
 /*
  * FileName:     Image.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/23
+ * Last Updated: 2026/09/28
  *
  * 画像
  */
@@ -10,11 +10,11 @@
 #include "Image.h"
 
 #include "IImageRenderer.h"
-#include "../GameObjects/IGameObjectFinder.h"
-#include "../GameObjects/GameObject.h"
-#include "../Renderings/Canvas.h"
-#include "../Systems/IResources.h"
-#include "../Systems/JsonSerializer.h"
+#include "Scripts/Commons/GameObjects/IGameObjectFinder.h"
+#include "Scripts/Commons/GameObjects/GameObject.h"
+#include "Scripts/Commons/Renderings/Canvas.h"
+#include "Scripts/Commons/Systems/IResources.h"
+#include "Scripts/Commons/Systems/JsonSerializer.h"
 
 // コンストラクタ
 Renderings::Image::Image(const ComponentDesc& desc, IImageRenderer* pIImageRenderer, const Systems::IResources& iResources)
