@@ -61,9 +61,9 @@ namespace Renderings
 		int GetOrderInLayer() const { return m_orderInLayer; }
 
 		// 画像ソース名を取得
-		const Renderings::ImageSource* GetPImageSource() const { return m_pImageSource; }
+		const ImageSource* GetPImageSource() const { return m_pImageSource; }
 		// ピクセルシェーダ名を取得
-		const Renderings::PixelShader* GetPPixelShader() const { return m_pPixelShader; }
+		const PixelShader* GetPPixelShader() const { return m_pPixelShader; }
 
 		// キャンバスのポインタを取得
 		const Canvas* GetPCanvas() const { return m_pCanvas; }
@@ -84,9 +84,9 @@ namespace Renderings
 		int m_orderInLayer;
 
 		// 画像ソース
-		const Renderings::ImageSource* m_pImageSource;
+		const ImageSource* m_pImageSource;
 		// ピクセルシェーダ
-		const Renderings::PixelShader* m_pPixelShader;
+		const PixelShader* m_pPixelShader;
 
 		// キャンバスのポインタ
 		const Canvas* m_pCanvas;

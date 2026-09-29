@@ -1,7 +1,7 @@
 /*
  * FileName:     Model3D.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/28
+ * Last Updated: 2026/09/29
  *
  * 3Dモデル
  */
@@ -47,7 +47,7 @@ namespace Renderings
 		void RemoveICameraScreen(const ICameraScreen& iCameraScreen);
 
 		// モデルソースを取得
-		const Renderings::Model3DSource* GetPModelSource() const { return m_pModelSource; }
+		const Model3DSource* GetPModelSource() const { return m_pModelSource; }
 
 		// 映るカメラ画面のポインタリストを取得
 		const std::vector<const ICameraScreen*>& GetPICameraScreens() const { return m_pICameraScreens; }
@@ -59,7 +59,7 @@ namespace Renderings
 		/* メンバ変数 */
 
 		// モデルソース
-		const Renderings::Model3DSource* m_pModelSource;
+		const Model3DSource* m_pModelSource;
 
 		// 映るカメラ画面のポインタリスト
 		std::vector<const ICameraScreen*> m_pICameraScreens;

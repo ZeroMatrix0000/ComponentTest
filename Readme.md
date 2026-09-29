@@ -28,25 +28,30 @@ namespace GameObjects{
 }
 
 namespace Renderings{
-    class CameraScreen
-    class Canvas <<Component>>
-    class ColliderRenderer
-    class DeviceResources <<OnlyOne>>
-    class ICameraScreen <<Component>>
-    class IColliderRenderer <<OnlyOne>>
     class IImageRenderer <<OnlyOne>>
     class Image <<Component>>
     class ImageRenderer
     class ImageSource
     class IModel3DRenderer <<OnlyOne>>
-    class ITextRenderer <<OnlyOne>>
     class Model3D
     class Model3DRenderer
     class Model3DSource
-    class Renderer <<OnlyOne>>
-    class RenderingResources <<OnlyOne>>
+    class DecorationString
+    class DecorationTextRenderer
+    class TextColorEffect
+    class ITextRenderer <<OnlyOne>>
     class Text <<Component>>
     class TextRenderer
+    class CameraScreen
+    class Canvas <<Component>>
+    class ColliderRenderer
+    class ConstantBuffer
+    class DeviceResources <<OnlyOne>>
+    class ICameraScreen <<Component>>
+    class IColliderRenderer <<OnlyOne>>
+    class PixelShader
+    class Renderer <<OnlyOne>>
+    class RenderingResources <<OnlyOne>>
 }
 
 namespace Scenes{
@@ -107,6 +112,30 @@ IComponentManager --o GameObjectManager
 IResources --o GameObjectManager
 Component <.. GameObjectManager
 
+Image <.. IImageRenderer
+Canvas --o Image
+ImageSource --o Image
+IImageRenderer --o Image
+IResources --o Image
+PixelShader --o Image
+IImageRenderer <|-- ImageRenderer
+Image "*" --o "1" ImageRenderer
+Model3D <.. IModel3DRenderer
+ICameraScreen "*" --o "1" Model3D
+IModel3DRenderer --o Model3D
+IResources --o Model3D
+Model3DSource --o Model3D
+IModel3DRenderer <|-- Model3DRenderer
+Model3D "*" --o "1" Model3DRenderer
+TextColorEffect "*" --o "1" DecorationString
+TextColorEffect <.. DecorationTextRenderer
+Text <.. ITextRenderer
+DecorationString --* Text
+Canvas --o Text
+ITextRenderer --o Text
+ITextRenderer <|-- TextRenderer
+DecorationTextRenderer --* TextRenderer
+Text "*" --o "1" TextRenderer
 ICameraScreen <|-- CameraScreen
 BoxCollider <.. IColliderRenderer
 SphereCollider <.. IColliderRenderer
@@ -115,27 +144,11 @@ IColliderRenderer <|-- ColliderRenderer
 BoxCollider "*" --o "1" ColliderRenderer
 SphereCollider "*" --o "1" ColliderRenderer
 MeshCollider "*" --o "1" ColliderRenderer
-Image <.. IImageRenderer
-Canvas --o Image
-IImageRenderer --o Image
-IImageRenderer <|-- ImageRenderer
-Image "*" --o "1" ImageRenderer
-IResources --o ImageRenderer
-Model3D <.. IModel3DRenderer
-Text <.. ITextRenderer
-ICameraScreen "*" --o "1" Model3D
-IModel3DRenderer --o Model3D
-IModel3DRenderer <|-- Model3DRenderer
-Model3D "*" --o "1" Model3DRenderer
-IResources --o Model3DRenderer
+ConstantBuffer --* PixelShader
 Model3DRenderer --* Renderer
 ImageRenderer --* Renderer
 TextRenderer --* Renderer
 ColliderRenderer --* Renderer
-Canvas --o Text
-ITextRenderer --o Text
-ITextRenderer <|-- TextRenderer
-Text "*" --o "1" TextRenderer
 
 GameObject "*" --o "1" Scene
 ISceneManager <|-- SceneManager
@@ -152,9 +165,11 @@ IGameObjectInstantiator <.. ErrorMessage
 IInput <|-- Input
 Model3DSource <.. IResources
 ImageSource <.. IResources
+PixelShader <.. IResources
 IResources <|-- Resources
 Model3DSource "*" --o "1" Resources
 ImageSource "*" --o "1" Resources
+PixelShader "*" --o "1" Resources
 ITimer <|-- Timer
 IWindowController <|-- WindowController
 
@@ -218,6 +233,30 @@ Component <.. GameObjectManager
 
 classDiagram
 
+Image <.. IImageRenderer
+Canvas --o Image
+ImageSource --o Image
+IImageRenderer --o Image
+IResources --o Image
+PixelShader --o Image
+IImageRenderer <|-- ImageRenderer
+Image "*" --o "1" ImageRenderer
+Model3D <.. IModel3DRenderer
+ICameraScreen "*" --o "1" Model3D
+IModel3DRenderer --o Model3D
+IResources --o Model3D
+Model3DSource --o Model3D
+IModel3DRenderer <|-- Model3DRenderer
+Model3D "*" --o "1" Model3DRenderer
+TextColorEffect "*" --o "1" DecorationString
+TextColorEffect <.. DecorationTextRenderer
+Text <.. ITextRenderer
+DecorationString --* Text
+Canvas --o Text
+ITextRenderer --o Text
+ITextRenderer <|-- TextRenderer
+DecorationTextRenderer --* TextRenderer
+Text "*" --o "1" TextRenderer
 ICameraScreen <|-- CameraScreen
 BoxCollider <.. IColliderRenderer
 SphereCollider <.. IColliderRenderer
@@ -226,27 +265,11 @@ IColliderRenderer <|-- ColliderRenderer
 BoxCollider "*" --o "1" ColliderRenderer
 SphereCollider "*" --o "1" ColliderRenderer
 MeshCollider "*" --o "1" ColliderRenderer
-Image <.. IImageRenderer
-Canvas --o Image
-IImageRenderer --o Image
-IImageRenderer <|-- ImageRenderer
-Image "*" --o "1" ImageRenderer
-IResources --o ImageRenderer
-Model3D <.. IModel3DRenderer
-Text <.. ITextRenderer
-ICameraScreen "*" --o "1" Model3D
-IModel3DRenderer --o Model3D
-IModel3DRenderer <|-- Model3DRenderer
-Model3D "*" --o "1" Model3DRenderer
-IResources --o Model3DRenderer
+ConstantBuffer --* PixelShader
 Model3DRenderer --* Renderer
 ImageRenderer --* Renderer
 TextRenderer --* Renderer
 ColliderRenderer --* Renderer
-Canvas --o Text
-ITextRenderer --o Text
-ITextRenderer <|-- TextRenderer
-Text "*" --o "1" TextRenderer
 
 ```
 
@@ -275,9 +298,11 @@ IGameObjectInstantiator <.. ErrorMessage
 IInput <|-- Input
 Model3DSource <.. IResources
 ImageSource <.. IResources
+PixelShader <.. IResources
 IResources <|-- Resources
 Model3DSource "*" --o "1" Resources
 ImageSource "*" --o "1" Resources
+PixelShader "*" --o "1" Resources
 ITimer <|-- Timer
 IWindowController <|-- WindowController
 
