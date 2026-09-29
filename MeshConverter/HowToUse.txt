@@ -1,0 +1,3 @@
+① MeshConverter.exe と同じディレクトリに、面が三角化された .obj ファイルを置く
+② MeshConverter.exe を実行し、.obj のファイル名（拡張子を除く）を入力する
+③ 生成された .mesh ファイルを Resources/Meshes 内に配置する
