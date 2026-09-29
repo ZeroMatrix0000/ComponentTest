@@ -1,7 +1,7 @@
 /*
  * FileName:     Text.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/28
+ * Last Updated: 2026/09/29
  *
  * テキスト
  */
@@ -19,6 +19,7 @@
 Renderings::Text::Text(const ComponentDesc& desc, ITextRenderer* pITextRenderer)
 	: Component{ desc }
 	, m_str{}
+	, m_isDecoration{ false }
 	, m_fontName{}
 	, m_fontSize{ 24.0f }
 	, m_fontColor{ D2D1::ColorF::White }
@@ -48,6 +49,7 @@ void Renderings::Text::Initalize(const nlohmann::ordered_json& json, IGameObject
 
 	Systems::JsonSerializer serializer{ pIGameObjectFinder };
 	serializer.AddParameter(&str, "Str");
+	serializer.AddParameter(&m_isDecoration, "IsDecoration");
 	serializer.AddParameter(&m_fontName, "FontName");
 	serializer.AddParameter(&m_fontSize, "FontSize");
 	serializer.AddParameter(&m_fontColor, "FontColor");
@@ -59,5 +61,5 @@ void Renderings::Text::Initalize(const nlohmann::ordered_json& json, IGameObject
 	serializer.AddParameter(&m_pCanvas, "Canvas");
 	serializer.Load(json);
 
-	m_str.SetStr(str);
+	m_str.SetStr(str, m_isDecoration);
 }

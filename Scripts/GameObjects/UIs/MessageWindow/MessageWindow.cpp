@@ -1,7 +1,7 @@
 /*
  * FileName:     MessageWindow.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/28
+ * Last Updated: 2026/09/29
  *
  * メッセージウィンドウ
  */
@@ -120,6 +120,8 @@ void MessageWindow::Update(float elapsedTime)
 
 	// <> の間か
 	bool isAngleBracket = false;
+	// 文字列に変更があったか
+	bool isChanged = false;
 
 	while (newCharCount != 0 && !m_textCount.IsMax())
 	{
@@ -143,6 +145,7 @@ void MessageWindow::Update(float elapsedTime)
 			}
 			else
 			{
+				isChanged = true;
 				newCharCount--;
 			}
 		}
@@ -166,7 +169,10 @@ void MessageWindow::Update(float elapsedTime)
 	m_pText->SetFontSize(m_textFontSize * moveRate);
 
 	// 文字列を変更
-	m_pText->SetStr(m_text.substr(0, Math::RoundInt(m_textCount)));
+	if (isChanged)
+	{
+		m_pText->SetStr(m_text.substr(0, Math::RoundInt(m_textCount)));
+	}
 }
 
 // 出現
@@ -194,6 +200,7 @@ void MessageWindow::SetText(const std::wstring& text)
 void MessageWindow::DisplayAllText()
 {
 	m_textCount = static_cast<float>(m_text.size());
+	m_pText->SetStr(m_text);
 }
 
 // 話者を設定

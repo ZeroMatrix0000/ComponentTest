@@ -1,7 +1,7 @@
 /*
  * FileName:     DecorationString.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/28
+ * Last Updated: 2026/09/29
  *
  * デコレーション付き文字列
  */
@@ -43,7 +43,7 @@ namespace Renderings
 		DecorationString();
 
 		// 文字列を設定
-		void SetStr(const std::wstring& str);
+		void SetStr(const std::wstring& str, bool isDecoration);
 
 		// 元の文字列を取得
 		const std::wstring& GetSourceStr() const { return m_sourceStr; }

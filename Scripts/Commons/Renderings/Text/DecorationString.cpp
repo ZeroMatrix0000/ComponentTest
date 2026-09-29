@@ -1,7 +1,7 @@
 /*
  * FileName:     DecorationString.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/28
+ * Last Updated: 2026/09/29
  *
  * デコレーション付き文字列
  */
@@ -21,12 +21,18 @@ Renderings::DecorationString::DecorationString()
 }
 
 // 文字列を設定
-void Renderings::DecorationString::SetStr(const std::wstring& str)
+void Renderings::DecorationString::SetStr(const std::wstring& str, bool isDecoration)
 {
 	m_sourceStr = str;
 	m_str.clear();
 	m_colorDescList.clear();
 	m_colorDescCount = 0;
+
+	if (!isDecoration)
+	{
+		m_str = str;
+		return;
+	}
 
 	// 検索番号
 	size_t index = 0;
