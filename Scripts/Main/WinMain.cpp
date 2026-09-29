@@ -18,9 +18,9 @@ LRESULT CALLBACK WndProcW(HWND, UINT, WPARAM, LPARAM);
 /* 定数 */
 
 // ウィンドウクラス名
-static constexpr LPCWSTR WINDOW_CLASS_NAME = L"DIrectXTest2WindowClass";
+static constexpr LPCWSTR WINDOW_CLASS_NAME = L"ComponentTestWindowClass";
 // ウィンドウ名
-static constexpr LPCWSTR WINDOW_NAME       = L"RPGEditor";
+static constexpr LPCWSTR WINDOW_NAME       = L"ComponentTest";
 // 出力幅
 static constexpr int     OUTPUT_WIDTH      = 1600;
 // 出力高さ

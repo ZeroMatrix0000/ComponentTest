@@ -22,7 +22,7 @@
     <VCProjectVersion>18.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{8ecf9b29-f083-42f3-bf2a-dbcf47757aeb}</ProjectGuid>
-    <RootNamespace>RPGEditorVer20</RootNamespace>
+    <RootNamespace>ComponentTest</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
