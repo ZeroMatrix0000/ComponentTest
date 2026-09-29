@@ -47,6 +47,7 @@ namespace Renderings{
     class ColliderRenderer
     class ConstantBuffer
     class DeviceResources <<OnlyOne>>
+    class DeviceResources2D <<OnlyOne>>
     class ICameraScreen <<Component>>
     class IColliderRenderer <<OnlyOne>>
     class PixelShader
@@ -144,6 +145,7 @@ IColliderRenderer <|-- ColliderRenderer
 BoxCollider "*" --o "1" ColliderRenderer
 SphereCollider "*" --o "1" ColliderRenderer
 MeshCollider "*" --o "1" ColliderRenderer
+DeviceResources --o DeviceResources2D
 ConstantBuffer --* PixelShader
 Model3DRenderer --* Renderer
 ImageRenderer --* Renderer
@@ -265,6 +267,7 @@ IColliderRenderer <|-- ColliderRenderer
 BoxCollider "*" --o "1" ColliderRenderer
 SphereCollider "*" --o "1" ColliderRenderer
 MeshCollider "*" --o "1" ColliderRenderer
+DeviceResources --o DeviceResources2D
 ConstantBuffer --* PixelShader
 Model3DRenderer --* Renderer
 ImageRenderer --* Renderer
