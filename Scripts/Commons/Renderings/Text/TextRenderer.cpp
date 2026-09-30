@@ -1,7 +1,7 @@
 /*
  * FileName:     TextRenderer.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/28
+ * Last Updated: 2026/09/30
  *
  * テキスト描画
  */
@@ -130,7 +130,7 @@ void Renderings::TextRenderer::Begin()
 }
 
 // 描画処理
-void Renderings::TextRenderer::Draw(const Text* pText)
+void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 {
 	// 空文字列なら何もしない
 	if (pText->GetStr().empty())
@@ -154,8 +154,8 @@ void Renderings::TextRenderer::Draw(const Text* pText)
 		return;
 	}
 
-	// 長方形
-	Math::Rect rect = pRectTransform->GetRect();
+	// トランスフォームの長方形
+	Math::Rect transformRect = pRectTransform->GetRect();
 	// キャンバスサイズ
 	Math::Vector2 canvasSize = pCanvas->GetSize();
 
@@ -163,34 +163,34 @@ void Renderings::TextRenderer::Draw(const Text* pText)
 	switch (pRectTransform->GetPivot())
 	{
 	case Utility::AlignmentPoint::TopLeft:
-		rect.position.x += rect.size.x / 2.0f;
-		rect.position.y += rect.size.y / 2.0f;
+		transformRect.position.x += transformRect.size.x / 2.0f;
+		transformRect.position.y += transformRect.size.y / 2.0f;
 		break;
 	case Utility::AlignmentPoint::TopCenter:
-		rect.position.y += rect.size.y / 2.0f;
+		transformRect.position.y += transformRect.size.y / 2.0f;
 		break;
 	case Utility::AlignmentPoint::TopRight:
-		rect.position.x -= rect.size.x / 2.0f;
-		rect.position.y += rect.size.y / 2.0f;
+		transformRect.position.x -= transformRect.size.x / 2.0f;
+		transformRect.position.y += transformRect.size.y / 2.0f;
 		break;
 	case Utility::AlignmentPoint::MiddleLeft:
-		rect.position.x += rect.size.x / 2.0f;
+		transformRect.position.x += transformRect.size.x / 2.0f;
 		break;
 	case Utility::AlignmentPoint::MiddleCenter:
 		break;
 	case Utility::AlignmentPoint::MiddleRight:
-		rect.position.x -= rect.size.x / 2.0f;
+		transformRect.position.x -= transformRect.size.x / 2.0f;
 		break;
 	case Utility::AlignmentPoint::BottomLeft:
-		rect.position.x += rect.size.x / 2.0f;
-		rect.position.y -= rect.size.y / 2.0f;
+		transformRect.position.x += transformRect.size.x / 2.0f;
+		transformRect.position.y -= transformRect.size.y / 2.0f;
 		break;
 	case Utility::AlignmentPoint::BottomCenter:
-		rect.position.y -= rect.size.y / 2.0f;
+		transformRect.position.y -= transformRect.size.y / 2.0f;
 		break;
 	case Utility::AlignmentPoint::BottomRight:
-		rect.position.x -= rect.size.x / 2.0f;
-		rect.position.y -= rect.size.y / 2.0f;
+		transformRect.position.x -= transformRect.size.x / 2.0f;
+		transformRect.position.y -= transformRect.size.y / 2.0f;
 		break;
 	default:
 		break;
@@ -199,32 +199,32 @@ void Renderings::TextRenderer::Draw(const Text* pText)
 	switch (pRectTransform->GetAnchor())
 	{
 	case Utility::AlignmentPoint::TopCenter:
-		rect.position.x += canvasSize.x / 2.0f;
+		transformRect.position.x += canvasSize.x / 2.0f;
 		break;
 	case Utility::AlignmentPoint::TopRight:
-		rect.position.x += canvasSize.x;
+		transformRect.position.x += canvasSize.x;
 		break;
 	case Utility::AlignmentPoint::MiddleLeft:
-		rect.position.y += canvasSize.y / 2.0f;
+		transformRect.position.y += canvasSize.y / 2.0f;
 		break;
 	case Utility::AlignmentPoint::MiddleCenter:
-		rect.position.x += canvasSize.x / 2.0f;
-		rect.position.y += canvasSize.y / 2.0f;
+		transformRect.position.x += canvasSize.x / 2.0f;
+		transformRect.position.y += canvasSize.y / 2.0f;
 		break;
 	case Utility::AlignmentPoint::MiddleRight:
-		rect.position.x += canvasSize.x;
-		rect.position.y += canvasSize.y / 2.0f;
+		transformRect.position.x += canvasSize.x;
+		transformRect.position.y += canvasSize.y / 2.0f;
 		break;
 	case Utility::AlignmentPoint::BottomLeft:
-		rect.position.y += canvasSize.y;
+		transformRect.position.y += canvasSize.y;
 		break;
 	case Utility::AlignmentPoint::BottomCenter:
-		rect.position.x += canvasSize.x / 2.0f;
-		rect.position.y += canvasSize.y;
+		transformRect.position.x += canvasSize.x / 2.0f;
+		transformRect.position.y += canvasSize.y;
 		break;
 	case Utility::AlignmentPoint::BottomRight:
-		rect.position.x += canvasSize.x;
-		rect.position.y += canvasSize.y;
+		transformRect.position.x += canvasSize.x;
+		transformRect.position.y += canvasSize.y;
 		break;
 	default:
 		break;
@@ -233,8 +233,10 @@ void Renderings::TextRenderer::Draw(const Text* pText)
 	// キャンバスの表示倍率
 	float canvasRatio = pCanvas->GetRatio();
 	// 表示倍率を適用
-	rect.position *= canvasRatio;
-	rect.size *= canvasRatio;
+	transformRect.position *= canvasRatio;
+	transformRect.size *= canvasRatio;
+	// フォントサイズ
+	float fontSize = pText->GetFontSize() * canvasRatio;
 
 	// テキストフォーマット
 	Microsoft::WRL::ComPtr<IDWriteTextFormat> textFormat;
@@ -253,6 +255,29 @@ void Renderings::TextRenderer::Draw(const Text* pText)
 		return;
 	}
 
+	// 行の上端とベースラインの距離
+	float baseline{};
+	switch (pText->GetParagraphAlignment())
+	{
+	case DWRITE_PARAGRAPH_ALIGNMENT_NEAR:
+		// 行の上端に文字の上端ががつくようにする
+		baseline = fontSize;
+		break;
+	case DWRITE_PARAGRAPH_ALIGNMENT_CENTER:
+		// 行の中心に文字の中心がつくようにする
+		baseline = fontSize * (0.4f + pText->GetLineSpace() / 2.0f);
+		break;
+	case DWRITE_PARAGRAPH_ALIGNMENT_FAR:
+		// 行の下端に文字の下端がつくようにする
+		baseline = fontSize * (pText->GetLineSpace() - 0.2f);
+		break;
+	default:
+		break;
+	}
+
+	// 行間を設定
+	textFormat->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_UNIFORM, fontSize * pText->GetLineSpace(), baseline);
+
 	// 左右配置
 	textFormat->SetTextAlignment(pText->GetTextAlignment());
 	// 上下配置
@@ -268,8 +293,8 @@ void Renderings::TextRenderer::Draw(const Text* pText)
 		str.c_str(),
 		static_cast<UINT32>(str.size()),
 		textFormat.Get(),
-		rect.size.x,
-		rect.size.y,
+		transformRect.size.x,
+		transformRect.size.y,
 		textLayout.GetAddressOf()
 	);
 
@@ -281,6 +306,24 @@ void Renderings::TextRenderer::Draw(const Text* pText)
 		brush.GetAddressOf()
 	);
 
+	// テキスト詳細
+	DWRITE_TEXT_METRICS metrics{};
+	textLayout->GetMetrics(&metrics);
+
+	// デバッグ表示
+	if (isDebug)
+	{
+		m_pContext->DrawRectangle(transformRect.CreateD2D1_RECT_F(), brush.Get());
+		// テキストの長方形
+		Math::Rect textRect
+		{
+			transformRect.position - transformRect.size / 2.0f + Math::Vector2{ metrics.left + metrics.width / 2.0f, metrics.top + metrics.height / 2.0f },
+			Math::Vector2{ metrics.width, metrics.height }
+		};
+		m_pContext->DrawRectangle(textRect.CreateD2D1_RECT_F(), brush.Get());
+	}
+
+	// アウトライン幅
 	float outlineWidth = pText->GetOutlineWidth() * canvasRatio;
 
 	// アウトライン幅があるなら
@@ -292,10 +335,6 @@ void Renderings::TextRenderer::Draw(const Text* pText)
 			D2D1::PixelFormat(DXGI_FORMAT_R8G8B8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED)
 		);
 
-		// テキスト詳細
-		DWRITE_TEXT_METRICS metrics{};
-		Utility::ThrowIfFailed(textLayout->GetMetrics(&metrics));
-
 		// ビットマップサイズ
 		D2D1_SIZE_U bitmapSize
 		{
@@ -305,14 +344,14 @@ void Renderings::TextRenderer::Draw(const Text* pText)
 
 		// テキスト用ビットマップ
 		Microsoft::WRL::ComPtr<ID2D1Bitmap1> textBitmap{};
-		Utility::ThrowIfFailed(m_textContext->CreateBitmap
+		m_textContext->CreateBitmap
 		(
 			bitmapSize,
 			nullptr,
 			0,
 			bitmapProperties,
-			textBitmap.ReleaseAndGetAddressOf()
-		));
+			textBitmap.GetAddressOf()
+		);
 
 		// ターゲットを設定
 		m_textContext->SetTarget(textBitmap.Get());
@@ -320,7 +359,6 @@ void Renderings::TextRenderer::Draw(const Text* pText)
 		// 描画開始
 		m_textContext->BeginDraw();
 		// 透明に
-		m_textContext->Clear();
 
 		// 文字を描画
 		DrawTextLayout
@@ -361,14 +399,14 @@ void Renderings::TextRenderer::Draw(const Text* pText)
 			m_pContext->SetTransform(D2D1::Matrix3x2F::Rotation
 			(
 				angle,
-				D2D1::Point2F(rect.position.x, rect.position.y)
+				D2D1::Point2F(transformRect.position.x, transformRect.position.y)
 			));
 		}
 
 		Math::Vector2 position
 		{
-			rect.position.x - rect.size.x / 2.0f - outlineWidth - 1.0f + metrics.left,
-			rect.position.y - rect.size.y / 2.0f - outlineWidth - 1.0f + metrics.top
+			transformRect.position.x - transformRect.size.x / 2.0f - outlineWidth - 1.0f + metrics.left,
+			transformRect.position.y - transformRect.size.y / 2.0f - outlineWidth - 1.0f + metrics.top
 		};
 
 		// 文字を描画
@@ -409,7 +447,7 @@ void Renderings::TextRenderer::Draw(const Text* pText)
 			m_pContext->SetTransform(D2D1::Matrix3x2F::Rotation
 			(
 				angle,
-				D2D1::Point2F(rect.position.x, rect.position.y)
+				D2D1::Point2F(transformRect.position.x, transformRect.position.y)
 			));
 		}
 
@@ -418,8 +456,8 @@ void Renderings::TextRenderer::Draw(const Text* pText)
 		(
 			Math::Vector2
 			{
-				rect.position.x - rect.size.x / 2.0f,
-				rect.position.y - rect.size.y / 2.0f
+				transformRect.position.x - transformRect.size.x / 2.0f,
+				transformRect.position.y - transformRect.size.y / 2.0f
 			},
 			m_pContext,
 			textLayout.Get(),

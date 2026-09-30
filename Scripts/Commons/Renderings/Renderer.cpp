@@ -1,7 +1,7 @@
 /*
  * FileName:     Renderer.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/28
+ * Last Updated: 2026/09/30
  *
  * 描画
  */
@@ -83,7 +83,7 @@ void Renderings::Renderer::Render()
 		if (itImage == pImages.end())
 		{
 			wasDrawText = true;
-			m_textRenderer.Draw(*itText);
+			m_textRenderer.Draw(*itText, m_renderMode != RenderMode::Model);
 			itText++;
 			continue;
 		}
@@ -126,7 +126,7 @@ void Renderings::Renderer::Render()
 		else
 		{
 			wasDrawText = true;
-			m_textRenderer.Draw(*itText);
+			m_textRenderer.Draw(*itText, m_renderMode != RenderMode::Model);
 			itText++;
 			continue;
 		}

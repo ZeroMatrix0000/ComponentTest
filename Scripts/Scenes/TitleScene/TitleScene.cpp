@@ -111,7 +111,7 @@ void TitleScene::Update(float elapsedTime)
 	m_pTitle->SetPosition(m_titlePosition + Math::Vector2::UnitY * Math::Sin(Math::Deg2Rad(m_titleSway)) * 50.0f);
 	auto* buffer = m_pTitleImage->GetPPixelShader()->GetConstantBuffer();
 	buffer->SetVariable("time", buffer->GetVariable<float>("time") + elapsedTime);
-	//buffer->SetVariable("timer", buffer->GetVariable<float>("time") + elapsedTime);
+	buffer->SetVariable("timer", buffer->GetVariable<float>("time") + elapsedTime);
 
 	// カメラ画面の更新
 	Camera::EulerTargetCamera camera = m_pCameraScreen->GetCamera();

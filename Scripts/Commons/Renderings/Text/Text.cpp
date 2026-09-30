@@ -1,7 +1,7 @@
 /*
  * FileName:     Text.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/29
+ * Last Updated: 2026/09/30
  *
  * テキスト
  */
@@ -25,6 +25,7 @@ Renderings::Text::Text(const ComponentDesc& desc, ITextRenderer* pITextRenderer)
 	, m_fontColor{ D2D1::ColorF::White }
 	, m_textAlignment{}
 	, m_paragraphAlignment{}
+	, m_lineSpace{ 1.5f }
 	, m_outlineWidth{ 0.0f }
 	, m_outlineColor{ D2D1::ColorF::Black }
 	, m_orderInLayer{}
@@ -55,6 +56,7 @@ void Renderings::Text::Initalize(const nlohmann::ordered_json& json, IGameObject
 	serializer.AddParameter(&m_fontColor, "FontColor");
 	serializer.AddParameter(&m_textAlignment, "TextAlignment");
 	serializer.AddParameter(&m_paragraphAlignment, "ParagraphAlignment");
+	serializer.AddParameter(&m_lineSpace, "LineSpace");
 	serializer.AddParameter(&m_outlineWidth, "OutlineWidth");
 	serializer.AddParameter(&m_outlineColor, "OutlineColor");
 	serializer.AddParameter(&m_orderInLayer, "OrderInLayer");

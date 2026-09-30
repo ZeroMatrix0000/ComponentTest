@@ -1,7 +1,7 @@
 /*
  * FileName:     Text.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/29
+ * Last Updated: 2026/09/30
  *
  * テキスト
  */
@@ -82,6 +82,9 @@ namespace Renderings
 		DWRITE_TEXT_ALIGNMENT      GetTextAlignment()      const { return m_textAlignment; }
 		// 段落配置を取得
 		DWRITE_PARAGRAPH_ALIGNMENT GetParagraphAlignment() const { return m_paragraphAlignment; }
+
+		// 行間を取得
+		float GetLineSpace() const { return m_lineSpace; }
 		
 		// アウトラインの太さを取得
 		float GetOutlineWidth() const { return m_outlineWidth; }
@@ -117,6 +120,9 @@ namespace Renderings
 		DWRITE_TEXT_ALIGNMENT      m_textAlignment;
 		// 段落配置
 		DWRITE_PARAGRAPH_ALIGNMENT m_paragraphAlignment;
+
+		// 行間
+		float m_lineSpace;
 
 		// アウトラインの太さ
 		float m_outlineWidth;

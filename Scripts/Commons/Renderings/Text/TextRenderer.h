@@ -1,7 +1,7 @@
 /*
  * FileName:     TextRenderer.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/28
+ * Last Updated: 2026/09/30
  *
  * テキスト描画
  */
@@ -35,7 +35,7 @@ namespace Renderings
 		// 描画開始
 		void Begin();
 		// 描画処理
-		void Draw(const Text* pText);
+		void Draw(const Text* pText, bool isDebug);
 		// 描画終了
 		void End();
 
