@@ -9,6 +9,7 @@
 #pragma once
 
 #include "ITextRenderer.h"
+#include "TextRendererHelper.h"
 #include "DecorationTextRenderer.h"
 
 namespace Renderings
@@ -57,20 +58,10 @@ namespace Renderings
 	private:
 
 
-		/* メンバ関数 */
-
-		// 文字を描画
-		void DrawTextLayout
-		(
-			const Math::Vector2&  position,
-			ID2D1DeviceContext7*  pContext,
-			IDWriteTextLayout*    pTextLayout,
-			ID2D1SolidColorBrush* pBrush,
-			const Text*           pText
-		);
-
-
 		/* メンバ変数 */
+
+		// ヘルパー関数群
+		TextRenderHelper m_helper;
 
 		// DirectWriteファクトリー
 		Microsoft::WRL::ComPtr<IDWriteFactory8> m_dWriteFactory;

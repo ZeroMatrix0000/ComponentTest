@@ -34,7 +34,7 @@ namespace Renderings
 		void Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder) override;
 
 		// 文字列を設定
-		void SetStr(const std::wstring& str) { m_str.SetStr(str, m_isDecoration); }
+		void SetStr(const std::wstring& str) { m_str.SetStr(str); }
 
 		// フォント名を設定
 		void SetFontName(const std::wstring& fontName)          { m_fontName = fontName; }
@@ -106,8 +106,6 @@ namespace Renderings
 
 		// 文字列
 		DecorationString m_str;
-		// デコレーションするか
-		bool m_isDecoration;
 
 		// フォント名
 		std::wstring m_fontName;

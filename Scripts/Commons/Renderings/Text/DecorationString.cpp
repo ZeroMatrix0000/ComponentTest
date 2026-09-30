@@ -1,7 +1,7 @@
 /*
  * FileName:     DecorationString.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/29
+ * Last Updated: 2026/09/30
  *
  * デコレーション付き文字列
  */
@@ -15,20 +15,25 @@
 Renderings::DecorationString::DecorationString()
 	: m_sourceStr{}
 	, m_str{}
+	, m_isDecoration{}
 	, m_colorDescList{}
 	, m_colorDescCount{}
+	, m_rubyDescList{}
+	, m_rubyDescCount{}
 {
 }
 
 // 文字列を設定
-void Renderings::DecorationString::SetStr(const std::wstring& str, bool isDecoration)
+void Renderings::DecorationString::SetStr(const std::wstring& str)
 {
 	m_sourceStr = str;
 	m_str.clear();
 	m_colorDescList.clear();
 	m_colorDescCount = 0;
+	m_rubyDescList.clear();
+	m_rubyDescCount = 0;
 
-	if (!isDecoration)
+	if (!m_isDecoration)
 	{
 		m_str = str;
 		return;
@@ -65,10 +70,14 @@ void Renderings::DecorationString::SetStr(const std::wstring& str, bool isDecora
 		index = gtIndex + 1;
 	}
 
-	// 確定してない色付け詳細を確定させる
+	// 確定してない詳細を確定させる
 	for (size_t i = m_colorDescCount; i < m_colorDescList.size(); i++)
 	{
 		m_colorDescList.at(i).length = m_str.size() - m_colorDescList.at(m_colorDescCount).beginIndex;
+	}
+	for (size_t i = m_rubyDescCount; i < m_rubyDescList.size(); i++)
+	{
+		m_rubyDescList.at(i).length = m_str.size() - m_rubyDescList.at(m_rubyDescCount).beginIndex;
 	}
 }
 
@@ -105,6 +114,17 @@ void Renderings::DecorationString::CalcTag(const std::wstring& tag)
 		{
 			m_colorDescList.at(m_colorDescCount).length = m_str.size() - m_colorDescList.at(m_colorDescCount).beginIndex;
 			m_colorDescCount++;
+		}
+		// ルビの設定
+		else if (tag.substr(0, 5) == L"ruby=")
+		{
+			m_rubyDescList.push_back(RubyDesc{ tag.substr(5), m_str.size() });
+		}
+		// ルビの設定の終了
+		else if (tag == L"/ruby")
+		{
+			m_rubyDescList.at(m_rubyDescCount).length = m_str.size() - m_rubyDescList.at(m_rubyDescCount).beginIndex;
+			m_rubyDescCount++;
 		}
 		else
 		{

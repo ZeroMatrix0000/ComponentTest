@@ -20,6 +20,7 @@
 // コンストラクタ
 Renderings::TextRenderer::TextRenderer()
 	: ITextRenderer{}
+	, m_helper{ *this }
 	, m_dWriteFactory{}
 	, m_textContext{}
 	, m_fontCollection{}
@@ -132,14 +133,8 @@ void Renderings::TextRenderer::Begin()
 // 描画処理
 void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 {
-	// 空文字列なら何もしない
-	if (pText->GetStr().empty())
-	{
-		return;
-	}
-
-	// テキストが透明なら何もしない
-	if (pText->GetFontColor().A() == 0.0f)
+	// 空文字列かサイズが 0 以下か色が透明なら何もしない
+	if (pText->GetStr().empty() || pText->GetFontSize() <= 0.0f || pText->GetFontColor().A() == 0.0f)
 	{
 		return;
 	}
@@ -156,132 +151,28 @@ void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 
 	// トランスフォームの長方形
 	Math::Rect transformRect = pRectTransform->GetRect();
-	// キャンバスサイズ
-	Math::Vector2 canvasSize = pCanvas->GetSize();
-
-	// ピボットに合わせて長方形を移動
-	switch (pRectTransform->GetPivot())
-	{
-	case Utility::AlignmentPoint::TopLeft:
-		transformRect.position.x += transformRect.size.x / 2.0f;
-		transformRect.position.y += transformRect.size.y / 2.0f;
-		break;
-	case Utility::AlignmentPoint::TopCenter:
-		transformRect.position.y += transformRect.size.y / 2.0f;
-		break;
-	case Utility::AlignmentPoint::TopRight:
-		transformRect.position.x -= transformRect.size.x / 2.0f;
-		transformRect.position.y += transformRect.size.y / 2.0f;
-		break;
-	case Utility::AlignmentPoint::MiddleLeft:
-		transformRect.position.x += transformRect.size.x / 2.0f;
-		break;
-	case Utility::AlignmentPoint::MiddleCenter:
-		break;
-	case Utility::AlignmentPoint::MiddleRight:
-		transformRect.position.x -= transformRect.size.x / 2.0f;
-		break;
-	case Utility::AlignmentPoint::BottomLeft:
-		transformRect.position.x += transformRect.size.x / 2.0f;
-		transformRect.position.y -= transformRect.size.y / 2.0f;
-		break;
-	case Utility::AlignmentPoint::BottomCenter:
-		transformRect.position.y -= transformRect.size.y / 2.0f;
-		break;
-	case Utility::AlignmentPoint::BottomRight:
-		transformRect.position.x -= transformRect.size.x / 2.0f;
-		transformRect.position.y -= transformRect.size.y / 2.0f;
-		break;
-	default:
-		break;
-	}
-	// アンカーに合わせて長方形を移動
-	switch (pRectTransform->GetAnchor())
-	{
-	case Utility::AlignmentPoint::TopCenter:
-		transformRect.position.x += canvasSize.x / 2.0f;
-		break;
-	case Utility::AlignmentPoint::TopRight:
-		transformRect.position.x += canvasSize.x;
-		break;
-	case Utility::AlignmentPoint::MiddleLeft:
-		transformRect.position.y += canvasSize.y / 2.0f;
-		break;
-	case Utility::AlignmentPoint::MiddleCenter:
-		transformRect.position.x += canvasSize.x / 2.0f;
-		transformRect.position.y += canvasSize.y / 2.0f;
-		break;
-	case Utility::AlignmentPoint::MiddleRight:
-		transformRect.position.x += canvasSize.x;
-		transformRect.position.y += canvasSize.y / 2.0f;
-		break;
-	case Utility::AlignmentPoint::BottomLeft:
-		transformRect.position.y += canvasSize.y;
-		break;
-	case Utility::AlignmentPoint::BottomCenter:
-		transformRect.position.x += canvasSize.x / 2.0f;
-		transformRect.position.y += canvasSize.y;
-		break;
-	case Utility::AlignmentPoint::BottomRight:
-		transformRect.position.x += canvasSize.x;
-		transformRect.position.y += canvasSize.y;
-		break;
-	default:
-		break;
-	}
-
 	// キャンバスの表示倍率
 	float canvasRatio = pCanvas->GetRatio();
-	// 表示倍率を適用
-	transformRect.position *= canvasRatio;
-	transformRect.size *= canvasRatio;
+
+	// 長方形をキャンバス情報とピボットとアンカーに沿って移動
+	m_helper.AdjustRect(pCanvas->GetSize(), canvasRatio, pRectTransform->GetPivot(), pRectTransform->GetAnchor(), &transformRect);
+
 	// フォントサイズ
 	float fontSize = pText->GetFontSize() * canvasRatio;
 
 	// テキストフォーマット
 	Microsoft::WRL::ComPtr<IDWriteTextFormat> textFormat;
-	if (FAILED(m_dWriteFactory->CreateTextFormat
+	m_helper.CreateTextFormat
 	(
-		pText->GetFontName().c_str(),
+		pText->GetFontName(),
+		pText->GetFontSize(),
+		pText->GetLineSpace(),
+		pText->GetTextAlignment(),
+		pText->GetParagraphAlignment(),
+		m_dWriteFactory.Get(),
 		m_fontCollection.Get(),
-		DWRITE_FONT_WEIGHT_NORMAL,
-		DWRITE_FONT_STYLE_NORMAL,
-		DWRITE_FONT_STRETCH_NORMAL,
-		pText->GetFontSize() * canvasRatio,
-		L"ja-jp",
 		textFormat.GetAddressOf()
-	)))
-	{
-		return;
-	}
-
-	// 行の上端とベースラインの距離
-	float baseline{};
-	switch (pText->GetParagraphAlignment())
-	{
-	case DWRITE_PARAGRAPH_ALIGNMENT_NEAR:
-		// 行の上端に文字の上端ががつくようにする
-		baseline = fontSize;
-		break;
-	case DWRITE_PARAGRAPH_ALIGNMENT_CENTER:
-		// 行の中心に文字の中心がつくようにする
-		baseline = fontSize * (0.4f + pText->GetLineSpace() / 2.0f);
-		break;
-	case DWRITE_PARAGRAPH_ALIGNMENT_FAR:
-		// 行の下端に文字の下端がつくようにする
-		baseline = fontSize * (pText->GetLineSpace() - 0.2f);
-		break;
-	default:
-		break;
-	}
-
-	// 行間を設定
-	textFormat->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_UNIFORM, fontSize * pText->GetLineSpace(), baseline);
-
-	// 左右配置
-	textFormat->SetTextAlignment(pText->GetTextAlignment());
-	// 上下配置
-	textFormat->SetParagraphAlignment(pText->GetParagraphAlignment());
+	);
 
 	// 描画する文字列
 	const std::wstring& str = pText->GetStr();
@@ -338,8 +229,8 @@ void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 		// ビットマップサイズ
 		D2D1_SIZE_U bitmapSize
 		{
-			Math::Min(static_cast<UINT32>(metrics.width + outlineWidth * 2.0f + 2.0f), m_pBackBuffer->GetPixelSize().width),
-			Math::Min(static_cast<UINT32>(metrics.height + outlineWidth * 2.0f + 2.0f), m_pBackBuffer->GetPixelSize().height)
+			static_cast<UINT32>(metrics.width + outlineWidth * 2.0f + 2.0f),
+			static_cast<UINT32>(metrics.height + outlineWidth * 2.0f + 2.0f)
 		};
 
 		// テキスト用ビットマップ
@@ -359,18 +250,18 @@ void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 		// 描画開始
 		m_textContext->BeginDraw();
 		// 透明に
+		m_textContext->Clear();
 
 		// 文字を描画
-		DrawTextLayout
+		m_helper.DrawTextLayout
 		(
-			Math::Vector2
-			{
-				outlineWidth + 1.0f - metrics.left,
-				outlineWidth + 1.0f - metrics.top
-			},
+			Math::Vector2{ outlineWidth + 1.0f - metrics.left, outlineWidth + 1.0f - metrics.top },
 			m_textContext.Get(),
+			m_dWriteFactory.Get(),
+			m_fontCollection.Get(),
 			textLayout.Get(),
 			brush.Get(),
+			&m_decorationRenderer,
 			pText
 		);
 
@@ -396,11 +287,7 @@ void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 		// 描画ターゲットを回転
 		if (angle != 0.0f)
 		{
-			m_pContext->SetTransform(D2D1::Matrix3x2F::Rotation
-			(
-				angle,
-				D2D1::Point2F(transformRect.position.x, transformRect.position.y)
-			));
+			m_pContext->SetTransform(D2D1::Matrix3x2F::Rotation(angle, D2D1::Point2F(transformRect.position.x, transformRect.position.y)));
 		}
 
 		Math::Vector2 position
@@ -444,24 +331,19 @@ void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 		// 描画ターゲットを回転
 		if (angle != 0.0f)
 		{
-			m_pContext->SetTransform(D2D1::Matrix3x2F::Rotation
-			(
-				angle,
-				D2D1::Point2F(transformRect.position.x, transformRect.position.y)
-			));
+			m_pContext->SetTransform(D2D1::Matrix3x2F::Rotation(angle, D2D1::Point2F(transformRect.position.x, transformRect.position.y)));
 		}
 
 		// 文字を描画
-		DrawTextLayout
+		m_helper.DrawTextLayout
 		(
-			Math::Vector2
-			{
-				transformRect.position.x - transformRect.size.x / 2.0f,
-				transformRect.position.y - transformRect.size.y / 2.0f
-			},
+			transformRect.position - transformRect.size / 2.0f,
 			m_pContext,
+			m_dWriteFactory.Get(),
+			m_fontCollection.Get(),
 			textLayout.Get(),
 			brush.Get(),
+			&m_decorationRenderer,
 			pText
 		);
 
@@ -470,7 +352,6 @@ void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 		{
 			m_pContext->SetTransform(D2D1::Matrix3x2F::Identity());
 		}
-		m_pContext->SetTransform(D2D1::Matrix3x2F::Identity());
 	}
 }
 
@@ -508,35 +389,4 @@ void Renderings::TextRenderer::SortPTexts()
 {
 	// レイヤー順にソート
 	std::ranges::sort(m_pTexts, [](const Text* p1, const Text* p2) {return p1->GetOrderInLayer() < p2->GetOrderInLayer(); });
-}
-
-// 文字を描画
-void Renderings::TextRenderer::DrawTextLayout(const Math::Vector2& position, ID2D1DeviceContext7* pContext, IDWriteTextLayout* pTextLayout, ID2D1SolidColorBrush* pBrush, const Text* pText)
-{
-	// 色付け詳細リスト
-	const auto& colorDescList = pText->GetDecorationString(*this).GetColorDescList();
-
-	// エフェクトを追加
-	for (const auto& colorDesc : colorDescList)
-	{
-		pTextLayout->SetDrawingEffect
-		(
-			colorDesc.effect.Get(),
-			DWRITE_TEXT_RANGE
-			{
-				static_cast<UINT32>(colorDesc.beginIndex),
-				static_cast<UINT32>(colorDesc.length)
-			}
-		);
-	}
-
-	// 文字を描画
-	m_decorationRenderer.Initialize(pContext, pBrush);
-	pTextLayout->Draw
-	(
-		nullptr,
-		&m_decorationRenderer,
-		position.x,
-		position.y
-	);
 }

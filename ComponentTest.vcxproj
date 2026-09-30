@@ -185,6 +185,7 @@
     <ClCompile Include="Scripts\Commons\Renderings\Text\Text.cpp" />
     <ClCompile Include="Scripts\Commons\Renderings\Text\TextColorEffect.cpp" />
     <ClCompile Include="Scripts\Commons\Renderings\Text\TextRenderer.cpp" />
+    <ClCompile Include="Scripts\Commons\Renderings\Text\TextRendererHelper.cpp" />
     <ClCompile Include="Scripts\Commons\Scenes\SceneTransitionAnimation.cpp" />
     <ClCompile Include="Scripts\Commons\Systems\ErrorMessage.cpp" />
     <ClCompile Include="Scripts\Commons\Systems\Input.cpp" />
@@ -278,6 +279,7 @@
     <ClInclude Include="Scripts\Commons\Renderings\Text\TextColorEffect.h" />
     <ClInclude Include="Scripts\Commons\Renderings\Text\TextRenderer.h" />
     <ClInclude Include="Scripts\Commons\Renderings\Renderer.h" />
+    <ClInclude Include="Scripts\Commons\Renderings\Text\TextRendererHelper.h" />
     <ClInclude Include="Scripts\Commons\Scenes\SceneTransitionAnimation.h" />
     <ClInclude Include="Scripts\Commons\Systems\ErrorMessage.h" />
     <ClInclude Include="Scripts\Commons\Systems\IErrorMessage.h" />

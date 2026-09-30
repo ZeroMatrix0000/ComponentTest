@@ -352,6 +352,9 @@
     <ClCompile Include="Scripts\Commons\Renderings\Text\TextColorEffect.cpp">
       <Filter>Scripts\Commons\Renderings\Text</Filter>
     </ClCompile>
+    <ClCompile Include="Scripts\Commons\Renderings\Text\TextRendererHelper.cpp">
+      <Filter>Scripts\Commons\Renderings\Text</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Pch.h" />
@@ -704,6 +707,9 @@
       <Filter>Scripts\Commons\Renderings\Text</Filter>
     </ClInclude>
     <ClInclude Include="Scripts\Commons\Renderings\Text\TextColorEffect.h">
+      <Filter>Scripts\Commons\Renderings\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Commons\Renderings\Text\TextRendererHelper.h">
       <Filter>Scripts\Commons\Renderings\Text</Filter>
     </ClInclude>
   </ItemGroup>

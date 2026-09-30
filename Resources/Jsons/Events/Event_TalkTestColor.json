@@ -8,7 +8,7 @@
 	{
 		"ActionType": "SetMessageWindowText",
 		"Params": {
-			"Text": "このテキストは<color=#FFDD00>黄色</color>です。\nこのテキストは<color=#0044FF>青色</color>です。\n<color=#88FFFFFF>半透明</color>もいけます。",
+			"Text": "このテキストは<color=#FFDD00><ruby=きいろ>黄色</ruby></color>です。\nこのテキストは<color=#0044FF><ruby=あおいろ>青色</ruby></color>です。\n<color=#88FFFFFF><ruby=はんとうめい>半透明</ruby></color>もいけます。",
 			"Character": "色付けテスト"
 		}
 	},

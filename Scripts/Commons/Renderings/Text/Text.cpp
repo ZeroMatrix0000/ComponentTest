@@ -19,7 +19,6 @@
 Renderings::Text::Text(const ComponentDesc& desc, ITextRenderer* pITextRenderer)
 	: Component{ desc }
 	, m_str{}
-	, m_isDecoration{ false }
 	, m_fontName{}
 	, m_fontSize{ 24.0f }
 	, m_fontColor{ D2D1::ColorF::White }
@@ -46,11 +45,12 @@ Renderings::Text::~Text()
 // 初期化処理
 void Renderings::Text::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
 {
-	std::wstring str{ m_str.GetSourceStr() };
+	std::wstring str = m_str.GetSourceStr();
+	bool isDecoration = m_str.IsDecoration();
 
 	Systems::JsonSerializer serializer{ pIGameObjectFinder };
 	serializer.AddParameter(&str, "Str");
-	serializer.AddParameter(&m_isDecoration, "IsDecoration");
+	serializer.AddParameter(&isDecoration, "IsDecoration");
 	serializer.AddParameter(&m_fontName, "FontName");
 	serializer.AddParameter(&m_fontSize, "FontSize");
 	serializer.AddParameter(&m_fontColor, "FontColor");
@@ -63,5 +63,6 @@ void Renderings::Text::Initalize(const nlohmann::ordered_json& json, IGameObject
 	serializer.AddParameter(&m_pCanvas, "Canvas");
 	serializer.Load(json);
 
-	m_str.SetStr(str, m_isDecoration);
+	m_str.SetIsDecoration(isDecoration);
+	m_str.SetStr(str);
 }
