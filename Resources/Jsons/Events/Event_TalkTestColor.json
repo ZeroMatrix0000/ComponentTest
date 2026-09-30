@@ -9,7 +9,14 @@
 		"ActionType": "SetMessageWindowText",
 		"Params": {
 			"Text": "このテキストは<color=#FFDD00><ruby=きいろ>黄色</ruby></color>です。\nこのテキストは<color=#0044FF><ruby=あおいろ>青色</ruby></color>です。\n<color=#88FFFFFF><ruby=はんとうめい>半透明</ruby></color>もいけます。",
-			"Character": "色付けテスト"
+			"Character": "<ruby=いろづ>色付</ruby>けテスト"
+		}
+	},
+	{
+		"ActionType": "SetMessageWindowText",
+		"Params": {
+			"Text": "<ruby=ふりがな>振仮名</ruby>をつけることができるようになりました。",
+			"Character": "<ruby=いろづ>色付</ruby>けテスト"
 		}
 	},
 	{

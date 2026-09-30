@@ -6,11 +6,12 @@
 		},
 		"Size": {
 			"X": 950.0,
-			"Y": 210.0
+			"Y": 200.0
 		}
 	},
 	"Text": {
 		"Str": "キャラクター名",
+		"IsDecoration": true,
 		"FontName": "GenEi M Gothic v2",
 		"OrderInLayer": 100
 	}

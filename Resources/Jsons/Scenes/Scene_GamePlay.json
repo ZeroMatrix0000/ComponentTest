@@ -161,8 +161,51 @@
 				]
 			},
 			"NPC": {
-				"Name": "色付けテスト",
+				"Name": "<ruby=いろづ>色付</ruby>けテスト",
 				"EventName": "Event_TalkTestColor"
+			}
+		}
+	},
+	{
+		"Name": "NPCツクローサ",
+		"Prefab": "Prefab_NPC",
+		"Components": {
+			"Transform": {
+				"Position": {
+					"X": -25.0,
+					"Y": 6.0,
+					"Z": -25.0
+				},
+				"Rotation": {
+					"X": 0.0,
+					"Y": 0.0,
+					"Z": 0.0
+				}
+			},
+			"Model3D": {
+				"ModelSourceName": "NPC",
+				"CameraScreens": [
+					"PlayerCamera"
+				]
+			},
+			"BoxCollider": {
+				"Position": {
+					"X": 0.0,
+					"Y": 1.0,
+					"Z": 0.0
+				},
+				"Size": {
+					"X": 1.0,
+					"Y": 2.0,
+					"Z": 1.0
+				},
+				"CameraScreens": [
+					"PlayerCamera"
+				]
+			},
+			"NPC": {
+				"Name": "ツクローサ",
+				"EventName": "Event_TalkTestMaykit"
 			}
 		}
 	},
@@ -173,7 +216,8 @@
 				"NPCList": [
 					"NPCテスト",
 					"NPCTest",
-					"NPC色付けテスト"
+					"NPC色付けテスト",
+					"NPCツクローサ"
 				],
 				"Canvas": "Canvas"
 			}

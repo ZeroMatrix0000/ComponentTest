@@ -8,6 +8,7 @@
 		"Anchor": "TopLeft"
 	},
 	"Text": {
+		"IsDecoration": true,
 		"FontName": "GenEi M Gothic v2",
 		"FontSize": 32.0,
 		"FontColor": {

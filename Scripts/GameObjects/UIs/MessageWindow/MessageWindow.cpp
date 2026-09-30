@@ -173,7 +173,7 @@ void MessageWindow::Update(float elapsedTime)
 	{
 		std::wstring rubyStr = m_text.substr(Math::RoundInt(m_textCount));
 		size_t rubyIndex = rubyStr.find(L"</ruby>");
-		if (rubyIndex == std::wstring::npos)
+		if (rubyIndex != std::wstring::npos)
 		{
 			rubyStr = rubyStr.substr(0, rubyIndex);
 		}

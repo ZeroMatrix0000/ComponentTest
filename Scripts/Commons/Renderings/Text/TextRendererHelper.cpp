@@ -196,7 +196,7 @@ void Renderings::TextRenderHelper::DrawTextLayout
 		CreateTextFormat
 		(
 			pText->GetFontName(),
-			fontSize * 0.5f,
+			fontSize * 0.45f,
 			1.0f,
 			DWRITE_TEXT_ALIGNMENT_CENTER,
 			DWRITE_PARAGRAPH_ALIGNMENT_CENTER,
@@ -205,8 +205,20 @@ void Renderings::TextRenderHelper::DrawTextLayout
 			textFormat.GetAddressOf()
 		);
 
+		// 元の色
+		D2D1_COLOR_F oldColor = pBrush->GetColor();
+
 		for (const auto& rubyDesc : rubyDescList)
 		{
+			// 色を設定
+			for (const auto& colorDesc : colorDescList)
+			{
+				if (rubyDesc.beginIndex == Math::Clamp(rubyDesc.beginIndex, colorDesc.beginIndex, colorDesc.beginIndex + colorDesc.length))
+				{
+					pBrush->SetColor(colorDesc.effect->GetColor());
+				}
+			}
+
 			// ヒット領域
 			DWRITE_HIT_TEST_METRICS hitTestMetrics[8]{};
 			// 領域数
@@ -264,6 +276,7 @@ void Renderings::TextRenderHelper::DrawTextLayout
 				textLayout.GetAddressOf()
 			);
 
+			// 描画
 			textLayout->Draw
 			(
 				nullptr,
@@ -272,6 +285,8 @@ void Renderings::TextRenderHelper::DrawTextLayout
 				rubyRect.position.y - rubyRect.size.y / 2.0f
 			);
 
+			// 元の色に戻す
+			pBrush->SetColor(oldColor);
 		}
 	}
 }

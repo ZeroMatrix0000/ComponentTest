@@ -66,7 +66,7 @@ void TitleScene::Initialize(const SceneTransitionData& data)
 	// 選択メニューを取得
 	m_pSelectMenu = pIGameObjectManager->Find("TitleMenu")->GetComponent<SelectMenu>();
 	m_pSelectMenu->AddOption(L"スタート", [&] { gameContext.GetPISceneManager()->SetNextScene<GamePlayScene>(); });
-	m_pSelectMenu->AddOption(L"ゲームを終了", [&] { gameContext.GetPIWindowController()->Destroy(); });
+	m_pSelectMenu->AddOption(L"ゲームを<ruby=しゅうりょう>終了</ruby>", [&] { gameContext.GetPIWindowController()->Destroy(); });
 
 	// タイトルを取得
 	GameObject* pObj = pIGameObjectManager->Find("Title");

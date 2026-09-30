@@ -775,6 +775,9 @@
     <None Include="Resources\Jsons\Events\Event_TalkTestColor.json">
       <Filter>Jsons\Events</Filter>
     </None>
+    <None Include="Resources\Jsons\Events\Event_TalkTestMaykit.json">
+      <Filter>Jsons\Events</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\PixelShaders\Test2.hlsl">

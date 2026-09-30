@@ -172,7 +172,7 @@ void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 	m_helper.CreateTextFormat
 	(
 		pText->GetFontName(),
-		pText->GetFontSize(),
+		fontSize,
 		pText->GetLineSpace(),
 		pText->GetTextAlignment(),
 		pText->GetParagraphAlignment(),
@@ -232,7 +232,7 @@ void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 		D2D1_SIZE_U bitmapSize
 		{
 			static_cast<UINT32>(metrics.width + outlineWidth * 2.0f + 2.0f),
-			static_cast<UINT32>(metrics.height + outlineWidth * 2.0f + 2.0f)
+			static_cast<UINT32>(metrics.height + outlineWidth * 2.0f + 2.0f + fontSize * 2.0f)
 		};
 
 		// テキスト用ビットマップ
@@ -258,7 +258,7 @@ void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 		m_helper.DrawTextLayout
 		(
 			canvasRatio,
-			Math::Vector2{ outlineWidth + 1.0f - metrics.left, outlineWidth + 1.0f - metrics.top },
+			Math::Vector2{ outlineWidth + 1.0f - metrics.left, outlineWidth + 1.0f + fontSize - metrics.top },
 			m_textContext.Get(),
 			m_dWriteFactory.Get(),
 			m_fontCollection.Get(),
@@ -296,7 +296,7 @@ void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 		Math::Vector2 position
 		{
 			transformRect.position.x - transformRect.size.x / 2.0f - outlineWidth - 1.0f + metrics.left,
-			transformRect.position.y - transformRect.size.y / 2.0f - outlineWidth - 1.0f + metrics.top
+			transformRect.position.y - transformRect.size.y / 2.0f - outlineWidth - 1.0f - fontSize + metrics.top
 		};
 
 		// 文字を描画

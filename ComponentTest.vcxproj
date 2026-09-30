@@ -225,6 +225,7 @@
     <ClCompile Include="Scripts\Scenes\TitleScene\TitleScene.cpp" />
     <ClCompile Include="Scripts\GameObjects\UIs\SelectMenu\SelectMenu.cpp" />
     <None Include="Resources\Jsons\Events\Event_TalkTestColor.json" />
+    <None Include="Resources\Jsons\Events\Event_TalkTestMaykit.json" />
     <None Include="Resources\Jsons\Prefabs\Prefab_BlackBeltImage.json" />
     <None Include="Resources\Jsons\Prefabs\Prefab_InteractCursor.json" />
     <None Include="Resources\Jsons\Prefabs\Prefab_MessageWindowBackGround.json" />

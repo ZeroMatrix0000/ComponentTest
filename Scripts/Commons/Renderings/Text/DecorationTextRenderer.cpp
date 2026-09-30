@@ -1,7 +1,7 @@
 /*
  * FileName:     DecorationTextRenderer.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/28
+ * Last Updated: 2026/09/30
  *
  * テキストのデコレーション描画
  */
@@ -35,6 +35,7 @@ HRESULT __stdcall Renderings::DecorationTextRenderer::DrawGlyphRun(void* clientD
 		}
 	}
 
+	// 描画
 	m_pContext->DrawGlyphRun
 	(
 		D2D1::Point2F(baselineOriginX, baselineOriginY),
@@ -42,6 +43,8 @@ HRESULT __stdcall Renderings::DecorationTextRenderer::DrawGlyphRun(void* clientD
 		m_pBrush,
 		measuringMode
 	);
+
+	// 元の色に戻す
 	m_pBrush->SetColor(oldColor);
 
 	return S_OK;
