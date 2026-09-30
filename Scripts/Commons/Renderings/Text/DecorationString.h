@@ -72,6 +72,12 @@ namespace Renderings
 		const std::vector<RubyDesc>& GetRubyDescList() const { return m_rubyDescList; };
 
 
+		/* 静的関数 */
+
+		// タグを削除
+		static void DeleteTag(std::wstring* pStr);
+
+
 	private:
 
 

@@ -51,6 +51,13 @@ void Renderings::TextRenderer::Initialize(ID2D1Device7* pDevice, ID2D1DeviceCont
 	// コンテキスト
 	Utility::ThrowIfFailed(pDevice->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE, m_textContext.GetAddressOf()));
 
+	// ブラシ
+	Utility::ThrowIfFailed(m_pContext->CreateSolidColorBrush
+	(
+		D2D1_COLOR_F{},
+		m_brush.GetAddressOf()
+	));
+
 	// 膨張エフェクト
 	m_textContext->CreateEffect(CLSID_D2D1Morphology, m_dilateEffect.GetAddressOf());
 	m_dilateEffect->SetValue(D2D1_MORPHOLOGY_PROP_MODE, D2D1_MORPHOLOGY_MODE_DILATE);
@@ -190,12 +197,7 @@ void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 	);
 
 	// ブラシ
-	Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> brush;
-	m_pContext->CreateSolidColorBrush
-	(
-		pText->GetD2D1FontColor(),
-		brush.GetAddressOf()
-	);
+	m_brush->SetColor(pText->GetD2D1FontColor());
 
 	// テキスト詳細
 	DWRITE_TEXT_METRICS metrics{};
@@ -204,14 +206,14 @@ void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 	// デバッグ表示
 	if (isDebug)
 	{
-		m_pContext->DrawRectangle(transformRect.CreateD2D1_RECT_F(), brush.Get());
+		m_pContext->DrawRectangle(transformRect.CreateD2D1_RECT_F(), m_brush.Get());
 		// テキストの長方形
 		Math::Rect textRect
 		{
 			transformRect.position - transformRect.size / 2.0f + Math::Vector2{ metrics.left + metrics.width / 2.0f, metrics.top + metrics.height / 2.0f },
 			Math::Vector2{ metrics.width, metrics.height }
 		};
-		m_pContext->DrawRectangle(textRect.CreateD2D1_RECT_F(), brush.Get());
+		m_pContext->DrawRectangle(textRect.CreateD2D1_RECT_F(), m_brush.Get());
 	}
 
 	// アウトライン幅
@@ -255,12 +257,13 @@ void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 		// 文字を描画
 		m_helper.DrawTextLayout
 		(
+			canvasRatio,
 			Math::Vector2{ outlineWidth + 1.0f - metrics.left, outlineWidth + 1.0f - metrics.top },
 			m_textContext.Get(),
 			m_dWriteFactory.Get(),
 			m_fontCollection.Get(),
 			textLayout.Get(),
-			brush.Get(),
+			m_brush.Get(),
 			&m_decorationRenderer,
 			pText
 		);
@@ -337,12 +340,13 @@ void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 		// 文字を描画
 		m_helper.DrawTextLayout
 		(
+			canvasRatio,
 			transformRect.position - transformRect.size / 2.0f,
 			m_pContext,
 			m_dWriteFactory.Get(),
 			m_fontCollection.Get(),
 			textLayout.Get(),
-			brush.Get(),
+			m_brush.Get(),
 			&m_decorationRenderer,
 			pText
 		);

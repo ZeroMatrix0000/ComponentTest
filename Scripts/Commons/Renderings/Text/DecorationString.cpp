@@ -81,6 +81,32 @@ void Renderings::DecorationString::SetStr(const std::wstring& str)
 	}
 }
 
+// タグを削除
+void Renderings::DecorationString::DeleteTag(std::wstring* pStr)
+{
+	while (true)
+	{
+		// < を探す
+		size_t ltIndex = pStr->find(L"<");
+		// 見つからなければ終了
+		if (ltIndex == std::wstring::npos)
+		{
+			return;
+		}
+
+		// > を探す
+		size_t gtIndex = pStr->find(L">", ltIndex);
+		// 見つからなければ終了
+		if (gtIndex == std::wstring::npos)
+		{
+			*pStr = pStr->substr(0, ltIndex);
+			return;
+		}
+
+		pStr->erase(ltIndex, gtIndex - ltIndex);
+	}
+}
+
 // タグの計算
 void Renderings::DecorationString::CalcTag(const std::wstring& tag)
 {

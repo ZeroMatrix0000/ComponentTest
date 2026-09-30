@@ -6,7 +6,7 @@
 		},
 		"Size": {
 			"X": 900.0,
-			"Y": 100.0
+			"Y": 110.0
 		}
 	},
 	"Text": {
@@ -14,6 +14,7 @@
 		"IsDecoration": true,
 		"FontSize": 32.0,
 		"FontName": "GenEi M Gothic v2",
+		"LineSpace": 1.8,
 		"OrderInLayer": 100
 	}
 }

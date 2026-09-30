@@ -171,7 +171,19 @@ void MessageWindow::Update(float elapsedTime)
 	// 文字列を変更
 	if (isChanged)
 	{
-		m_pText->SetStr(m_text.substr(0, Math::RoundInt(m_textCount)));
+		std::wstring rubyStr = m_text.substr(Math::RoundInt(m_textCount));
+		size_t rubyIndex = rubyStr.find(L"</ruby>");
+		if (rubyIndex == std::wstring::npos)
+		{
+			rubyStr = rubyStr.substr(0, rubyIndex);
+		}
+		Renderings::DecorationString::DeleteTag(&rubyStr);
+
+		std::wstring str = m_text.substr(0, Math::RoundInt(m_textCount));
+		str.append(L"<color=#00000000>");
+		str.append(rubyStr);
+
+		m_pText->SetStr(str);
 	}
 }
 

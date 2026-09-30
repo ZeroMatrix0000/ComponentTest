@@ -72,6 +72,9 @@ namespace Renderings
 		// フォントコレクション
 		Microsoft::WRL::ComPtr<IDWriteFontCollection3> m_fontCollection;
 
+		// ブラシ
+		Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> m_brush;
+
 		// 膨張エフェクト
 		Microsoft::WRL::ComPtr<ID2D1Effect> m_dilateEffect;
 		// 色変更エフェクト

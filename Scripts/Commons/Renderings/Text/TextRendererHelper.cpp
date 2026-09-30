@@ -145,6 +145,7 @@ void Renderings::TextRenderHelper::CreateTextFormat(const std::wstring& fontName
 // 文字を描画
 void Renderings::TextRenderHelper::DrawTextLayout
 (
+	float                   canvasRatio,
 	const Math::Vector2&    position,
 	ID2D1DeviceContext7*    pContext,
 	IDWriteFactory8*        pDWriteFactory,
@@ -187,12 +188,15 @@ void Renderings::TextRenderHelper::DrawTextLayout
 	// ルビを描画
 	if (rubyDescList.size() != 0)
 	{
+		// フォントサイズ
+		float fontSize = pText->GetFontSize() * canvasRatio;
+
 		// テキストフォーマット
 		Microsoft::WRL::ComPtr<IDWriteTextFormat> textFormat;
 		CreateTextFormat
 		(
 			pText->GetFontName(),
-			pText->GetFontSize() / 3.0f,
+			fontSize * 0.5f,
 			1.0f,
 			DWRITE_TEXT_ALIGNMENT_CENTER,
 			DWRITE_PARAGRAPH_ALIGNMENT_CENTER,
@@ -217,6 +221,55 @@ void Renderings::TextRenderHelper::DrawTextLayout
 				hitTestMetrics,
 				8,
 				&hitTestMetricsCount
+			);
+
+			// ルビの長方形
+			Math::Rect rubyRect
+			{
+				Math::Vector2{ hitTestMetrics[0].left, hitTestMetrics[0].top },
+				Math::Vector2{ fontSize * rubyDesc.m_text.size(), fontSize }
+			};
+
+			// 文字の真上に描画位置が来るようにする
+			switch (pText->GetParagraphAlignment())
+			{
+			case DWRITE_PARAGRAPH_ALIGNMENT_NEAR:
+				rubyRect.position.y -= fontSize * 0.2f;
+				break;
+			case DWRITE_PARAGRAPH_ALIGNMENT_CENTER:
+				rubyRect.position.y -= fontSize * (pText->GetLineSpace() / 2.0f - 0.8f);
+				break;
+			case DWRITE_PARAGRAPH_ALIGNMENT_FAR:
+				rubyRect.position.y -= fontSize * (pText->GetLineSpace() - 1.4f);
+				break;
+			default:
+				break;
+			}
+
+			// 各領域の幅を足す
+			for (const auto& element : hitTestMetrics)
+			{
+				rubyRect.position.x += element.width / 2.0f;
+			}
+
+			// テキストレイアウト
+			Microsoft::WRL::ComPtr<IDWriteTextLayout> textLayout;
+			pDWriteFactory->CreateTextLayout
+			(
+				rubyDesc.m_text.c_str(),
+				static_cast<UINT32>(rubyDesc.m_text.size()),
+				textFormat.Get(),
+				rubyRect.size.x,
+				rubyRect.size.y,
+				textLayout.GetAddressOf()
+			);
+
+			textLayout->Draw
+			(
+				nullptr,
+				pDecorationRenderer,
+				rubyRect.position.x - rubyRect.size.x / 2.0f,
+				rubyRect.position.y - rubyRect.size.y / 2.0f
 			);
 
 		}

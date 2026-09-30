@@ -51,6 +51,7 @@ namespace Renderings
 		// 文字を描画
 		void DrawTextLayout
 		(
+			float                   canvasRatio,
 			const Math::Vector2&    position,
 			ID2D1DeviceContext7*    pContext,
 			IDWriteFactory8*        pDWriteFactory,
