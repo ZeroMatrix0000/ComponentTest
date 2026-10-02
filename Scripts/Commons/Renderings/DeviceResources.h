@@ -30,7 +30,7 @@ namespace Renderings
 		// 画面初期化
 		void Clear();
 		// 画面表示
-		void Present();
+		void Present(bool isLimitFPS);
 
 		// ウィンドウサイズ変更時の処理
 		void OnWindowSizeChanged(const Math::Vector2Int& outputSize);

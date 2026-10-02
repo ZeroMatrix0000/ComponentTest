@@ -83,10 +83,17 @@ void Renderings::DeviceResources::Clear()
 }
 
 // 画面表示
-void Renderings::DeviceResources::Present()
+void Renderings::DeviceResources::Present(bool isLimitFPS)
 {
 	// バックバッファを表示
-	Utility::ThrowIfFailed(m_swapChain->Present(0, DXGI_PRESENT_ALLOW_TEARING));
+	if (isLimitFPS)
+	{
+		Utility::ThrowIfFailed(m_swapChain->Present(1, 0));
+	}
+	else
+	{
+		Utility::ThrowIfFailed(m_swapChain->Present(0, DXGI_PRESENT_ALLOW_TEARING));
+	}
 }
 
 // ウィンドウサイズ変更時の処理
@@ -94,11 +101,6 @@ void Renderings::DeviceResources::OnWindowSizeChanged(const Math::Vector2Int& ou
 {
 	// ウィンドウの大きさが変わらなければ何もしない
 	if (outputSize.x == m_outputSize.x && outputSize.y == m_outputSize.y)
-	{
-		return;
-	}
-	// ウィンドウの大きさの幅か高さが0なら何もしない
-	if (outputSize.x == 0.0f || outputSize.y == 0.0f)
 	{
 		return;
 	}

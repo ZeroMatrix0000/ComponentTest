@@ -203,19 +203,6 @@ void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 	DWRITE_TEXT_METRICS metrics{};
 	textLayout->GetMetrics(&metrics);
 
-	// デバッグ表示
-	if (isDebug)
-	{
-		m_pContext->DrawRectangle(transformRect.CreateD2D1_RECT_F(), m_brush.Get());
-		// テキストの長方形
-		Math::Rect textRect
-		{
-			transformRect.position - transformRect.size / 2.0f + Math::Vector2{ metrics.left + metrics.width / 2.0f, metrics.top + metrics.height / 2.0f },
-			Math::Vector2{ metrics.width, metrics.height }
-		};
-		m_pContext->DrawRectangle(textRect.CreateD2D1_RECT_F(), m_brush.Get());
-	}
-
 	// アウトライン幅
 	float outlineWidth = pText->GetOutlineWidth() * canvasRatio;
 
@@ -321,6 +308,19 @@ void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 			)
 		);
 
+		// デバッグ表示
+		if (isDebug)
+		{
+			m_pContext->DrawRectangle(transformRect.CreateD2D1_RECT_F(), m_brush.Get());
+			// テキストの長方形
+			Math::Rect textRect
+			{
+				transformRect.position - transformRect.size / 2.0f + Math::Vector2{ metrics.left + metrics.width / 2.0f, metrics.top + metrics.height / 2.0f },
+				Math::Vector2{ metrics.width, metrics.height }
+			};
+			m_pContext->DrawRectangle(textRect.CreateD2D1_RECT_F(), m_brush.Get());
+		}
+
 		// コンテキストを元に戻す
 		if (angle != 0.0f)
 		{
@@ -350,6 +350,19 @@ void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 			&m_decorationRenderer,
 			pText
 		);
+
+		// デバッグ表示
+		if (isDebug)
+		{
+			m_pContext->DrawRectangle(transformRect.CreateD2D1_RECT_F(), m_brush.Get());
+			// テキストの長方形
+			Math::Rect textRect
+			{
+				transformRect.position - transformRect.size / 2.0f + Math::Vector2{ metrics.left + metrics.width / 2.0f, metrics.top + metrics.height / 2.0f },
+				Math::Vector2{ metrics.width, metrics.height }
+			};
+			m_pContext->DrawRectangle(textRect.CreateD2D1_RECT_F(), m_brush.Get());
+		}
 
 		// コンテキストを元に戻す
 		if (angle != 0.0f)

@@ -267,7 +267,7 @@ void Game::Render()
 	m_renderer.Render();
 
 	// 画面の表示
-	m_deviceResources.Present();
+	m_deviceResources.Present(true);
 }
 
 // 終了処理
@@ -282,6 +282,12 @@ void Game::OnWindowSizeChanged(const Math::Vector2Int& outputSize)
 {
 	// ウィンドウを受け取っていないなら何もしない
 	if (!m_hWindow)
+	{
+		return;
+	}
+
+	// ウィンドウの大きさの幅か高さが0なら何もしない
+	if (outputSize.x == 0.0f || outputSize.y == 0.0f)
 	{
 		return;
 	}

@@ -53,6 +53,8 @@ namespace Components
 	private:
 
 
+		/* メンバ変数 */
+
 		// 長方形
 		Math::Rect m_rect;
 		// 角度
