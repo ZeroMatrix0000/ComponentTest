@@ -98,6 +98,49 @@ void Renderings::TextRenderHelper::AdjustRect(const Math::Vector2& canvasSize, f
 	pRect->size *= canvasRatio;
 }
 
+// 回転の中心を取得
+Math::Vector2 Renderings::TextRenderHelper::GetRotateOrigin(const Math::Rect& rect, Utility::AlignmentPoint pivot)
+{
+	Math::Vector2 origin = rect.position;
+	switch (pivot)
+	{
+	case Utility::AlignmentPoint::TopLeft:
+		origin.x -= rect.size.x / 2.0f;
+		origin.y -= rect.size.y / 2.0f;
+		break;
+	case Utility::AlignmentPoint::TopCenter:
+		origin.y -= rect.size.y / 2.0f;
+		break;
+	case Utility::AlignmentPoint::TopRight:
+		origin.x += rect.size.x / 2.0f;
+		origin.y -= rect.size.y / 2.0f;
+		break;
+	case Utility::AlignmentPoint::MiddleLeft:
+		origin.x -= rect.size.x / 2.0f;
+		break;
+	case Utility::AlignmentPoint::MiddleCenter:
+		break;
+	case Utility::AlignmentPoint::MiddleRight:
+		origin.x += rect.size.x / 2.0f;
+		break;
+	case Utility::AlignmentPoint::BottomLeft:
+		origin.x -= rect.size.x / 2.0f;
+		origin.y += rect.size.y / 2.0f;
+		break;
+	case Utility::AlignmentPoint::BottomCenter:
+		origin.y += rect.size.y / 2.0f;
+		break;
+	case Utility::AlignmentPoint::BottomRight:
+		origin.x += rect.size.x / 2.0f;
+		origin.y += rect.size.y / 2.0f;
+		break;
+	default:
+		break;
+	}
+
+	return origin;
+}
+
 // テキストフォーマットを生成
 void Renderings::TextRenderHelper::CreateTextFormat(const std::wstring& fontName, float fontSize, float lineSpace, DWRITE_TEXT_ALIGNMENT textAlignment, DWRITE_PARAGRAPH_ALIGNMENT paragraphAlignment, IDWriteFactory8* pDWriteFactory, IDWriteFontCollection3* pFontCollection, IDWriteTextFormat** ppTextFormat)
 {

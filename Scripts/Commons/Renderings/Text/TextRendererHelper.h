@@ -35,6 +35,9 @@ namespace Renderings
 			Math::Rect*             pRect
 		);
 
+		// 回転の中心を取得
+		Math::Vector2 GetRotateOrigin(const Math::Rect& rect, Utility::AlignmentPoint pivot);
+
 		// テキストフォーマットを生成
 		void CreateTextFormat
 		(

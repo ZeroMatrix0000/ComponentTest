@@ -274,10 +274,12 @@ void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 
 		// 角度
 		float angle = pRectTransform->GetAngle();
+		// 回転の中心を取得
+		Math::Vector2 origin = m_helper.GetRotateOrigin(transformRect, pRectTransform->GetPivot());
 		// 描画ターゲットを回転
 		if (angle != 0.0f)
 		{
-			m_pContext->SetTransform(D2D1::Matrix3x2F::Rotation(angle, D2D1::Point2F(transformRect.position.x, transformRect.position.y)));
+			m_pContext->SetTransform(D2D1::Matrix3x2F::Rotation(angle, D2D1::Point2F(origin.x, origin.y)));
 		}
 
 		Math::Vector2 position
@@ -331,10 +333,12 @@ void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 	{
 		// 角度
 		float angle = pRectTransform->GetAngle();
+		// 回転の中心を取得
+		Math::Vector2 origin = m_helper.GetRotateOrigin(transformRect, pRectTransform->GetPivot());
 		// 描画ターゲットを回転
 		if (angle != 0.0f)
 		{
-			m_pContext->SetTransform(D2D1::Matrix3x2F::Rotation(angle, D2D1::Point2F(transformRect.position.x, transformRect.position.y)));
+			m_pContext->SetTransform(D2D1::Matrix3x2F::Rotation(angle, D2D1::Point2F(origin.x, origin.y)));
 		}
 
 		// 文字を描画
