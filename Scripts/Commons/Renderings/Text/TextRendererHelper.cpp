@@ -1,7 +1,7 @@
 /*
  * FileName:     TextRendererHelper.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/30
+ * Last Updated: 2026/10/06
  *
  * テキスト描画のヘルパー関数群
  */
@@ -19,41 +19,43 @@ Renderings::TextRenderHelper::TextRenderHelper(TextRenderer& renderer)
 {
 }
 
-// 長方形をキャンバスサイズとピボットとアンカーに沿って移動
-void Renderings::TextRenderHelper::AdjustRect(const Math::Vector2& canvasSize, float canvasRatio, Utility::AlignmentPoint pivot, Utility::AlignmentPoint anchor, Math::Rect* pRect)
+// 長方形をキャンバス情報とピボットとアンカーに沿って移動
+Math::Rect Renderings::TextRenderHelper::AdjustRect(const Math::Vector2& canvasSize, float canvasRatio, const Math::Rect& rect, Utility::AlignmentPoint pivot, Utility::AlignmentPoint anchor)
 {
+	Math::Rect newRect = rect;
+
 	// ピボットに合わせて長方形を移動
 	switch (pivot)
 	{
 	case Utility::AlignmentPoint::TopLeft:
-		pRect->position.x += pRect->size.x / 2.0f;
-		pRect->position.y += pRect->size.y / 2.0f;
+		newRect.position.x += newRect.size.x / 2.0f;
+		newRect.position.y += newRect.size.y / 2.0f;
 		break;
 	case Utility::AlignmentPoint::TopCenter:
-		pRect->position.y += pRect->size.y / 2.0f;
+		newRect.position.y += newRect.size.y / 2.0f;
 		break;
 	case Utility::AlignmentPoint::TopRight:
-		pRect->position.x -= pRect->size.x / 2.0f;
-		pRect->position.y += pRect->size.y / 2.0f;
+		newRect.position.x -= newRect.size.x / 2.0f;
+		newRect.position.y += newRect.size.y / 2.0f;
 		break;
 	case Utility::AlignmentPoint::MiddleLeft:
-		pRect->position.x += pRect->size.x / 2.0f;
+		newRect.position.x += newRect.size.x / 2.0f;
 		break;
 	case Utility::AlignmentPoint::MiddleCenter:
 		break;
 	case Utility::AlignmentPoint::MiddleRight:
-		pRect->position.x -= pRect->size.x / 2.0f;
+		newRect.position.x -= newRect.size.x / 2.0f;
 		break;
 	case Utility::AlignmentPoint::BottomLeft:
-		pRect->position.x += pRect->size.x / 2.0f;
-		pRect->position.y -= pRect->size.y / 2.0f;
+		newRect.position.x += newRect.size.x / 2.0f;
+		newRect.position.y -= newRect.size.y / 2.0f;
 		break;
 	case Utility::AlignmentPoint::BottomCenter:
-		pRect->position.y -= pRect->size.y / 2.0f;
+		newRect.position.y -= newRect.size.y / 2.0f;
 		break;
 	case Utility::AlignmentPoint::BottomRight:
-		pRect->position.x -= pRect->size.x / 2.0f;
-		pRect->position.y -= pRect->size.y / 2.0f;
+		newRect.position.x -= newRect.size.x / 2.0f;
+		newRect.position.y -= newRect.size.y / 2.0f;
 		break;
 	default:
 		break;
@@ -62,40 +64,42 @@ void Renderings::TextRenderHelper::AdjustRect(const Math::Vector2& canvasSize, f
 	switch (anchor)
 	{
 	case Utility::AlignmentPoint::TopCenter:
-		pRect->position.x += canvasSize.x / 2.0f;
+		newRect.position.x += canvasSize.x / 2.0f;
 		break;
 	case Utility::AlignmentPoint::TopRight:
-		pRect->position.x += canvasSize.x;
+		newRect.position.x += canvasSize.x;
 		break;
 	case Utility::AlignmentPoint::MiddleLeft:
-		pRect->position.y += canvasSize.y / 2.0f;
+		newRect.position.y += canvasSize.y / 2.0f;
 		break;
 	case Utility::AlignmentPoint::MiddleCenter:
-		pRect->position.x += canvasSize.x / 2.0f;
-		pRect->position.y += canvasSize.y / 2.0f;
+		newRect.position.x += canvasSize.x / 2.0f;
+		newRect.position.y += canvasSize.y / 2.0f;
 		break;
 	case Utility::AlignmentPoint::MiddleRight:
-		pRect->position.x += canvasSize.x;
-		pRect->position.y += canvasSize.y / 2.0f;
+		newRect.position.x += canvasSize.x;
+		newRect.position.y += canvasSize.y / 2.0f;
 		break;
 	case Utility::AlignmentPoint::BottomLeft:
-		pRect->position.y += canvasSize.y;
+		newRect.position.y += canvasSize.y;
 		break;
 	case Utility::AlignmentPoint::BottomCenter:
-		pRect->position.x += canvasSize.x / 2.0f;
-		pRect->position.y += canvasSize.y;
+		newRect.position.x += canvasSize.x / 2.0f;
+		newRect.position.y += canvasSize.y;
 		break;
 	case Utility::AlignmentPoint::BottomRight:
-		pRect->position.x += canvasSize.x;
-		pRect->position.y += canvasSize.y;
+		newRect.position.x += canvasSize.x;
+		newRect.position.y += canvasSize.y;
 		break;
 	default:
 		break;
 	}
 
 	// 表示倍率を適用
-	pRect->position *= canvasRatio;
-	pRect->size *= canvasRatio;
+	newRect.position *= canvasRatio;
+	newRect.size *= canvasRatio;
+
+	return newRect;
 }
 
 // 回転の中心を取得

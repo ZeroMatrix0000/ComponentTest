@@ -1,7 +1,7 @@
 /*
  * FileName:     Model3D.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/28
+ * Last Updated: 2026/10/06
  *
  * 3Dモデル
  */
@@ -53,7 +53,11 @@ void Renderings::Model3D::Initalize(const nlohmann::ordered_json& json, IGameObj
 // モデルソースを設定
 void Renderings::Model3D::SetModelSource(const std::string& modelSourceName)
 {
+	// 描画者からモデルを削除
+	m_pIModelRenderer->RemovePModel(this);
 	m_pModelSource = m_refIResources.GetModelSource(modelSourceName);
+	// 描画者にモデルを追加
+	m_pIModelRenderer->AddPModel(this);
 }
 
 // 映るカメラ画面を追加

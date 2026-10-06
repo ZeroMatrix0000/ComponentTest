@@ -1,7 +1,7 @@
 /*
  * FileName:     TextRenderer.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/30
+ * Last Updated: 2026/10/06
  *
  * テキスト描画
  */
@@ -156,13 +156,18 @@ void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 		return;
 	}
 
-	// トランスフォームの長方形
-	Math::Rect transformRect = pRectTransform->GetRect();
 	// キャンバスの表示倍率
 	float canvasRatio = pCanvas->GetRatio();
 
 	// 長方形をキャンバス情報とピボットとアンカーに沿って移動
-	m_helper.AdjustRect(pCanvas->GetSize(), canvasRatio, pRectTransform->GetPivot(), pRectTransform->GetAnchor(), &transformRect);
+	Math::Rect transformRect = m_helper.AdjustRect
+	(
+		pCanvas->GetSize(),
+		canvasRatio,
+		pRectTransform->GetRect(),
+		pRectTransform->GetPivot(),
+		pRectTransform->GetAnchor()
+	);
 
 	// フォントサイズ
 	float fontSize = pText->GetFontSize() * canvasRatio;
@@ -313,14 +318,14 @@ void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 		// デバッグ表示
 		if (isDebug)
 		{
-			m_pContext->DrawRectangle(transformRect.CreateD2D1_RECT_F(), m_brush.Get());
+			m_pContext->DrawRectangle(transformRect.CreateD2D1_RECT_F(), m_brush.Get(), 2.0f);
 			// テキストの長方形
 			Math::Rect textRect
 			{
 				transformRect.position - transformRect.size / 2.0f + Math::Vector2{ metrics.left + metrics.width / 2.0f, metrics.top + metrics.height / 2.0f },
 				Math::Vector2{ metrics.width, metrics.height }
 			};
-			m_pContext->DrawRectangle(textRect.CreateD2D1_RECT_F(), m_brush.Get());
+			m_pContext->DrawRectangle(textRect.CreateD2D1_RECT_F(), m_brush.Get(), 2.0f);
 		}
 
 		// コンテキストを元に戻す
@@ -358,14 +363,14 @@ void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 		// デバッグ表示
 		if (isDebug)
 		{
-			m_pContext->DrawRectangle(transformRect.CreateD2D1_RECT_F(), m_brush.Get());
+			m_pContext->DrawRectangle(transformRect.CreateD2D1_RECT_F(), m_brush.Get(), 2.0f);
 			// テキストの長方形
 			Math::Rect textRect
 			{
 				transformRect.position - transformRect.size / 2.0f + Math::Vector2{ metrics.left + metrics.width / 2.0f, metrics.top + metrics.height / 2.0f },
 				Math::Vector2{ metrics.width, metrics.height }
 			};
-			m_pContext->DrawRectangle(textRect.CreateD2D1_RECT_F(), m_brush.Get());
+			m_pContext->DrawRectangle(textRect.CreateD2D1_RECT_F(), m_brush.Get(), 2.0f);
 		}
 
 		// コンテキストを元に戻す

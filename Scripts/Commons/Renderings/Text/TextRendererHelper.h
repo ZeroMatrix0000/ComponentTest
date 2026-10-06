@@ -1,7 +1,7 @@
 /*
  * FileName:     TextRendererHelper.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/30
+ * Last Updated: 2026/10/06
  *
  * テキスト描画のヘルパー関数群
  */
@@ -26,13 +26,13 @@ namespace Renderings
 		TextRenderHelper(TextRenderer& renderer);
 
 		// 長方形をキャンバス情報とピボットとアンカーに沿って移動
-		void AdjustRect
+		Math::Rect AdjustRect
 		(
 			const Math::Vector2&    canvasSize,
 			float                   canvasRatio,
+			const Math::Rect&       rect,
 			Utility::AlignmentPoint pivot,
-			Utility::AlignmentPoint anchor,
-			Math::Rect*             pRect
+			Utility::AlignmentPoint anchor
 		);
 
 		// 回転の中心を取得

@@ -33,7 +33,7 @@ void Renderings::Renderer::Initialize
 )
 {
 	// モデル描画の初期化
-	m_modelRenderer.Initialize(pContext, commonStates);
+	m_modelRenderer.Initialize(pDevice, pContext, commonStates);
 	// 画像描画の初期化
 	m_imageRenderer.Initialize(pDevice, pContext, commonStates);
 	// 当たり判定描画の初期化
