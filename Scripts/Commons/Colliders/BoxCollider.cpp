@@ -1,7 +1,7 @@
 /*
  * FileName:     BoxCollider.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/08/22
+ * Last Updated: 2026/10/07
  *
  * 長方形の当たり判定
  */
@@ -73,7 +73,7 @@ void Colliders::BoxCollider::RemoveICameraScreen(const Renderings::ICameraScreen
 void Colliders::BoxCollider::ApplyTransform()
 {
 	// ワールド行列
-	Math::Matrix world = m_pTransform->CreateWorldMatrix();
+	Math::Matrix world = m_pTransform->GetWorldMatrix();
 
 	m_worldBox.position = Math::Vector3::Transform(m_box.position, world);
 	m_worldBox.size = m_box.size * m_pTransform->GetScale();

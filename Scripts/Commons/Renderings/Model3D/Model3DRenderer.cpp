@@ -1,7 +1,7 @@
 /*
  * FileName:     Model3DRenderer.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/06
+ * Last Updated: 2026/10/07
  *
  * 3Dモデル描画
  */
@@ -12,6 +12,7 @@
 #include "Model3D.h"
 #include "Model3DSource.h"
 #include "../ICameraScreen.h"
+#include "../VertexShader.h"
 #include "Scripts/Commons/GameObjects/GameObject.h"
 #include "Scripts/Commons/Components/Transform.h"
 #include "Scripts/Commons/Systems/IResources.h"
@@ -19,13 +20,13 @@
  // コンストラクタ
 Renderings::Model3DRenderer::Model3DRenderer()
 	: IModel3DRenderer{}
-	, m_effect{}
 	, m_instanceBuffer{}
-	, m_inputLayouts{}
+	, m_inputLayout{}
 	, m_pModels{}
 	, m_pDevice{}
 	, m_pContext{}
 	, m_pCommonStates{}
+	, m_pInstancingVS{}
 {
 }
 
@@ -35,11 +36,6 @@ void Renderings::Model3DRenderer::Initialize(ID3D11Device5* pDevice, ID3D11Devic
 	m_pDevice = pDevice;
 	m_pContext = pContext;
 	m_pCommonStates = &commonStates;
-
-	// 法線マップエフェクトを作成
-	m_effect = std::make_unique<DirectX::NormalMapEffect>(pDevice);
-	// インスタンシング有効化
-	m_effect->SetInstancingEnabled(true);
 
 	// バッファの詳細
 	D3D11_BUFFER_DESC desc{};
@@ -57,102 +53,85 @@ void Renderings::Model3DRenderer::Initialize(ID3D11Device5* pDevice, ID3D11Devic
 }
 
 // 描画処理
-void Renderings::Model3DRenderer::Render()
+void Renderings::Model3DRenderer::Render(bool isInstance)
 {
-	for (const auto& pModels : m_pModels)
+	// ピクセルシェーダ
+	auto sampler = m_pCommonStates->LinearWrap();
+	m_pContext->PSSetSamplers(0, 1, &sampler);
+
+	m_pContext->OMSetDepthStencilState(m_pCommonStates->DepthDefault(), 0);
+
+	for (const auto& [pICameraScreen, pModelsList] : m_pModels)
 	{
-		// 行列リスト
-		std::vector<DirectX::XMFLOAT3X4> matrices{};
-
-		for (const auto* pModel : pModels.second)
+		for (const auto& [pModelSource, pModels] : pModelsList)
 		{
-			// モデルソース
-			const Model3DSource* modelSource = pModels.first;
+			// 行列リスト
+			std::vector<DirectX::XMFLOAT3X4> matrices{};
+			matrices.reserve(pModels.size() * 100);
 
-			// モデルの所有者のトランスフォーム
-			const Transform* pTransform = pModel->GetConstPOwner()->GetConstComponent<Transform>();
-
-			// カメラ画面
-			for (const auto* pICameraScreen : pModel->GetPICameraScreens())
+			for (const auto* pModel : pModels)
 			{
-				// 行列
-				Math::Matrix matrix = pTransform->CreateWorldMatrix() * pICameraScreen->GetViewMatrix() * pICameraScreen->GetProjectionMatrix();
-				// 行列リストに追加
-				DirectX::XMStoreFloat3x4(&matrices.emplace_back(), matrix);
+				// モデルの所有者のトランスフォーム
+				const Transform* pTransform = pModel->GetConstPOwner()->GetConstComponent<Transform>();
 
-				//modelSource->GetModel().Draw
-				//(
-				//	m_pContext,
-				//	*m_pCommonStates,
-				//	pTransform->CreateWorldMatrix(),
-				//	pICameraScreen->GetViewMatrix(),
-				//	pICameraScreen->GetProjectionMatrix()
-				//);
+				for (int i = 0; i < 100; i++)
+				{
+					if (isInstance)
+					{
+						// 行列リストに追加
+						DirectX::XMStoreFloat3x4(&matrices.emplace_back(), pTransform->GetWorldMatrix());
+					}
+					else
+					{
+						pModelSource->GetModel().Draw
+						(
+							m_pContext,
+							*m_pCommonStates,
+							pTransform->GetWorldMatrix(),
+							pICameraScreen->GetViewMatrix(),
+							pICameraScreen->GetProjectionMatrix()
+						);
+					}
+				}
 			}
-		}
 
-		// 行列リストが空なら何もしない
-		if (matrices.empty())
-		{
-			continue;
-		}
-
-		// サブリソース
-		D3D11_MAPPED_SUBRESOURCE mapped{};
-		// GPU へ転送
-		Utility::ThrowIfFailed(m_pContext->Map
-		(
-			m_instanceBuffer.Get(),
-			0,
-			D3D11_MAP_WRITE_DISCARD,
-			0,
-			&mapped
-		));
-		std::memcpy(mapped.pData, matrices.data(), sizeof(DirectX::XMFLOAT3X4) * matrices.size());
-		m_pContext->Unmap(m_instanceBuffer.Get(), 0);
-
-		m_effect->Apply(m_pContext);
-
-		UINT instanceStride = sizeof(DirectX::XMFLOAT3X4);
-		UINT instanceOffset = 0;
-		m_pContext->IASetVertexBuffers
-		(
-			1,
-			1,
-			m_instanceBuffer.GetAddressOf(),
-			&instanceStride,
-			&instanceOffset
-		);
-
-		// モデル
-		const auto& pModel = pModels.first->GetModel();
-
-		for (size_t meshIndex = 0; meshIndex < pModel.meshes.size(); meshIndex++)
-		{
-			// メッシュ
-			const auto& mesh = pModel.meshes.at(meshIndex);
-
-			for (size_t partIndex = 0; partIndex < mesh->meshParts.size(); partIndex++)
+			// 行列リストが空なら何もしない
+			if (matrices.empty())
 			{
-				auto* pInputLayouts = m_inputLayouts.at(pModels.first).at(meshIndex).at(partIndex).Get();
+				continue;
+			}
 
-				m_pContext->IASetInputLayout(pInputLayouts);
+			UpdateInstanceBuffer(matrices);
 
-				mesh->meshParts.at(partIndex)->DrawInstanced
-				(
-					m_pContext,
-					m_effect.get(),
-					pInputLayouts,
-					static_cast<uint32_t>(matrices.size())
-				);
+			// モデル
+			const auto& dxModel = pModelSource->GetModel();
+
+			for (const auto& mesh : dxModel.meshes)
+			{
+				for (const auto& part : mesh->meshParts)
+				{
+					DrawInstanced(pICameraScreen, part.get(), matrices.size());
+				}
 			}
 		}
 	}
 }
 
-// モデルのポインタを追加
-void Renderings::Model3DRenderer::AddPModel(const Model3D* pModel)
+// インスタンシング頂点シェーダを設定
+void Renderings::Model3DRenderer::SetInstancingVS(const VertexShader* pVertexShader)
 {
+	m_pInstancingVS = pVertexShader;
+	CreateInputLayout();
+}
+
+// モデルのポインタを追加
+void Renderings::Model3DRenderer::AddPModel(const ICameraScreen* pICameraScreen, const Model3D* pModel)
+{
+	if (!pICameraScreen)
+	{
+		return;
+	}
+
 	// モデルソース
 	const Model3DSource* pModelSource = pModel->GetPModelSource();
 	if (!pModelSource)
@@ -160,21 +139,34 @@ void Renderings::Model3DRenderer::AddPModel(const Model3D* pModel)
 		return;
 	}
 
-	// モデルソースに対応したモデルのポインタリストが見つからなければ生成
-	auto it = m_pModels.find(pModelSource);
-	if (it == m_pModels.end())
+	// カメラに対応したモデルのポインタリストが見つからなければ生成
+	auto cameraIt = m_pModels.find(pICameraScreen);
+	if (cameraIt == m_pModels.end())
 	{
-		m_pModels.emplace(pModelSource, std::vector<const Model3D*>{});
-		CreateInputLayout(pModelSource);
+		m_pModels.emplace(pICameraScreen, std::unordered_map<const Model3DSource*, std::vector<const Model3D*>>{});
+		cameraIt = m_pModels.find(pICameraScreen);
+	}
+
+	// モデルソースに対応したモデルのポインタリストが見つからなければ生成
+	auto modelIt = cameraIt->second.find(pModelSource);
+	if (modelIt == cameraIt->second.end())
+	{
+		cameraIt->second.emplace(pModelSource, std::vector<const Model3D*>{});
+		modelIt = cameraIt->second.find(pModelSource);
 	}
 
 	// モデルのポインタの追加
-	m_pModels.at(pModelSource).push_back(pModel);
+	modelIt->second.push_back(pModel);
 }
 
 // モデルのポインタを削除
-void Renderings::Model3DRenderer::RemovePModel(const Model3D* pModel)
+void Renderings::Model3DRenderer::RemovePModel(const ICameraScreen* pICameraScreen, const Model3D* pModel)
 {
+	if (!pICameraScreen)
+	{
+		return;
+	}
+
 	// モデルソース
 	const Model3DSource* pModelSource = pModel->GetPModelSource();
 	if (!pModelSource)
@@ -183,81 +175,171 @@ void Renderings::Model3DRenderer::RemovePModel(const Model3D* pModel)
 	}
 
 	// ポインタリスト
-	auto& pModels = m_pModels.at(pModelSource);
+	auto& pModels = m_pModels.at(pICameraScreen).at(pModelSource);
 
 	auto it = std::ranges::find(pModels, pModel);
 	if (it != pModels.end())
 	{
 		pModels.erase(it);
 	}
+
+	// 空の配列を削除
+	if (pModels.size() == 0)
+	{
+		m_pModels.at(pICameraScreen).erase(pModelSource);
+		if (m_pModels.at(pICameraScreen).size() == 0)
+		{
+			m_pModels.erase(pICameraScreen);
+		}
+	}
 }
 
 // 入力レイアウトを作成
-void Renderings::Model3DRenderer::CreateInputLayout(const Model3DSource* pModelSource)
+void Renderings::Model3DRenderer::CreateInputLayout()
 {
-	m_inputLayouts.emplace(pModelSource, std::vector<std::vector<Microsoft::WRL::ComPtr<ID3D11InputLayout>>>{});
-	// 入力レイアウトリスト
-	auto& inputLayouts = m_inputLayouts.at(pModelSource);
-
-	for (const auto& mesh : pModelSource->GetModel().meshes)
+	const D3D11_INPUT_ELEMENT_DESC inputElements[] =
 	{
-		inputLayouts.push_back(std::vector<Microsoft::WRL::ComPtr<ID3D11InputLayout>>{});
-		for (const auto& part : mesh->meshParts)
 		{
-			// 入力レイアウトの詳細
-			std::vector<D3D11_INPUT_ELEMENT_DESC> elements;
-
-			// 頂点データの追加
-			for (const auto& element : *(part->vbDecl))
-			{
-				elements.push_back(element);
-			}
-
-			// 行列データの追加
-			elements.push_back(
-			{
-				"InstMatrix",
-				0,
-				DXGI_FORMAT_R32G32B32A32_FLOAT,
-				1,
-				0,
-				D3D11_INPUT_PER_INSTANCE_DATA,
-				1
-			});
-			elements.push_back(
-			{
-				"InstMatrix",
-				1,
-				DXGI_FORMAT_R32G32B32A32_FLOAT,
-				1,
-				16,
-				D3D11_INPUT_PER_INSTANCE_DATA,
-				1
-			});
-			elements.push_back(
-			{
-				"InstMatrix",
-				2,
-				DXGI_FORMAT_R32G32B32A32_FLOAT,
-				1,
-				32,
-				D3D11_INPUT_PER_INSTANCE_DATA,
-				1
-			});
-
-			const void* byteCode = nullptr;
-			size_t byteCodeSize = 0;
-
-			m_effect->GetVertexShaderBytecode(&byteCode, &byteCodeSize);
-
-			Utility::ThrowIfFailed(m_pDevice->CreateInputLayout
-			(
-				elements.data(),
-				static_cast<UINT>(elements.size()),
-				byteCode,
-				byteCodeSize,
-				inputLayouts.back().emplace_back().GetAddressOf()
-			));
+			"SV_Position",
+			0,
+			DXGI_FORMAT_R32G32B32_FLOAT,
+			0,
+			0,
+			D3D11_INPUT_PER_VERTEX_DATA,
+			0
+		},
+		{
+			"NORMAL",
+			0,
+			DXGI_FORMAT_R32G32B32_FLOAT,
+			0,
+			12,
+			D3D11_INPUT_PER_VERTEX_DATA,
+			0
+		},
+		{
+			"TEXCOORD",
+			0,
+			DXGI_FORMAT_R32G32_FLOAT,
+			0,
+			24,
+			D3D11_INPUT_PER_VERTEX_DATA,
+			0
+		},
+		{
+			"InstMatrix",
+			0,
+			DXGI_FORMAT_R32G32B32A32_FLOAT,
+			1,
+			0,
+			D3D11_INPUT_PER_INSTANCE_DATA,
+			1
+		},
+		{
+			"InstMatrix",
+			1,
+			DXGI_FORMAT_R32G32B32A32_FLOAT,
+			1,
+			16,
+			D3D11_INPUT_PER_INSTANCE_DATA,
+			1
+		},
+		{
+			"InstMatrix",
+			2,
+			DXGI_FORMAT_R32G32B32A32_FLOAT,
+			1,
+			32,
+			D3D11_INPUT_PER_INSTANCE_DATA,
+			1
 		}
-	}
+	};
+
+	Utility::ThrowIfFailed(m_pDevice->CreateInputLayout
+	(
+		inputElements,
+		_countof(inputElements),
+		m_pInstancingVS->GetBlob()->GetBufferPointer(),
+		m_pInstancingVS->GetBlob()->GetBufferSize(),
+		m_inputLayout.GetAddressOf()
+	));
+}
+
+// インスタンスバッファを更新
+void Renderings::Model3DRenderer::UpdateInstanceBuffer(const std::vector<DirectX::XMFLOAT3X4>& matrices)
+{
+	// サブリソース
+	D3D11_MAPPED_SUBRESOURCE mapped{};
+	// GPU へ転送
+	Utility::ThrowIfFailed(m_pContext->Map
+	(
+		m_instanceBuffer.Get(),
+		0,
+		D3D11_MAP_WRITE_DISCARD,
+		0,
+		&mapped
+	));
+	std::memcpy(mapped.pData, matrices.data(), sizeof(DirectX::XMFLOAT3X4) * matrices.size());
+	m_pContext->Unmap(m_instanceBuffer.Get(), 0);
+}
+
+// インスタンス描画
+void Renderings::Model3DRenderer::DrawInstanced(const ICameraScreen* pICameraScreen, const DirectX::ModelMeshPart* pPart, size_t matricesCount)
+{
+	// エフェクト
+	auto* effect = static_cast<DirectX::BasicEffect*>(pPart->effect.get());
+	effect->SetWorld(Math::Matrix::Identity);
+	effect->SetView(pICameraScreen->GetViewMatrix());
+	effect->SetProjection(pICameraScreen->GetProjectionMatrix());
+	effect->Apply(m_pContext);
+
+	// 頂点シェーダ
+	m_pContext->VSSetShader(m_pInstancingVS->GetD3DShader(), nullptr, 0);
+
+	// 入力レイアウト
+	m_pContext->IASetInputLayout(m_inputLayout.Get());
+
+	// 頂点バッファ
+	ID3D11Buffer* buffers[] =
+	{
+		pPart->vertexBuffer.Get(),
+		m_instanceBuffer.Get()
+	};
+	UINT strides[] =
+	{
+		pPart->vertexStride,
+		sizeof(DirectX::XMFLOAT3X4)
+	};
+	UINT offsets[] =
+	{
+		0,
+		0
+	};
+	m_pContext->IASetVertexBuffers(
+		0,
+		2,
+		buffers,
+		strides,
+		offsets
+	);
+
+	// 番号バッファ
+	m_pContext->IASetIndexBuffer
+	(
+		pPart->indexBuffer.Get(),
+		pPart->indexFormat,
+		0
+	);
+
+	// トポロジー
+	m_pContext->IASetPrimitiveTopology(pPart->primitiveType);
+
+	// 描画
+	m_pContext->DrawIndexedInstanced(
+		pPart->indexCount,
+		static_cast<UINT>(matricesCount),
+		pPart->startIndex,
+		pPart->vertexOffset,
+		0
+	);
 }

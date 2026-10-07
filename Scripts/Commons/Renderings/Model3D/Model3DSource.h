@@ -1,7 +1,7 @@
 /*
  * FileName:     Model3DSource.h
  * Author:       Takao Hayata
- * Last Updated: 2026/07/06
+ * Last Updated: 2026/10/07
  *
  * 3Dモデルのソース
  */
@@ -23,7 +23,7 @@ namespace Renderings
 		Model3DSource();
 
 		// 初期化処理
-		void Initialize(ID3D11Device* device, DirectX::EffectFactory* fx, const std::wstring& filePath);
+		void Initialize(ID3D11Device* device, DirectX::IEffectFactory* fx, const std::wstring& filePath);
 
 		// モデルを取得
 		const auto& GetModel() const
@@ -35,7 +35,7 @@ namespace Renderings
 		/* 静的関数 */
 
 		// 生成
-		static Model3DSource Create(ID3D11Device* device, DirectX::EffectFactory* fx, const std::wstring& filePath);
+		static Model3DSource Create(ID3D11Device* device, DirectX::IEffectFactory* fx, const std::wstring& filePath);
 
 
 	private:

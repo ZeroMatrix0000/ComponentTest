@@ -1,7 +1,7 @@
 /*
  * FileName:     SphereCollider.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/08/22
+ * Last Updated: 2026/10/07
  *
  * 球の当たり判定
  */
@@ -80,7 +80,7 @@ void Colliders::SphereCollider::ApplyTransform()
 	}
 
 	// ワールド行列
-	Math::Matrix world = m_pTransform->CreateWorldMatrix();
+	Math::Matrix world = m_pTransform->GetWorldMatrix();
 	// 拡大
 	Math::Vector3 scale = m_pTransform->GetScale();
 

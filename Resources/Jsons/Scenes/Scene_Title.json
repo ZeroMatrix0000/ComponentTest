@@ -74,13 +74,13 @@
 				}
 			},
 			"Model3D": {
-				"ModelSourceName": "Ground",
+				"ModelSourceName": "NewGrounds",
 				"CameraScreens": [
 					"TitleCamera"
 				]
 			},
 			"MeshCollider": {
-				"MeshName": "Ground",
+				"MeshName": "NewGrounds",
 				"CameraScreens": [
 					"TitleCamera"
 				]

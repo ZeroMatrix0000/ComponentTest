@@ -1,7 +1,7 @@
 /*
  * FileName:     Model3DSource.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/07/01
+ * Last Updated: 2026/10/07
  *
  * 3Dモデルのソース
  */
@@ -16,13 +16,13 @@ Renderings::Model3DSource::Model3DSource()
 }
 
 // 初期化処理
-void Renderings::Model3DSource::Initialize(ID3D11Device* device, DirectX::EffectFactory* fx, const std::wstring& filePath)
+void Renderings::Model3DSource::Initialize(ID3D11Device* device, DirectX::IEffectFactory* fx, const std::wstring& filePath)
 {
 	m_model = DirectX::Model::CreateFromCMO(device, filePath.c_str(), *fx);
 }
 
 // 生成
-Renderings::Model3DSource Renderings::Model3DSource::Create(ID3D11Device* device, DirectX::EffectFactory* fx, const std::wstring& filePath)
+Renderings::Model3DSource Renderings::Model3DSource::Create(ID3D11Device* device, DirectX::IEffectFactory* fx, const std::wstring& filePath)
 {
 	Model3DSource model;
 	model.Initialize(device, fx, filePath);

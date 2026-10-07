@@ -46,7 +46,7 @@ void Renderings::Renderer::Render()
 	// モデルの描画
 	if (m_renderMode != RenderMode::Collider)
 	{
-		m_modelRenderer.Render();
+		m_modelRenderer.Render(true);
 	}
 	// 当たり判定の描画
 	if (m_renderMode != RenderMode::Model)

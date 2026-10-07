@@ -118,6 +118,9 @@
     <Filter Include="Scripts\Commons\Renderings\Model3D">
       <UniqueIdentifier>{9c78f9b8-0a17-496a-ad39-6c56135cfe46}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\VertexShaders">
+      <UniqueIdentifier>{929dd0b6-14a0-432d-924b-bda898ce69a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Scripts\Main\WinMain.cpp">
@@ -355,6 +358,10 @@
     <ClCompile Include="Scripts\Commons\Renderings\Text\TextRendererHelper.cpp">
       <Filter>Scripts\Commons\Renderings\Text</Filter>
     </ClCompile>
+    <ClCompile Include="Scripts\Commons\Renderings\Model3D\InstancingEffectFactory.cpp">
+      <Filter>Scripts\Commons\Renderings\Model3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Commons\Renderings\VertexShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Pch.h" />
@@ -712,6 +719,10 @@
     <ClInclude Include="Scripts\Commons\Renderings\Text\TextRendererHelper.h">
       <Filter>Scripts\Commons\Renderings\Text</Filter>
     </ClInclude>
+    <ClInclude Include="Scripts\Commons\Renderings\Model3D\InstancingEffectFactory.h">
+      <Filter>Scripts\Commons\Renderings\Model3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Commons\Renderings\VertexShader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -788,6 +799,9 @@
     </FxCompile>
     <FxCompile Include="Shaders\PixelShaders\TextOutline.hlsl">
       <Filter>Shaders\PixelShaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\VertexShaders\BasicInstancingVS.hlsl">
+      <Filter>Shaders\VertexShaders</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

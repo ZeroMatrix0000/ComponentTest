@@ -156,6 +156,8 @@ void Game::Initialize(const HWND& hWindow)
 	);
 	// メッシュの読み込み
 	m_resources.LoadMeshes(L"Resources\\Meshes");
+	// 頂点シェーダの読み込み
+	m_resources.LoadVertexShaders(device, L"Resources\\Shaders\\VertexShaders");
 	// ピクセルシェーダの読み込み
 	m_resources.LoadPixelShaders(device, L"Resources\\Shaders\\PixelShaders");
 
@@ -168,6 +170,7 @@ void Game::Initialize(const HWND& hWindow)
 		m_deviceResources2D.GetContext(),
 		m_deviceResources2D.GetBackBuffer()
 	);
+	m_renderer.GetModelRenderer().SetInstancingVS(m_resources.GetVertexShader("BasicInstancingVS"));
 	m_renderer.GetTextRenderer().CreateFontCollection(L"Resources\\Fonts");
 
 	// タイマーの初期化
@@ -267,7 +270,7 @@ void Game::Render()
 	m_renderer.Render();
 
 	// 画面の表示
-	m_deviceResources.Present(true);
+	m_deviceResources.Present(false);
 }
 
 // 終了処理

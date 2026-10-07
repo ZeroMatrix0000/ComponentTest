@@ -1,7 +1,7 @@
 /*
  * FileName:     Model3D.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/06
+ * Last Updated: 2026/10/07
  *
  * 3Dモデル
  */
@@ -23,15 +23,16 @@ Renderings::Model3D::Model3D(const ComponentDesc& desc, IModel3DRenderer* pIMode
 	, m_pIModelRenderer{ pIModelRenderer }
 	, m_refIResources{ iResources }
 {
-	// 描画者にモデルを追加
-	m_pIModelRenderer->AddPModel(this);
 }
 
 // デストラクタ
 Renderings::Model3D::~Model3D()
 {
 	// 描画者からモデルを削除
-	m_pIModelRenderer->RemovePModel(this);
+	for (const auto* pICameraScreen : m_pICameraScreens)
+	{
+		m_pIModelRenderer->RemovePModel(pICameraScreen, this);
+	}
 }
 
 // 初期化処理
@@ -54,10 +55,16 @@ void Renderings::Model3D::Initalize(const nlohmann::ordered_json& json, IGameObj
 void Renderings::Model3D::SetModelSource(const std::string& modelSourceName)
 {
 	// 描画者からモデルを削除
-	m_pIModelRenderer->RemovePModel(this);
+	for (const auto* pICameraScreen : m_pICameraScreens)
+	{
+		m_pIModelRenderer->RemovePModel(pICameraScreen, this);
+	}
 	m_pModelSource = m_refIResources.GetModelSource(modelSourceName);
 	// 描画者にモデルを追加
-	m_pIModelRenderer->AddPModel(this);
+	for (const auto* pICameraScreen : m_pICameraScreens)
+	{
+		m_pIModelRenderer->AddPModel(pICameraScreen, this);
+	}
 }
 
 // 映るカメラ画面を追加
@@ -66,6 +73,7 @@ void Renderings::Model3D::AddICameraScreen(const ICameraScreen& iCameraScreen)
 	if (std::ranges::find(m_pICameraScreens, &iCameraScreen) == m_pICameraScreens.end())
 	{
 		m_pICameraScreens.push_back(&iCameraScreen);
+		m_pIModelRenderer->AddPModel(&iCameraScreen, this);
 	}
 }
 
@@ -76,5 +84,6 @@ void Renderings::Model3D::RemoveICameraScreen(const ICameraScreen& iCameraScreen
 	if (it != m_pICameraScreens.end())
 	{
 		m_pICameraScreens.erase(it);
+		m_pIModelRenderer->RemovePModel(&iCameraScreen, this);
 	}
 }

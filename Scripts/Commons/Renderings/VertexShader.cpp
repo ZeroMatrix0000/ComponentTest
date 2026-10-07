@@ -1,29 +1,29 @@
 /*
- * FileName:     PixelShader.h
+ * FileName:     VertexShader.h
  * Author:       Takao Hayata
  * Last Updated: 2026/10/07
  *
- * ピクセルシェーダ
+ * 頂点シェーダ
  */
 
 #include "Pch.h"
-#include "PixelShader.h"
+#include "VertexShader.h"
 
-// コンストラクタ
-Renderings::PixelShader::PixelShader()
+ // コンストラクタ
+Renderings::VertexShader::VertexShader()
 	: m_d3dShader{}
 	, m_constantBuffer{}
 {
 }
 
 // 初期化処理
-void Renderings::PixelShader::Initialize(ID3D11Device5* device, const std::wstring& filePath)
+void Renderings::VertexShader::Initialize(ID3D11Device5* device, const std::wstring& filePath)
 {
 	// ブロブデータ
 	Utility::ThrowIfFailed(D3DReadFileToBlob(filePath.c_str(), m_blob.GetAddressOf()));
 
 	// ピクセルシェーダ
-	Utility::ThrowIfFailed(device->CreatePixelShader
+	Utility::ThrowIfFailed(device->CreateVertexShader
 	(
 		m_blob->GetBufferPointer(),
 		m_blob->GetBufferSize(),
@@ -37,9 +37,9 @@ void Renderings::PixelShader::Initialize(ID3D11Device5* device, const std::wstri
 }
 
 // 生成
-Renderings::PixelShader Renderings::PixelShader::Create(ID3D11Device5* device, const std::wstring& filePath)
+Renderings::VertexShader Renderings::VertexShader::Create(ID3D11Device5* device, const std::wstring& filePath)
 {
-	PixelShader shader;
+	VertexShader shader;
 	shader.Initialize(device, filePath);
 	return shader;
 }

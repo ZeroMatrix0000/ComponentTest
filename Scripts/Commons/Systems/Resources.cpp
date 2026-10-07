@@ -1,7 +1,7 @@
 /*
  * FileName:     Resources.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/07/29
+ * Last Updated: 2026/10/07
  *
  * リソース管理
  */
@@ -17,12 +17,13 @@ Systems::Resources::Resources()
 	, m_imageSources{}
 	, m_jsons{}
 	, m_meshes{}
+	, m_vertexShaders{}
 	, m_pixelShaders{}
 {
 }
 
 // モデルを追加
-void Systems::Resources::LoadModelSources(ID3D11Device5* device, DirectX::EffectFactory* fx, const std::wstring& directoryPath)
+void Systems::Resources::LoadModelSources(ID3D11Device5* device, DirectX::IEffectFactory* fx, const std::wstring& directoryPath)
 {
 	// パスが存在しないなら
 	if (!std::filesystem::exists(directoryPath))
@@ -208,6 +209,44 @@ void Systems::Resources::LoadMeshes(const std::wstring& directoryPath)
 	}
 }
 
+// 頂点シェーダを読み込む
+void Systems::Resources::LoadVertexShaders(ID3D11Device5* device, const std::wstring& directoryPath)
+{
+	// パスが存在しないなら
+	if (!std::filesystem::exists(directoryPath))
+	{
+		// エラーメッセージを追加
+		IErrorMessage::GetInstance()->AddMessage(Utility::FormatWString
+		(
+			L"パスが間違っています。 | path: %s",
+			directoryPath.c_str()
+		));
+		return;
+	}
+
+	// ディレクトリ内を全て検索
+	for (const auto& entry : std::filesystem::recursive_directory_iterator(directoryPath))
+	{
+		// ファイルなら
+		if (entry.is_regular_file())
+		{
+			try
+			{
+				m_vertexShaders.emplace(entry.path().stem().string(), Renderings::VertexShader::Create(device, entry.path().wstring()));
+			}
+			catch (std::exception e)
+			{
+				// エラーメッセージを追加
+				IErrorMessage::GetInstance()->AddMessage(Utility::FormatWString
+				(
+					L"ピクセルシェーダの読み込みに失敗しました。 | path: %s",
+					entry.path().c_str()
+				));
+			}
+		}
+	}
+}
+
 // ピクセルシェーダを読み込む
 void Systems::Resources::LoadPixelShaders(ID3D11Device5* device, const std::wstring& directoryPath)
 {
@@ -311,6 +350,24 @@ const Mesh* Systems::Resources::GetMesh(const std::string& meshName) const
 		(
 			L"メッシュが見つかりません。 | name: %s",
 			Utility::string2wstring(meshName).c_str()
+		));
+		return nullptr;
+	}
+
+	return &it->second;
+}
+
+// 頂点シェーダの取得
+const Renderings::VertexShader* Systems::Resources::GetVertexShader(const std::string& shaderName) const
+{
+	auto it = m_vertexShaders.find(shaderName);
+	if (it == m_vertexShaders.end())
+	{
+		// エラーメッセージを追加
+		IErrorMessage::GetInstance()->AddMessage(Utility::FormatWString
+		(
+			L"ピクセルシェーダが見つかりません。 | name: %s",
+			Utility::string2wstring(shaderName).c_str()
 		));
 		return nullptr;
 	}

@@ -1,0 +1,54 @@
+Texture2D<float4> Texture : register(t0);
+sampler Sampler : register(s0);
+
+cbuffer Parameters : register(b0)
+{
+    float4 DiffuseColor : packoffset(c0);
+    float3 EmissiveColor : packoffset(c1);
+    float3 SpecularColor : packoffset(c2);
+    float SpecularPower : packoffset(c2.w);
+
+    float3 LightDirection[3] : packoffset(c3);
+    float3 LightDiffuseColor[3] : packoffset(c6);
+    float3 LightSpecularColor[3] : packoffset(c9);
+
+    float3 EyePosition : packoffset(c12);
+
+    float3 FogColor : packoffset(c13);
+    float4 FogVector : packoffset(c14);
+
+    float4x4 World : packoffset(c15);
+    float3x3 WorldInverseTranspose : packoffset(c19);
+    float4x4 WorldViewProj : packoffset(c22);
+};
+
+#include "Structures.fxh"
+#include "Common.fxh"
+#include "Lighting.fxh"
+#include "Utilities.fxh"
+
+VSOutputTx VSInstancing(VSInputNmTxInst vin)
+{
+    VSOutputTx vout;
+
+	float3 position = mul(vin.Position, vin.Transform);
+
+	float3 normal = mul
+    (
+        vin.Normal,
+        (float3x3)vin.Transform
+    );
+
+	CommonVSOutput cout = ComputeCommonVSOutputWithLighting
+    (
+        float4(position, 1.0f),
+        normal,
+        3
+    );
+
+    SetCommonVSOutputParams;
+
+    vout.TexCoord = vin.TexCoord;
+
+    return vout;
+}

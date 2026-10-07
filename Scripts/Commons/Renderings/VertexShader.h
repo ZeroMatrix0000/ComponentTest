@@ -1,9 +1,9 @@
 /*
- * FileName:     PixelShader.h
+ * FileName:     VertexShader.h
  * Author:       Takao Hayata
  * Last Updated: 2026/10/07
  *
- * ピクセルシェーダ
+ * 頂点データ
  */
 
 #pragma once
@@ -12,7 +12,7 @@
 
 namespace Renderings
 {
-	class PixelShader
+	class VertexShader
 	{
 
 	public:
@@ -21,7 +21,7 @@ namespace Renderings
 		/* メンバ関数 */
 
 		// コンストラクタ
-		PixelShader();
+		VertexShader();
 
 		// 初期化処理
 		void Initialize(ID3D11Device5* device, const std::wstring& filePath);
@@ -36,7 +36,7 @@ namespace Renderings
 		/* 静的関数 */
 
 		// 生成
-		static PixelShader Create(ID3D11Device5* device, const std::wstring& filePath);
+		static VertexShader Create(ID3D11Device5* device, const std::wstring& filePath);
 
 
 	private:
@@ -48,7 +48,7 @@ namespace Renderings
 		Microsoft::WRL::ComPtr<ID3DBlob> m_blob;
 
 		// シェーダ
-		Microsoft::WRL::ComPtr<ID3D11PixelShader> m_d3dShader;
+		Microsoft::WRL::ComPtr<ID3D11VertexShader> m_d3dShader;
 
 		// 定数バッファ
 		std::unique_ptr<ConstantBuffer> m_constantBuffer;

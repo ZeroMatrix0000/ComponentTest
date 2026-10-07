@@ -154,6 +154,7 @@
     <ClCompile Include="Scripts\Commons\GameObjects\GameObjectManager.cpp" />
     <ClCompile Include="Scripts\Commons\Renderings\ColliderRenderer.cpp" />
     <ClCompile Include="Scripts\Commons\Renderings\ConstantBuffer.cpp" />
+    <ClCompile Include="Scripts\Commons\Renderings\Model3D\InstancingEffectFactory.cpp" />
     <ClCompile Include="Scripts\Commons\Renderings\Text\DecorationString.cpp" />
     <ClCompile Include="Scripts\Commons\Renderings\Text\DecorationTextRenderer.cpp" />
     <ClCompile Include="Scripts\Commons\Renderings\DeviceResources2D.cpp" />
@@ -186,6 +187,7 @@
     <ClCompile Include="Scripts\Commons\Renderings\Text\TextColorEffect.cpp" />
     <ClCompile Include="Scripts\Commons\Renderings\Text\TextRenderer.cpp" />
     <ClCompile Include="Scripts\Commons\Renderings\Text\TextRendererHelper.cpp" />
+    <ClCompile Include="Scripts\Commons\Renderings\VertexShader.cpp" />
     <ClCompile Include="Scripts\Commons\Scenes\SceneTransitionAnimation.cpp" />
     <ClCompile Include="Scripts\Commons\Systems\ErrorMessage.cpp" />
     <ClCompile Include="Scripts\Commons\Systems\Input.cpp" />
@@ -256,6 +258,7 @@
     <ClInclude Include="Scripts\Commons\GameObjects\IGameObjectManager.h" />
     <ClInclude Include="Scripts\Commons\Renderings\ColliderRenderer.h" />
     <ClInclude Include="Scripts\Commons\Renderings\ConstantBuffer.h" />
+    <ClInclude Include="Scripts\Commons\Renderings\Model3D\InstancingEffectFactory.h" />
     <ClInclude Include="Scripts\Commons\Renderings\Text\DecorationString.h" />
     <ClInclude Include="Scripts\Commons\Renderings\Text\DecorationTextRenderer.h" />
     <ClInclude Include="Scripts\Commons\Renderings\DeviceResources2D.h" />
@@ -281,6 +284,7 @@
     <ClInclude Include="Scripts\Commons\Renderings\Text\TextRenderer.h" />
     <ClInclude Include="Scripts\Commons\Renderings\Renderer.h" />
     <ClInclude Include="Scripts\Commons\Renderings\Text\TextRendererHelper.h" />
+    <ClInclude Include="Scripts\Commons\Renderings\VertexShader.h" />
     <ClInclude Include="Scripts\Commons\Scenes\SceneTransitionAnimation.h" />
     <ClInclude Include="Scripts\Commons\Systems\ErrorMessage.h" />
     <ClInclude Include="Scripts\Commons\Systems\IErrorMessage.h" />
@@ -405,6 +409,20 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(cso)PixelShaders/%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(cso)PixelShaders/%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(cso)PixelShaders/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="Shaders\VertexShaders\BasicInstancingVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(cso)VertexShaders/%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(cso)VertexShaders/%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(cso)VertexShaders/%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(cso)VertexShaders/%(Filename).cso</ObjectFileOutput>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">VSInstancing</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">VSInstancing</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VSInstancing</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">VSInstancing</EntryPointName>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

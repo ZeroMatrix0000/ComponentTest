@@ -1,7 +1,7 @@
 /*
  * FileName:     Model3D.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/29
+ * Last Updated: 2026/10/07
  *
  * 3Dモデル
  */
@@ -48,9 +48,6 @@ namespace Renderings
 
 		// モデルソースを取得
 		const Model3DSource* GetPModelSource() const { return m_pModelSource; }
-
-		// 映るカメラ画面のポインタリストを取得
-		const std::vector<const ICameraScreen*>& GetPICameraScreens() const { return m_pICameraScreens; }
 
 
 	private:

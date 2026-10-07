@@ -1,7 +1,7 @@
 /*
  * FileName:     RenderingResources.h
  * Author:       Takao Hayata
- * Last Updated: 2026/07/06
+ * Last Updated: 2026/10/07
  *
  * 描画リソース
  */
@@ -9,6 +9,7 @@
 #pragma once
 
 #include "../Systems/OnlyOne.h"
+#include "Model3D/InstancingEffectFactory.h"
 
 namespace Renderings
 {
@@ -44,7 +45,7 @@ namespace Renderings
 		// コモンステート
 		std::unique_ptr<DirectX::CommonStates>  m_commonStates;
 		// エフェクトファクトリー
-		std::unique_ptr<DirectX::EffectFactory> m_effectFactory;
+		std::unique_ptr<InstancingEffectFactory> m_effectFactory;
 
 	};
 }
