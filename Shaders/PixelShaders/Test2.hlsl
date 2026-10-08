@@ -3,8 +3,8 @@ SamplerState Sampler : register(s0);
 
 cbuffer ConstBuffer : register(b0)
 {
-	float2 textureSize;
-	float time;
+	float2 TextureSize;
+	float Time;
 }
 
 struct PSInput
@@ -26,9 +26,9 @@ float4 main(PSInput input) : SV_Target
 	float2 uv = input.TexCoord;
 	float4 color = Texture.Sample(Sampler, uv);
 	
-	float2 pos = (uv * textureSize + float2(2.0f, 1.0f) * time * 50.0f) % 200.0f - 100.0f;
+	float2 pos = (uv * TextureSize + float2(2.0f, 1.0f) * Time * 50.0f) % 200.0f - 100.0f;
 	float r = length(pos);
-	float t = atan2(pos.y, pos.x) + time;
+	float t = atan2(pos.y, pos.x) + Time;
 	float s = step(r, (abs(Mod(Mod(t, 0.4f * PI) - 0.1f, 0.4f * PI - 0.2f) - 0.2f * PI + 0.1f) + 0.5f) * 75.0f);
 	//float s = step(r, (abs(Mod(t, 0.4f * PI) - 0.2f * PI) + 0.5f) * 50.0f);
 	

@@ -1,16 +1,18 @@
 /*
  * FileName:     InstancingEffectFactory.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/07
+ * Last Updated: 2026/10/08
  *
- * インスタンシング描画用のエフェクトファクトリ
+ * インスタンス描画用のエフェクトファクトリ
  */
 
 #pragma once
 
 namespace Renderings
 {
-	class InstancingEffectFactory final : public DirectX::IEffectFactory
+	class Model3DSource;
+
+	class InstancingEffectFactory : public DirectX::IEffectFactory
 	{
 
 	public:
@@ -24,7 +26,7 @@ namespace Renderings
 		// エフェクトを作成
 		std::shared_ptr<DirectX::IEffect> CreateEffect
 		(
-			const EffectInfo& info,
+			const EffectInfo& effectInfo,
 			ID3D11DeviceContext* pContext
 		) override;
 
@@ -39,17 +41,20 @@ namespace Renderings
 		// ディレクトリを設定
 		void SetDirectory(const std::wstring& filePath) { m_directory = filePath; };
 
+		// モデルソースを設定
+		void SetModel3DSource(Model3DSource* pModelSource) { m_pModelSource = pModelSource; }
+
 
 	private:
 
 
 		/* メンバ変数 */
 
-		// エフェクト保持用
-		std::vector<std::shared_ptr<DirectX::BasicEffect>> m_effects;
-
 		// ディレクトリ
 		std::wstring m_directory;
+
+		// モデルソース
+		Model3DSource* m_pModelSource;
 
 		// デバイス
 		ID3D11Device* m_pDevice;

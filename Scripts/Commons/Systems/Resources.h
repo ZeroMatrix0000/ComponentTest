@@ -1,7 +1,7 @@
 /*
  * FileName:     Resources.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/07
+ * Last Updated: 2026/10/08
  *
  * リソース管理
  */
@@ -11,8 +11,13 @@
 #include "IResources.h"
 #include "../Renderings/Model3D/Model3DSource.h"
 #include "../Renderings/Image/ImageSource.h"
-#include "../Renderings/VertexShader.h"
-#include "../Renderings/PixelShader.h"
+#include "../Renderings/Shader/VertexShader.h"
+#include "../Renderings/Shader/PixelShader.h"
+
+namespace Renderings
+{
+	class InstancingEffectFactory;
+}
 
 namespace Systems
 {
@@ -29,7 +34,7 @@ namespace Systems
 		Resources();
 
 		// モデルを読み込む
-		void LoadModelSources(ID3D11Device5* device, DirectX::IEffectFactory* fx, const std::wstring& directoryPath);
+		void LoadModelSources(ID3D11Device5* device, Renderings::InstancingEffectFactory* fx, const std::wstring& directoryPath);
 		// 画像を読み込む
 		void LoadImageSources(ID3D11Device5* device, const std::wstring& directoryPath);
 		// Jsonを読み込む

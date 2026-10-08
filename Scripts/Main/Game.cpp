@@ -1,7 +1,7 @@
 /*
  * FileName:     Game.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/28
+ * Last Updated: 2026/10/08
  *
  * ゲーム
  */
@@ -170,7 +170,8 @@ void Game::Initialize(const HWND& hWindow)
 		m_deviceResources2D.GetContext(),
 		m_deviceResources2D.GetBackBuffer()
 	);
-	m_renderer.GetModelRenderer().SetInstancingVS(m_resources.GetVertexShader("BasicInstancingVS"));
+	m_renderer.GetModelRenderer().SetVertexShader(m_resources.GetVertexShader("InstancingTest"));
+	m_renderer.GetModelRenderer().SetPixelShader(m_resources.GetPixelShader("InstancingTest"));
 	m_renderer.GetTextRenderer().CreateFontCollection(L"Resources\\Fonts");
 
 	// タイマーの初期化
@@ -270,7 +271,7 @@ void Game::Render()
 	m_renderer.Render();
 
 	// 画面の表示
-	m_deviceResources.Present(false);
+	m_deviceResources.Present(true);
 }
 
 // 終了処理

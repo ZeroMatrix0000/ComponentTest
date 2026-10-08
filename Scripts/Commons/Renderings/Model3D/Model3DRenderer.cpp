@@ -1,7 +1,7 @@
 /*
  * FileName:     Model3DRenderer.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/07
+ * Last Updated: 2026/10/08
  *
  * 3Dモデル描画
  */
@@ -12,7 +12,8 @@
 #include "Model3D.h"
 #include "Model3DSource.h"
 #include "../ICameraScreen.h"
-#include "../VertexShader.h"
+#include "../Shader/VertexShader.h"
+#include "../Shader/PixelShader.h"
 #include "Scripts/Commons/GameObjects/GameObject.h"
 #include "Scripts/Commons/Components/Transform.h"
 #include "Scripts/Commons/Systems/IResources.h"
@@ -26,7 +27,9 @@ Renderings::Model3DRenderer::Model3DRenderer()
 	, m_pDevice{}
 	, m_pContext{}
 	, m_pCommonStates{}
-	, m_pInstancingVS{}
+	, m_pVertexShader{}
+	, m_pPixelShader{}
+	, m_whiteTexture{}
 {
 }
 
@@ -50,77 +53,108 @@ void Renderings::Model3DRenderer::Initialize(ID3D11Device5* pDevice, ID3D11Devic
 		nullptr,
 		m_instanceBuffer.GetAddressOf()
 	));
+
+	CreateWhiteTexture();
 }
 
 // 描画処理
 void Renderings::Model3DRenderer::Render(bool isInstance)
 {
-	// ピクセルシェーダ
+	// シェーダを設定
+	m_pContext->VSSetShader(m_pVertexShader->GetD3DShader(), nullptr, 0);
+	m_pContext->PSSetShader(m_pPixelShader->GetD3DShader(), nullptr, 0);
+
+	// サンプラーを設定
 	auto sampler = m_pCommonStates->LinearWrap();
 	m_pContext->PSSetSamplers(0, 1, &sampler);
 
+	// 深度ステンシルを設定
 	m_pContext->OMSetDepthStencilState(m_pCommonStates->DepthDefault(), 0);
+
+	// 定数バッファ
+	ConstantBuffer* pVSConstantBuffer = m_pVertexShader->GetConstantBuffer();
+	// 定数バッファ
+	ConstantBuffer* pPSConstantBuffer = m_pPixelShader->GetConstantBuffer();
 
 	for (const auto& [pICameraScreen, pModelsList] : m_pModels)
 	{
+		// 定数バッファを設定
+		pVSConstantBuffer->SetVariable("View", pICameraScreen->GetViewMatrix().Transpose());
+		pVSConstantBuffer->SetVariable("Projection", pICameraScreen->GetProjectionMatrix().Transpose());
+		m_pVertexShader->SetConstantBuffer(m_pDevice, m_pContext);
+		pPSConstantBuffer->SetVariable("AmbientColor", Math::Vector3{ 0.5f, 0.5f, 0.5f });
+		pPSConstantBuffer->SetVariable("LightDirection", Math::Vector3{ -0.25f, -1.0f, -0.5f });
+		pPSConstantBuffer->SetVariable("LightColor", Math::Vector3{ 0.5f, 0.5f, 0.5f });
+		pPSConstantBuffer->SetVariable("EyePosition", pICameraScreen->GetEyePosition());
+		m_pPixelShader->SetConstantBuffer(m_pDevice, m_pContext);
+
 		for (const auto& [pModelSource, pModels] : pModelsList)
 		{
 			// 行列リスト
-			std::vector<DirectX::XMFLOAT3X4> matrices{};
-			matrices.reserve(pModels.size() * 100);
+			std::vector<DirectX::XMFLOAT3X4> instMatrices{};
+			instMatrices.reserve(pModels.size() * 100);
 
 			for (const auto* pModel : pModels)
 			{
 				// モデルの所有者のトランスフォーム
 				const Transform* pTransform = pModel->GetConstPOwner()->GetConstComponent<Transform>();
 
-				for (int i = 0; i < 100; i++)
+				// 行列リストに追加
+				DirectX::XMStoreFloat3x4(&instMatrices.emplace_back(), pTransform->GetWorldMatrix());
+
+				// インスタンス描画じゃないなら
+				if (!isInstance)
 				{
-					if (isInstance)
+					// バッファを更新
+					UpdateInstanceBuffer(instMatrices);
+
+					// パーツ番号
+					size_t partIndex = 0;
+					for (const auto& mesh : pModelSource->GetModel().meshes)
 					{
-						// 行列リストに追加
-						DirectX::XMStoreFloat3x4(&matrices.emplace_back(), pTransform->GetWorldMatrix());
+						for (const auto& part : mesh->meshParts)
+						{
+							// パーツの情報を設定
+							SetPartInfo(pModelSource->GetPartInfo(partIndex));
+							// 描画
+							Draw(pICameraScreen, part.get());
+
+							partIndex++;
+						}
 					}
-					else
-					{
-						pModelSource->GetModel().Draw
-						(
-							m_pContext,
-							*m_pCommonStates,
-							pTransform->GetWorldMatrix(),
-							pICameraScreen->GetViewMatrix(),
-							pICameraScreen->GetProjectionMatrix()
-						);
-					}
+
+					// マトリクスを削除
+					instMatrices.clear();
 				}
 			}
 
-			// 行列リストが空なら何もしない
-			if (matrices.empty())
-			{
-				continue;
-			}
+			// インスタンスバッファを更新
+			UpdateInstanceBuffer(instMatrices);
 
-			UpdateInstanceBuffer(matrices);
-
-			// モデル
-			const auto& dxModel = pModelSource->GetModel();
-
-			for (const auto& mesh : dxModel.meshes)
+			// パーツ番号
+			size_t partIndex = 0;
+			for (const auto& mesh : pModelSource->GetModel().meshes)
 			{
 				for (const auto& part : mesh->meshParts)
 				{
-					DrawInstanced(pICameraScreen, part.get(), matrices.size());
+					// 定数バッファを設定
+					SetPartInfo(pModelSource->GetPartInfo(partIndex));
+					// 描画
+					DrawInstanced(pICameraScreen, part.get(), instMatrices.size());
+
+					partIndex++;
 				}
 			}
 		}
 	}
+
+	m_pContext->PSSetShader(nullptr, nullptr, 0);
 }
 
-// インスタンシング頂点シェーダを設定
-void Renderings::Model3DRenderer::SetInstancingVS(const VertexShader* pVertexShader)
+// 頂点シェーダを設定
+void Renderings::Model3DRenderer::SetVertexShader(const VertexShader* pVertexShader)
 {
-	m_pInstancingVS = pVertexShader;
+	m_pVertexShader = pVertexShader;
 	CreateInputLayout();
 }
 
@@ -194,6 +228,59 @@ void Renderings::Model3DRenderer::RemovePModel(const ICameraScreen* pICameraScre
 	}
 }
 
+// 白画像を作成
+void Renderings::Model3DRenderer::CreateWhiteTexture()
+{
+	// 白色
+	const uint32_t white = 0xFFFFFFFF;
+
+	// テクスチャ詳細
+	D3D11_TEXTURE2D_DESC desc{};
+	desc.Width = 1;
+	desc.Height = 1;
+	desc.MipLevels = 1;
+	desc.ArraySize = 1;
+	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	desc.SampleDesc.Count = 1;
+	desc.Usage = D3D11_USAGE_IMMUTABLE;
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+
+	// サブリソースデータ
+	D3D11_SUBRESOURCE_DATA data{};
+	data.pSysMem = &white;
+	data.SysMemPitch = sizeof(uint32_t);
+
+	// テクスチャ
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
+	HRESULT hr = m_pDevice->CreateTexture2D
+	(
+		&desc,
+		&data,
+		texture.GetAddressOf()
+	);
+	if (FAILED(hr))
+	{
+		return;
+	}
+
+	// シェーダリソースビュー詳細
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	srvDesc.Format = desc.Format;
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels = 1;
+
+	// シェーダリソースビュー
+	hr = m_pDevice->CreateShaderResourceView(
+		texture.Get(),
+		&srvDesc,
+		m_whiteTexture.GetAddressOf()
+	);
+	if (FAILED(hr))
+	{
+		return;
+	}
+}
+
 // 入力レイアウトを作成
 void Renderings::Model3DRenderer::CreateInputLayout()
 {
@@ -259,8 +346,8 @@ void Renderings::Model3DRenderer::CreateInputLayout()
 	(
 		inputElements,
 		_countof(inputElements),
-		m_pInstancingVS->GetBlob()->GetBufferPointer(),
-		m_pInstancingVS->GetBlob()->GetBufferSize(),
+		m_pVertexShader->GetBlob()->GetBufferPointer(),
+		m_pVertexShader->GetBlob()->GetBufferSize(),
 		m_inputLayout.GetAddressOf()
 	));
 }
@@ -283,19 +370,25 @@ void Renderings::Model3DRenderer::UpdateInstanceBuffer(const std::vector<DirectX
 	m_pContext->Unmap(m_instanceBuffer.Get(), 0);
 }
 
-// インスタンス描画
-void Renderings::Model3DRenderer::DrawInstanced(const ICameraScreen* pICameraScreen, const DirectX::ModelMeshPart* pPart, size_t matricesCount)
+// パーツの情報を設定
+void Renderings::Model3DRenderer::SetPartInfo(const Model3DSource::PartInfo& partInfo)
 {
-	// エフェクト
-	auto* effect = static_cast<DirectX::BasicEffect*>(pPart->effect.get());
-	effect->SetWorld(Math::Matrix::Identity);
-	effect->SetView(pICameraScreen->GetViewMatrix());
-	effect->SetProjection(pICameraScreen->GetProjectionMatrix());
-	effect->Apply(m_pContext);
+	// テクスチャを設定
+	m_pContext->PSSetShaderResources(0, 1, partInfo.texture.Get() ? partInfo.texture.GetAddressOf() : m_whiteTexture.GetAddressOf());
 
-	// 頂点シェーダ
-	m_pContext->VSSetShader(m_pInstancingVS->GetD3DShader(), nullptr, 0);
+	// 定数バッファ
+	ConstantBuffer* pConstantBuffer = m_pPixelShader->GetConstantBuffer();
+	// 定数バッファを設定
+	pConstantBuffer->SetVariable("DiffuseColor", partInfo.effectInfo.diffuseColor);
+	pConstantBuffer->SetVariable("EmissiveColor", partInfo.effectInfo.emissiveColor);
+	pConstantBuffer->SetVariable("SpecularColor", partInfo.effectInfo.specularColor);
+	pConstantBuffer->SetVariable("SpecularPower", partInfo.effectInfo.specularPower);
+	m_pPixelShader->SetConstantBuffer(m_pDevice, m_pContext);
+}
 
+// 描画
+void Renderings::Model3DRenderer::Draw(const ICameraScreen* pICameraScreen, const DirectX::ModelMeshPart* pPart)
+{
 	// 入力レイアウト
 	m_pContext->IASetInputLayout(m_inputLayout.Get());
 
@@ -335,9 +428,60 @@ void Renderings::Model3DRenderer::DrawInstanced(const ICameraScreen* pICameraScr
 	m_pContext->IASetPrimitiveTopology(pPart->primitiveType);
 
 	// 描画
-	m_pContext->DrawIndexedInstanced(
+	m_pContext->DrawIndexed
+	(
 		pPart->indexCount,
-		static_cast<UINT>(matricesCount),
+		pPart->startIndex,
+		pPart->vertexOffset
+	);
+}
+
+// インスタンス描画
+void Renderings::Model3DRenderer::DrawInstanced(const ICameraScreen* pICameraScreen, const DirectX::ModelMeshPart* pPart, size_t instMatricesCount)
+{
+	// 頂点バッファ
+	ID3D11Buffer* buffers[] =
+	{
+		pPart->vertexBuffer.Get(),
+		m_instanceBuffer.Get()
+	};
+	UINT strides[] =
+	{
+		pPart->vertexStride,
+		sizeof(DirectX::XMFLOAT3X4)
+	};
+	UINT offsets[] =
+	{
+		0,
+		0
+	};
+	m_pContext->IASetVertexBuffers(
+		0,
+		2,
+		buffers,
+		strides,
+		offsets
+	);
+
+	// 番号バッファ
+	m_pContext->IASetIndexBuffer
+	(
+		pPart->indexBuffer.Get(),
+		pPart->indexFormat,
+		0
+	);
+
+	// トポロジー
+	m_pContext->IASetPrimitiveTopology(pPart->primitiveType);
+
+	// 入力レイアウト
+	m_pContext->IASetInputLayout(m_inputLayout.Get());
+
+	// 描画
+	m_pContext->DrawIndexedInstanced
+	(
+		pPart->indexCount,
+		static_cast<UINT>(instMatricesCount),
 		pPart->startIndex,
 		pPart->vertexOffset,
 		0

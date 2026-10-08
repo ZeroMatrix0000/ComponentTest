@@ -1,7 +1,7 @@
 /*
  * FileName:     ImageRenderer.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/29
+ * Last Updated: 2026/10/08
  *
  * 画像描画
  */
@@ -10,7 +10,7 @@
 #include "ImageRenderer.h"
 
 #include "ImageSource.h"
-#include "../PixelShader.h"
+#include "../Shader/PixelShader.h"
 #include "Image.h"
 #include "../Canvas.h"
 #include "Scripts/Commons/Systems/IResources.h"
@@ -167,23 +167,8 @@ void Renderings::ImageRenderer::Draw(const Image* pImage)
 	{
 		// ピクセルシェーダを設定
 		m_pContext->PSSetShader(pPixelShader->GetD3DShader(), nullptr, 0);
-
-		auto& data = pPixelShader->GetConstantBuffer()->GetData();
-
-		if (data.size() != 0)
-		{
-
-			// 定数バッファの詳細
-			CD3D11_BUFFER_DESC cbDesc{ static_cast<UINT>(data.size()), D3D11_BIND_CONSTANT_BUFFER };
-
-			// 定数バッファ
-			Microsoft::WRL::ComPtr<ID3D11Buffer> buffer;
-			Utility::ThrowIfFailed(m_pDevice->CreateBuffer(&cbDesc, nullptr, buffer.GetAddressOf()));
-
-			// 定数バッファを設定
-			m_pContext->UpdateSubresource(buffer.Get(), 0, nullptr, data.data(), 0, 0);
-			m_pContext->PSSetConstantBuffers(0, 1, buffer.GetAddressOf());
-		}
+		// 定数バッファを設定
+		pPixelShader->SetConstantBuffer(m_pDevice, m_pContext);
 	}
 
 	// 描画

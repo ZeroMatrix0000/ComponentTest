@@ -1,7 +1,7 @@
 /*
  * FileName:     Resources.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/07
+ * Last Updated: 2026/10/08
  *
  * リソース管理
  */
@@ -23,7 +23,7 @@ Systems::Resources::Resources()
 }
 
 // モデルを追加
-void Systems::Resources::LoadModelSources(ID3D11Device5* device, DirectX::IEffectFactory* fx, const std::wstring& directoryPath)
+void Systems::Resources::LoadModelSources(ID3D11Device5* device, Renderings::InstancingEffectFactory* fx, const std::wstring& directoryPath)
 {
 	// パスが存在しないなら
 	if (!std::filesystem::exists(directoryPath))
@@ -43,19 +43,20 @@ void Systems::Resources::LoadModelSources(ID3D11Device5* device, DirectX::IEffec
 		// ファイルなら
 		if (entry.is_regular_file())
 		{
-			try
-			{
-				m_modelSources.emplace(entry.path().stem().string(), Renderings::Model3DSource::Create(device, fx, entry.path().wstring()));
-			}
-			catch (std::exception e)
-			{
-				// エラーメッセージを追加
-				IErrorMessage::GetInstance()->AddMessage(Utility::FormatWString
-				(
-					L"モデルの読み込みに失敗しました。 | path: %s",
-					entry.path().c_str()
-				));
-			}
+			m_modelSources.emplace(entry.path().stem().string(), Renderings::Model3DSource::Create(device, fx, entry.path().wstring()));
+			//try
+			//{
+			//	m_modelSources.emplace(entry.path().stem().string(), Renderings::Model3DSource::Create(device, fx, entry.path().wstring()));
+			//}
+			//catch (std::exception e)
+			//{
+			//	// エラーメッセージを追加
+			//	IErrorMessage::GetInstance()->AddMessage(Utility::FormatWString
+			//	(
+			//		L"モデルの読み込みに失敗しました。 | path: %s",
+			//		entry.path().c_str()
+			//	));
+			//}
 		}
 	}
 }

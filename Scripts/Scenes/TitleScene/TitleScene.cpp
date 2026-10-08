@@ -14,7 +14,7 @@
 #include "Scripts/Commons/Systems/IInput.h"
 #include "Scripts/Commons/Scenes/ISceneManager.h"
 #include "Scripts/Commons/Renderings/Image/Image.h"
-#include "Scripts/Commons/Renderings/PixelShader.h"
+#include "Scripts/Commons/Renderings/Shader/PixelShader.h"
 #include "Scripts/Commons/Renderings/Canvas.h"
 #include "Scripts/Commons/Renderings/CameraScreen.h"
 #include "Scripts/Commons/Components/RectTransform.h"
@@ -72,7 +72,7 @@ void TitleScene::Initialize(const SceneTransitionData& data)
 	GameObject* pObj = pIGameObjectManager->Find("Title");
 	m_pTitle = pObj->GetComponent<RectTransform>();
 	m_pTitleImage = pObj->GetComponent<Renderings::Image>();
-	m_pTitleImage->GetPPixelShader()->GetConstantBuffer()->SetVariable("textureSize", m_pTitleImage->GetSize());
+	m_pTitleImage->GetPPixelShader()->GetConstantBuffer()->SetVariable("TextureSize", m_pTitleImage->GetSize());
 	m_titlePosition = m_pTitle->GetRect().position;
 	m_titleSway.Initialize(0.0f, 0.0f, 360.0f);
 }
@@ -110,7 +110,7 @@ void TitleScene::Update(float elapsedTime)
 	m_titleSway += 90.0f * elapsedTime;
 	m_pTitle->SetPosition(m_titlePosition + Math::Vector2::UnitY * Math::Sin(Math::Deg2Rad(m_titleSway)) * 50.0f);
 	auto* buffer = m_pTitleImage->GetPPixelShader()->GetConstantBuffer();
-	buffer->SetVariable("time", buffer->GetVariable<float>("time") + elapsedTime);
+	buffer->SetVariable("Time", buffer->GetVariable<float>("Time") + elapsedTime);
 	//buffer->SetVariable("timer", buffer->GetVariable<float>("time") + elapsedTime);
 
 	// カメラ画面の更新

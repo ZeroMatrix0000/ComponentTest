@@ -1,7 +1,7 @@
 /*
  * FileName:     Model3DRenderer.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/07
+ * Last Updated: 2026/10/08
  *
  * 3Dモデル描画
  */
@@ -9,6 +9,7 @@
 #pragma once
 
 #include "IModel3DRenderer.h"
+#include "Model3DSource.h"
 
 namespace Systems
 {
@@ -17,8 +18,8 @@ namespace Systems
 
 namespace Renderings
 {
-	class Model3DSource;
 	class VertexShader;
+	class PixelShader;
 
 	// 3Dモデル描画
 	class Model3DRenderer : public IModel3DRenderer
@@ -37,8 +38,10 @@ namespace Renderings
 		// 描画処理
 		void Render(bool isInstance);
 
-		// インスタンシング頂点シェーダを設定
-		void SetInstancingVS(const VertexShader* pVertexShader);
+		// 頂点シェーダを設定
+		void SetVertexShader(const VertexShader* pVertexShader);
+		// ピクセルシェーダを設定
+		void SetPixelShader(const PixelShader* pPixelShader) { m_pPixelShader = pPixelShader; }
 
 		// モデルのポインタを追加
 		void AddPModel(const ICameraScreen* pICameraScreen, const Model3D* pModel) override;
@@ -51,14 +54,22 @@ namespace Renderings
 
 		/* メンバ関数 */
 
+		// 白画像を作成
+		void CreateWhiteTexture();
+
 		// 入力レイアウトを作成
 		void CreateInputLayout();
 
 		// インスタンスバッファを更新
 		void UpdateInstanceBuffer(const std::vector<DirectX::XMFLOAT3X4>& matrices);
 
+		// パーツの情報を設定
+		void SetPartInfo(const Model3DSource::PartInfo& partInfo);
+
+		// 描画
+		void Draw(const ICameraScreen* pICameraScreen, const DirectX::ModelMeshPart* pPart);
 		// インスタンス描画
-		void DrawInstanced(const ICameraScreen* pICameraScreen, const DirectX::ModelMeshPart* pPart, size_t matricesCount);
+		void DrawInstanced(const ICameraScreen* pICameraScreen, const DirectX::ModelMeshPart* pPart, size_t instMatricesCount);
 
 
 		/* メンバ変数 */
@@ -68,6 +79,9 @@ namespace Renderings
 
 		// 入力レイアウト
 		Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
+
+		// 白画像
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_whiteTexture;
 
 		// モデルのポインタリスト
 		std::unordered_map<const ICameraScreen*, std::unordered_map<const Model3DSource*, std::vector<const Model3D*>>> m_pModels;
@@ -80,7 +94,9 @@ namespace Renderings
 		const DirectX::CommonStates* m_pCommonStates;
 
 		// 頂点シェーダのポインタ
-		const VertexShader* m_pInstancingVS;
+		const VertexShader* m_pVertexShader;
+		// ピクセルシェーダのポインタ
+		const PixelShader* m_pPixelShader;
 
 	};
 }

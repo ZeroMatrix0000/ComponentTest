@@ -1,7 +1,7 @@
 /*
  * FileName:     TextRenderer.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/06
+ * Last Updated: 2026/10/08
  *
  * テキスト描画
  */
@@ -12,7 +12,7 @@
 #include "TextOutlineRenderer.h"
 #include "Text.h"
 #include "../Canvas.h"
-#include "../PixelShader.h"
+#include "../Shader/PixelShader.h"
 #include "Scripts/Commons/GameObjects/GameObject.h"
 #include "Scripts/Commons/Components/RectTransform.h"
 #include "Scripts/Commons/Systems/IErrorMessage.h"

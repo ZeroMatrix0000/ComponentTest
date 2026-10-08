@@ -1,14 +1,14 @@
 /*
  * FileName:     ConstantBuffer.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/25
+ * Last Updated: 2026/10/08
  *
  * 定数バッファ
  */
 
 #pragma once
 
-#include "../Systems/IErrorMessage.h"
+#include "Scripts/Commons/Systems/IErrorMessage.h"
 
 namespace Renderings
 {
@@ -24,7 +24,7 @@ namespace Renderings
 		ConstantBuffer();
 
 		// 初期化処理
-		void Initialize(ID3DBlob* pBlob);
+		void Initialize(ID3D11Device5* pDevice, ID3DBlob* pBlob);
 
 		// 値を変更
 		template<typename T>
@@ -68,6 +68,9 @@ namespace Renderings
 
 		// データを取得
 		const std::vector<std::byte>& GetData() const { return m_data; }
+
+		// d3dバッファを取得
+		auto* GetBuffer() const { return m_buffer.Get(); }
 
 
 	private:
