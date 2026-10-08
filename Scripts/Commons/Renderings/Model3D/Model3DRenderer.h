@@ -48,8 +48,25 @@ namespace Renderings
 		// モデルのポインタを削除
 		void RemovePModel(const ICameraScreen* pICameraScreen, const Model3D* pModel) override;
 
+		// パーティクルのポインタを追加
+		void AddPParticle(const ICameraScreen* pICameraScreen, const Particle* pParticle) override;
+		// パーティクルのポインタを削除
+		void RemovePParticle(const ICameraScreen* pICameraScreen, const Particle* pParticle) override;
+
 
 	private:
+
+
+		/* 構造体 */
+
+		// 描画オブジェクト
+		struct RenderObjects
+		{
+			// モデルのポインタリスト
+			std::vector<const Model3D*> pModels{};
+			// パーティクルのポインタリスト
+			std::vector<const Particle*> pParticles{};
+		};
 
 
 		/* メンバ関数 */
@@ -83,8 +100,8 @@ namespace Renderings
 		// 白画像
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_whiteTexture;
 
-		// モデルのポインタリスト
-		std::unordered_map<const ICameraScreen*, std::unordered_map<const Model3DSource*, std::vector<const Model3D*>>> m_pModels;
+		// 描画オブジェクトリスト
+		std::unordered_map<const ICameraScreen*, std::unordered_map<const Model3DSource*, RenderObjects>> m_renderObjects;
 
 		// デバイスのポインタ
 		ID3D11Device5* m_pDevice;

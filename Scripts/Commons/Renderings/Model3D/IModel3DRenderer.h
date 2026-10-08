@@ -13,6 +13,7 @@
 namespace Renderings
 {
 	class Model3D;
+	class Particle;
 	class ICameraScreen;
 
 	// 3Dモデル描画のインタフェース
@@ -36,6 +37,11 @@ namespace Renderings
 		virtual void AddPModel(const ICameraScreen* pICameraScreen, const Model3D* pModel) = 0;
 		// モデルのポインタを削除
 		virtual void RemovePModel(const ICameraScreen* pICameraScreen, const Model3D* pModel) = 0;
+
+		// パーティクルのポインタを追加
+		virtual void AddPParticle(const ICameraScreen* pICameraScreen, const Particle* pParticle) = 0;
+		// パーティクルのポインタを削除
+		virtual void RemovePParticle(const ICameraScreen* pICameraScreen, const Particle* pParticle) = 0;
 
 	};
 }

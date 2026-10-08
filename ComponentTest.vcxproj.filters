@@ -124,6 +124,9 @@
     <Filter Include="Scripts\Commons\Renderings\Shader">
       <UniqueIdentifier>{ed991c18-dd90-4653-aca7-68cc6da865c0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scripts\Commons\Renderings\Particle">
+      <UniqueIdentifier>{003eeb64-9e6d-42c8-84e0-36dc76d4e7a7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Scripts\Main\WinMain.cpp">
@@ -366,6 +369,9 @@
     </ClCompile>
     <ClCompile Include="Scripts\Commons\Renderings\Shader\VertexShader.cpp">
       <Filter>Scripts\Commons\Renderings\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Commons\Renderings\Particle\Particle.cpp">
+      <Filter>Scripts\Commons\Renderings\Particle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -729,6 +735,9 @@
     </ClInclude>
     <ClInclude Include="Scripts\Commons\Renderings\Shader\VertexShader.h">
       <Filter>Scripts\Commons\Renderings\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Commons\Renderings\Particle\Particle.h">
+      <Filter>Scripts\Commons\Renderings\Particle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

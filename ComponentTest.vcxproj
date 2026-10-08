@@ -153,6 +153,7 @@
     <ClCompile Include="Scripts\Commons\Components\ComponentManager.cpp" />
     <ClCompile Include="Scripts\Commons\GameObjects\GameObjectManager.cpp" />
     <ClCompile Include="Scripts\Commons\Renderings\ColliderRenderer.cpp" />
+    <ClCompile Include="Scripts\Commons\Renderings\Particle\Particle.cpp" />
     <ClCompile Include="Scripts\Commons\Renderings\Shader\ConstantBuffer.cpp" />
     <ClCompile Include="Scripts\Commons\Renderings\Model3D\InstancingEffectFactory.cpp" />
     <ClCompile Include="Scripts\Commons\Renderings\Text\DecorationString.cpp" />
@@ -257,6 +258,7 @@
     <ClInclude Include="Scripts\Commons\GameObjects\IGameObjectInstantiator.h" />
     <ClInclude Include="Scripts\Commons\GameObjects\IGameObjectManager.h" />
     <ClInclude Include="Scripts\Commons\Renderings\ColliderRenderer.h" />
+    <ClInclude Include="Scripts\Commons\Renderings\Particle\Particle.h" />
     <ClInclude Include="Scripts\Commons\Renderings\Shader\ConstantBuffer.h" />
     <ClInclude Include="Scripts\Commons\Renderings\Model3D\InstancingEffectFactory.h" />
     <ClInclude Include="Scripts\Commons\Renderings\Text\DecorationString.h" />
