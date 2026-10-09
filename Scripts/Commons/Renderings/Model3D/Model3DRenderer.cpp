@@ -43,7 +43,7 @@ void Renderings::Model3DRenderer::Initialize(ID3D11Device5* pDevice, ID3D11Devic
 
 	// バッファの詳細
 	D3D11_BUFFER_DESC desc{};
-	desc.ByteWidth = sizeof(DirectX::XMFLOAT3X4) * 1024;
+	desc.ByteWidth = sizeof(DirectX::XMFLOAT3X4) * 65536;
 	desc.Usage = D3D11_USAGE_DYNAMIC;
 	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
@@ -93,7 +93,7 @@ void Renderings::Model3DRenderer::Render(bool isInstance)
 		{
 			// 行列リスト
 			std::vector<DirectX::XMFLOAT3X4> instMatrices{};
-			instMatrices.reserve(renderObjects.pModels.size() + renderObjects.pParticles.size());
+			instMatrices.reserve(renderObjects.pModels.size() + renderObjects.pParticleElements.size());
 
 			for (const auto* pModel : renderObjects.pModels)
 			{
@@ -102,6 +102,37 @@ void Renderings::Model3DRenderer::Render(bool isInstance)
 
 				// 行列リストに追加
 				DirectX::XMStoreFloat3x4(&instMatrices.emplace_back(), pTransform->GetWorldMatrix());
+
+				// インスタンス描画じゃないなら
+				if (!isInstance)
+				{
+					// バッファを更新
+					UpdateInstanceBuffer(instMatrices);
+
+					// パーツ番号
+					size_t partIndex = 0;
+					for (const auto& mesh : pModelSource->GetModel().meshes)
+					{
+						for (const auto& part : mesh->meshParts)
+						{
+							// パーツの情報を設定
+							SetPartInfo(pModelSource->GetPartInfo(partIndex));
+							// 描画
+							Draw(pICameraScreen, part.get());
+
+							partIndex++;
+						}
+					}
+
+					// マトリクスを削除
+					instMatrices.clear();
+				}
+			}
+
+			for (const auto* pElement : renderObjects.pParticleElements)
+			{
+				// 行列リストに追加
+				DirectX::XMStoreFloat3x4(&instMatrices.emplace_back(), pElement->matrix);
 
 				// インスタンス描画じゃないなら
 				if (!isInstance)
@@ -174,7 +205,7 @@ void Renderings::Model3DRenderer::AddPModel(const ICameraScreen* pICameraScreen,
 		return;
 	}
 
-	// カメラに対応したモデルのポインタリストが見つからなければ生成
+	// カメラに対応した描画オブジェクトリストが見つからなければ生成
 	auto cameraIt = m_renderObjects.find(pICameraScreen);
 	if (cameraIt == m_renderObjects.end())
 	{
@@ -182,7 +213,7 @@ void Renderings::Model3DRenderer::AddPModel(const ICameraScreen* pICameraScreen,
 		cameraIt = m_renderObjects.find(pICameraScreen);
 	}
 
-	// モデルソースに対応したモデルのポインタリストが見つからなければ生成
+	// モデルソースに対応した描画オブジェクトリストが見つからなければ生成
 	auto modelIt = cameraIt->second.find(pModelSource);
 	if (modelIt == cameraIt->second.end())
 	{
@@ -219,7 +250,7 @@ void Renderings::Model3DRenderer::RemovePModel(const ICameraScreen* pICameraScre
 	}
 
 	// 空の配列を削除
-	if (pModels.size() == 0 && m_renderObjects.at(pICameraScreen).at(pModelSource).pParticles.size() == 0)
+	if (pModels.size() == 0 && m_renderObjects.at(pICameraScreen).at(pModelSource).pParticleElements.size() == 0)
 	{
 		m_renderObjects.at(pICameraScreen).erase(pModelSource);
 		if (m_renderObjects.at(pICameraScreen).size() == 0)
@@ -230,7 +261,7 @@ void Renderings::Model3DRenderer::RemovePModel(const ICameraScreen* pICameraScre
 }
 
 // パーティクルのポインタを追加
-void Renderings::Model3DRenderer::AddPParticle(const ICameraScreen* pICameraScreen, const Particle* pParticle)
+void Renderings::Model3DRenderer::AddPParticle(const ICameraScreen* pICameraScreen, const Particle::RenderElement* pParticleElement)
 {
 	if (!pICameraScreen)
 	{
@@ -238,13 +269,13 @@ void Renderings::Model3DRenderer::AddPParticle(const ICameraScreen* pICameraScre
 	}
 
 	// モデルソース
-	const Model3DSource* pModelSource = pParticle->GetPModelSource();
+	const Model3DSource* pModelSource = pParticleElement->pModelSource;
 	if (!pModelSource)
 	{
 		return;
 	}
 
-	// カメラに対応したモデルのポインタリストが見つからなければ生成
+	// カメラに対応した描画オブジェクトリストが見つからなければ生成
 	auto cameraIt = m_renderObjects.find(pICameraScreen);
 	if (cameraIt == m_renderObjects.end())
 	{
@@ -252,7 +283,7 @@ void Renderings::Model3DRenderer::AddPParticle(const ICameraScreen* pICameraScre
 		cameraIt = m_renderObjects.find(pICameraScreen);
 	}
 
-	// モデルソースに対応したモデルのポインタリストが見つからなければ生成
+	// モデルソースに対応した描画オブジェクトリストが見つからなければ生成
 	auto modelIt = cameraIt->second.find(pModelSource);
 	if (modelIt == cameraIt->second.end())
 	{
@@ -261,11 +292,11 @@ void Renderings::Model3DRenderer::AddPParticle(const ICameraScreen* pICameraScre
 	}
 
 	// モデルのポインタの追加
-	modelIt->second.pParticles.push_back(pParticle);
+	modelIt->second.pParticleElements.push_back(pParticleElement);
 }
 
 // パーティクルのポインタを削除
-void Renderings::Model3DRenderer::RemovePParticle(const ICameraScreen* pICameraScreen, const Particle* pParticle)
+void Renderings::Model3DRenderer::RemovePParticle(const ICameraScreen* pICameraScreen, const Particle::RenderElement* pParticleElement)
 {
 	if (!pICameraScreen)
 	{
@@ -273,23 +304,23 @@ void Renderings::Model3DRenderer::RemovePParticle(const ICameraScreen* pICameraS
 	}
 
 	// モデルソース
-	const Model3DSource* pModelSource = pParticle->GetPModelSource();
+	const Model3DSource* pModelSource = pParticleElement->pModelSource;
 	if (!pModelSource)
 	{
 		return;
 	}
 
 	// ポインタリスト
-	auto& pParticles = m_renderObjects.at(pICameraScreen).at(pModelSource).pParticles;
+	auto& pParticleElements = m_renderObjects.at(pICameraScreen).at(pModelSource).pParticleElements;
 
-	auto it = std::ranges::find(pParticles, pParticle);
-	if (it != pParticles.end())
+	auto it = std::ranges::find(pParticleElements, pParticleElement);
+	if (it != pParticleElements.end())
 	{
-		pParticles.erase(it);
+		pParticleElements.erase(it);
 	}
 
 	// 空の配列を削除
-	if (pParticles.size() == 0 && m_renderObjects.at(pICameraScreen).at(pModelSource).pModels.size() == 0)
+	if (pParticleElements.size() == 0 && m_renderObjects.at(pICameraScreen).at(pModelSource).pModels.size() == 0)
 	{
 		m_renderObjects.at(pICameraScreen).erase(pModelSource);
 		if (m_renderObjects.at(pICameraScreen).size() == 0)

@@ -10,6 +10,7 @@
 
 namespace Libraries
 {
+	// 便利関数群
 	namespace Utility
 	{
 		// 位置合わせ点

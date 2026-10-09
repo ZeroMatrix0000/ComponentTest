@@ -27,5 +27,6 @@
 		"JumpPower": 16.0,
 		"CameraVelocityCoefficient": 0.2,
 		"CoyoteTime": 0.1
-	}
+	},
+	"ParticleManager": {}
 }

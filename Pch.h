@@ -31,8 +31,6 @@
 // DirectWrite
 #include <dwrite_3.h>
 
-// 数学
-#include <cmath>
 // コンセプト
 #include <concepts>
 // アルゴリズム
@@ -97,6 +95,8 @@ concept IsSame = (std::same_as<T, Args> || ...);
 
 // 便利関数群
 #include "Scripts/Commons/Libraries/Utility.h"
+// 乱数
+#include "Scripts/Commons/Libraries/Random.h"
 // 数学関係
 #include "Scripts/Commons/Libraries/Math/Math.h"
 #include "Scripts/Commons/Libraries/Math/Vector2Int.h"

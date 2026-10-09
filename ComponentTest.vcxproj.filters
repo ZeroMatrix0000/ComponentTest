@@ -127,6 +127,9 @@
     <Filter Include="Scripts\Commons\Renderings\Particle">
       <UniqueIdentifier>{003eeb64-9e6d-42c8-84e0-36dc76d4e7a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scripts\GameObjects\Particles">
+      <UniqueIdentifier>{bc5e8623-40c5-4939-8e07-857ea6f280d2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Scripts\Main\WinMain.cpp">
@@ -372,6 +375,21 @@
     </ClCompile>
     <ClCompile Include="Scripts\Commons\Renderings\Particle\Particle.cpp">
       <Filter>Scripts\Commons\Renderings\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Commons\Renderings\Particle\ParticleManager.cpp">
+      <Filter>Scripts\Commons\Renderings\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Commons\Renderings\Particle\ParticleSample.cpp">
+      <Filter>Scripts\Commons\Renderings\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Commons\Libraries\Random.cpp">
+      <Filter>Scripts\Commons\Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\GameObjects\Particles\LandingParticle.cpp">
+      <Filter>Scripts\GameObjects\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\GameObjects\Particles\JumpingParticle.cpp">
+      <Filter>Scripts\GameObjects\Particles</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -738,6 +756,21 @@
     </ClInclude>
     <ClInclude Include="Scripts\Commons\Renderings\Particle\Particle.h">
       <Filter>Scripts\Commons\Renderings\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Commons\Renderings\Particle\ParticleManager.h">
+      <Filter>Scripts\Commons\Renderings\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Commons\Renderings\Particle\ParticleSample.h">
+      <Filter>Scripts\Commons\Renderings\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Commons\Libraries\Random.h">
+      <Filter>Scripts\Commons\Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\GameObjects\Particles\LandingParticle.h">
+      <Filter>Scripts\GameObjects\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\GameObjects\Particles\JumpingParticle.h">
+      <Filter>Scripts\GameObjects\Particles</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

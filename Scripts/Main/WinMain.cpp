@@ -1,7 +1,7 @@
 /*
  * FileName:     WinMain.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/07/07
+ * Last Updated: 2026/10/09
  *
  * メイン
  */
@@ -150,7 +150,7 @@ LRESULT CALLBACK WndProcW
 			s_game = reinterpret_cast<Game*>(GetWindowLongPtrW(hWnd, GWLP_USERDATA));
 
 			// 1秒毎に処理を実行
-			SetTimer(hWnd, 1, 500, nullptr);
+			SetTimer(hWnd, 1, 1000, nullptr);
 		}
 		break;
 	// ウィンドウを破棄
@@ -180,7 +180,7 @@ LRESULT CALLBACK WndProcW
 		{
 			// ウィンドウに表示するテキスト
 			std::wstring text = WINDOW_NAME;
-			text += Utility::FormatWString(L" | FPS: %.2f", 1.0f / s_game->GetDeltaTime());
+			text += Utility::FormatWString(L" | FPS: %d", s_game->GetFPS());
 			// テキストを変更
 			SetWindowTextW(hWnd, text.c_str());
 		}

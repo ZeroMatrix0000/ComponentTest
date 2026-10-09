@@ -57,7 +57,7 @@ VSOutput main(VSInput input)
 	
 	output.texCoord = input.texCoord;
 	output.worldPosition = worldPosition;
-	output.normal = input.normal;
+	output.normal = mul(input.normal, float3x3(input.world._11_12_13, input.world._21_22_23, input.world._31_32_33));
 	
 	return output;
 }

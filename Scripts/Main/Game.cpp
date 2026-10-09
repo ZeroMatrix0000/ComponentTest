@@ -26,6 +26,7 @@
 #include "Scripts/Commons/Renderings/Model3D/Model3D.h"
 #include "Scripts/Commons/Renderings/Image/Image.h"
 #include "Scripts/Commons/Renderings/Text/Text.h"
+#include "Scripts/Commons/Renderings/Particle/ParticleManager.h"
 #include "Scripts/Commons/Renderings/Canvas.h"
 #include "Scripts/Commons/Renderings/CameraScreen.h"
 #include "Scripts/Commons/Colliders/BoxCollider.h"
@@ -271,7 +272,7 @@ void Game::Render()
 	m_renderer.Render();
 
 	// 画面の表示
-	m_deviceResources.Present(true);
+	m_deviceResources.Present(false);
 }
 
 // 終了処理
@@ -334,6 +335,11 @@ void Game::RegisterComponents()
 	{
 		return std::make_unique<Renderings::Text>(desc, &m_renderer.GetTextRenderer());
 	});
+	// パーティクル管理
+	m_componentManager.RegisterCreate<Renderings::ParticleManager>([&](const ComponentDesc& desc)
+	{
+		return std::make_unique<Renderings::ParticleManager>(desc, &m_renderer.GetModelRenderer(), m_resources);
+	});
 
 	// 長方形の当たり判定
 	m_componentManager.RegisterCreate<Colliders::BoxCollider>([&](const ComponentDesc& desc)
@@ -370,15 +376,17 @@ void Game::RegisterComponents()
 	m_gameObjectManager.Register<RectTransform>("RectTransform");
 	// 3Dモデル
 	m_gameObjectManager.Register<Renderings::Model3D>("Model3D");
+	// 画像
+	m_gameObjectManager.Register<Renderings::Image>("Image");
+	// 文字
+	m_gameObjectManager.Register<Renderings::Text>("Text");
+	// 文字
+	m_gameObjectManager.Register<Renderings::ParticleManager>("ParticleManager");
 	// カメラ画面
 	m_gameObjectManager.Register<Renderings::CameraScreen<Camera::QuaternionCamera>>("QuaternionCameraScreen");
 	m_gameObjectManager.Register<Renderings::CameraScreen<Camera::QuaternionTargetCamera>>("QuaternionTargetCameraScreen");
 	m_gameObjectManager.Register<Renderings::CameraScreen<Camera::EulerCamera>>("EulerCameraScreen");
 	m_gameObjectManager.Register<Renderings::CameraScreen<Camera::EulerTargetCamera>>("EulerTargetCameraScreen");
-	// 画像
-	m_gameObjectManager.Register<Renderings::Image>("Image");
-	// 文字
-	m_gameObjectManager.Register<Renderings::Text>("Text");
 	// キャンバス
 	m_gameObjectManager.Register<Renderings::Canvas>("Canvas");
 	// コライダー

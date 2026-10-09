@@ -20,6 +20,10 @@ namespace Colliders
 {
 	class BoxCollider;
 }
+namespace Renderings
+{
+	class ParticleManager;
+}
 
 class PlayerModel;
 
@@ -110,6 +114,8 @@ private:
 	Transform* m_pTransform;
 	// 長方形の当たり判定
 	Colliders::BoxCollider* m_pBoxCollider;
+	// パーティクル管理
+	Renderings::ParticleManager* m_pParticleManager;
 	// カメラ画面のポインタ
 	const Renderings::CameraScreen<Camera::EulerTargetCamera>* m_pCameraScreen;
 

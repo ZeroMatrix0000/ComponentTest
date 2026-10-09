@@ -96,6 +96,29 @@
 		}
 	},
 	{
+		"Name": "Box",
+		"Components": {
+			"Transform": {
+				"Position": {
+					"X": 0.0,
+					"Y": 5.0,
+					"Z": 0.0
+				},
+				"Rotation": {
+					"X": 45.0,
+					"Y": 45.0,
+					"Z": 45.0
+				}
+			},
+			"Model3D": {
+				"ModelSourceName": "Box",
+				"CameraScreens": [
+					"DebugCamera"
+				]
+			}
+		}
+	},
+	{
 		"Name": "Canvas",
 		"Components": {
 			"Canvas": {
@@ -103,57 +126,79 @@
 			}
 		}
 	},
+	//{
+	//	"Name": "Test",
+	//	"Components": {
+	//		"RectTransform": {
+	//			"Size": {
+	//				"X": 1000.0,
+	//				"Y": 250.0
+	//			},
+	//			"Angle": -30.0
+	//		},
+	//		"Image": {
+	//			"ImageSourceName": "MessageWindow",
+	//			"Canvas": "Canvas"
+	//		},
+	//		"Text": {
+	//			"Str": "あいうえお",
+	//			"FontName": "GenEi M Gothic v2",
+	//			"FontSize": 256.0,
+	//			"TextAlignment": "DWRITE_TEXT_ALIGNMENT_CENTER",
+	//			"ParagraphAlignment": "DWRITE_PARAGRAPH_ALIGNMENT_CENTER",
+	//			"OutlineWidth": 10.0,
+	//			"OutlineColor": {
+	//				"R": 1.0,
+	//				"G": 0.0,
+	//				"B": 0.5,
+	//				"A": 1.0
+	//			},
+	//			"Canvas": "Canvas"
+	//		}
+	//	}
+	//},
+	//{
+	//	"Name": "Test2",
+	//	"Components": {
+	//		"RectTransform": {
+	//			"Size": {
+	//				"X": 1000.0,
+	//				"Y": 250.0
+	//			},
+	//			"Angle": 45.0
+	//		},
+	//		"Image": {
+	//			"ImageSourceName": "MessageWindow",
+	//			"Color": {
+	//				"R": 1.0,
+	//				"G": 0.0,
+	//				"B": 0.0,
+	//				"A": 1.0
+	//			},
+	//			"OrderInLayer": 1,
+	//			"Canvas": "Canvas"
+	//		}
+	//	}
+	//},
 	{
-		"Name": "Test",
+		"Name": "ParticleManager",
 		"Components": {
-			"RectTransform": {
-				"Size": {
-					"X": 1000.0,
-					"Y": 250.0
+			"Transform": {
+				"Position": {
+					"X": 0.0,
+					"Y": 1.0,
+					"Z": 0.0
 				},
-				"Angle": -30.0
+				"Rotation": {
+					"X": 0.0,
+					"Y": 0.0,
+					"Z": 0.0
+				}
 			},
-			"Image": {
-				"ImageSourceName": "MessageWindow",
-				"Canvas": "Canvas"
-			},
-			"Text": {
-				"Str": "あいうえお",
-				"FontName": "GenEi M Gothic v2",
-				"FontSize": 256.0,
-				"TextAlignment": "DWRITE_TEXT_ALIGNMENT_CENTER",
-				"ParagraphAlignment": "DWRITE_PARAGRAPH_ALIGNMENT_CENTER",
-				"OutlineWidth": 10.0,
-				"OutlineColor": {
-					"R": 1.0,
-					"G": 0.0,
-					"B": 0.5,
-					"A": 1.0
-				},
-				"Canvas": "Canvas"
-			}
-		}
-	},
-	{
-		"Name": "Test2",
-		"Components": {
-			"RectTransform": {
-				"Size": {
-					"X": 1000.0,
-					"Y": 250.0
-				},
-				"Angle": 45.0
-			},
-			"Image": {
-				"ImageSourceName": "MessageWindow",
-				"Color": {
-					"R": 1.0,
-					"G": 0.0,
-					"B": 0.0,
-					"A": 1.0
-				},
-				"OrderInLayer": 1,
-				"Canvas": "Canvas"
+			"ParticleManager": {
+				"CameraScreens": [
+					"DebugCamera"
+				]
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 /*
  * FileName:     Model3DRenderer.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/08
+ * Last Updated: 2026/10/09
  *
  * 3Dモデル描画
  */
@@ -49,9 +49,9 @@ namespace Renderings
 		void RemovePModel(const ICameraScreen* pICameraScreen, const Model3D* pModel) override;
 
 		// パーティクルのポインタを追加
-		void AddPParticle(const ICameraScreen* pICameraScreen, const Particle* pParticle) override;
+		void AddPParticle(const ICameraScreen* pICameraScreen, const Particle::RenderElement* pParticleElement) override;
 		// パーティクルのポインタを削除
-		void RemovePParticle(const ICameraScreen* pICameraScreen, const Particle* pParticle) override;
+		void RemovePParticle(const ICameraScreen* pICameraScreen, const Particle::RenderElement* pParticleElement) override;
 
 
 	private:
@@ -65,7 +65,7 @@ namespace Renderings
 			// モデルのポインタリスト
 			std::vector<const Model3D*> pModels{};
 			// パーティクルのポインタリスト
-			std::vector<const Particle*> pParticles{};
+			std::vector<const Particle::RenderElement*> pParticleElements{};
 		};
 
 

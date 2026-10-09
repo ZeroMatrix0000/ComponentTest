@@ -1,7 +1,7 @@
 /*
  * FileName:     Game.h
  * Author:       Takao Hayata
- * Last Updated: 2026/07/31
+ * Last Updated: 2026/10/09
  *
  * ゲーム
  */
@@ -50,7 +50,7 @@ public:
 	void OnWindowSizeChanged(const Math::Vector2Int& outputSize);
 
 	// 1F間の経過時間を取得
-	float GetDeltaTime() const { return m_timer.GetDeltaTime(); }
+	int GetFPS() const { return m_timer.GetFPS(); }
 
 private:
 

@@ -136,7 +136,7 @@ void Systems::Resources::LoadJsons(const std::wstring& directoryPath)
 
 			try
 			{
-				m_jsons.emplace(entry.path().stem().string(), nlohmann::ordered_json::parse(fileStream));
+				m_jsons.emplace(entry.path().stem().string(), nlohmann::ordered_json::parse(fileStream, nullptr, true, true));
 			}
 			catch (std::exception e)
 			{

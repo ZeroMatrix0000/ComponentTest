@@ -14,6 +14,10 @@ namespace Components
 {
 	class Transform;
 }
+namespace Renderings
+{
+	class ParticleManager;
+}
 class Player;
 
 // プレイヤーのモデル
@@ -36,6 +40,9 @@ public:
 
 	// トランスフォームを設定
 	void SetTransform(const Transform& transform);
+
+	// パーティクル管理を設定
+	void SetParticleManager(Renderings::ParticleManager* pParticleManager) { m_pParticleManager = pParticleManager; }
 
 
 private:
@@ -64,5 +71,8 @@ private:
 
 	// 自身のトランスフォーム
 	Transform* m_pTransform;
+
+	// パーティクル管理
+	Renderings::ParticleManager* m_pParticleManager;
 
 };

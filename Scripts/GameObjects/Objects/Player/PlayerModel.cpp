@@ -12,7 +12,9 @@
 #include "Player.h"
 #include "Scripts/Commons/Components/Transform.h"
 #include "Scripts/Commons/GameObjects/GameObject.h"
+#include "Scripts/Commons/Renderings/Particle/ParticleManager.h"
 #include "Scripts/Commons/Systems/JsonSerializer.h"
+#include "Scripts/GameObjects/Particles/JumpingParticle.h"
 
 // コンストラクタ
 PlayerModel::PlayerModel(const ComponentDesc& desc)
@@ -26,6 +28,7 @@ PlayerModel::PlayerModel(const ComponentDesc& desc)
 	, m_scaling{}
 	, m_dashAngle{}
 	, m_pTransform{ GetPOwner()->GetNullReferences<Transform>() }
+	, m_pParticleManager{}
 {
 }
 
@@ -65,10 +68,20 @@ void PlayerModel::Update(float elapsedTime, const Player& player)
 	}
 	default:
 	{
+		float bounceTime = m_bounceTime;
 		m_bounceTime += elapsedTime;
+
+		// 地面に着地しているタイミングでダッシュ中なら砂煙を再生
+		if (bounceTime > m_bounceTime && player.GetMoveVelocityRatio() > 1.1f)
+		{
+			// 砂煙の再生
+			m_pParticleManager->Play<JumpingParticle>();
+		}
+		
+		// 跳ねる高さ
 		float height = m_bounceHeight * Math::Sin(m_bounceTime.GetRatio() * Math::PI) * player.GetMoveVelocityRatio();
 		m_fallingHeight.SetValue(height);
-
+		// 座標
 		Math::Vector3 position = m_pTransform->GetPosition() + Math::Vector3::Up * height;
 		m_pTransform->SetPosition(position);
 

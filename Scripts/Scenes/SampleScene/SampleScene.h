@@ -1,7 +1,7 @@
 /*
  * FileName:     SampleScene.h
  * Author:       Takao Hayata
- * Last Updated: 2026/07/27
+ * Last Updated: 2026/10/09
  *
  * サンプルシーン
  */
@@ -14,6 +14,7 @@ namespace Renderings
 {
 	class ICameraScreen;
 	class Canvas;
+	class ParticleManager;
 }
 class SceneTransitionData;
 class GameContext;
@@ -63,5 +64,8 @@ private:
 
 	// キャンバス
 	Renderings::Canvas* m_pCanvas;
+
+	// パーティクル管理
+	Renderings::ParticleManager* m_pParticleManager;
 
 };

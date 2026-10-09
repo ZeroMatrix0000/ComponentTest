@@ -1,7 +1,7 @@
 /*
  * FileName:     SampleScene.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/08/04
+ * Last Updated: 2026/10/09
  *
  * サンプルシーン
  */
@@ -16,6 +16,8 @@
 #include "Scripts/Commons/GameObjects/IGameObjectManager.h"
 #include "Scripts/Commons/Renderings/ICameraScreen.h"
 #include "Scripts/Commons/Renderings/Canvas.h"
+#include "Scripts/Commons/Renderings/Particle/ParticleManager.h"
+#include "Scripts/Commons/Renderings/Particle/ParticleSample.h"
 #include "Scripts/Commons/Colliders/BoxCollider.h"
 #include "Scripts/Commons/Colliders/SphereCollider.h"
 #include "Scripts/Commons/Colliders/MeshCollider.h"
@@ -30,6 +32,7 @@ SampleScene::SampleScene(const ComponentDesc& desc)
 	, m_pCameraScreen{}
 	, m_pDebugCamera{}
 	, m_pCanvas{}
+	, m_pParticleManager{}
 {
 }
 
@@ -58,6 +61,9 @@ void SampleScene::Initialize(const SceneTransitionData& data)
 	m_pCanvas = pIGameObjectManager->Find("Canvas")->GetComponent<Renderings::Canvas>();
 	m_pCanvas->SetSize(outputSize);
 
+	// パーティクル管理を取得
+	m_pParticleManager = pIGameObjectManager->Find("ParticleManager")->GetComponent<Renderings::ParticleManager>();
+
 	// プレイヤーを取得
 	GameObject* pPlayer = pIGameObjectManager->Find("Player");
 	pPlayer->GetComponent<Colliders::BoxCollider>()->ApplyTransform();
@@ -80,6 +86,12 @@ void SampleScene::Update(float elapsedTime)
 		GetContext().GetPISceneManager()->SetNextScene<SampleScene>();
 		return;
 	}
+
+	if (pIInput->GetKey(KeyName::Space))
+	{
+		m_pParticleManager->Play<Renderings::ParticleSample>();
+	}
+	m_pParticleManager->Update(elapsedTime);
 
 	// カメラの更新
 	m_pDebugCamera->SetInput

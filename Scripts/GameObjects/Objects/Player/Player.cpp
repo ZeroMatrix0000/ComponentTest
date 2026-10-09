@@ -14,9 +14,12 @@
 #include "Scripts/Commons/GameObjects/GameObject.h"
 #include "Scripts/Commons/GameObjects/IGameObjectFinder.h"
 #include "Scripts/Commons/Renderings/Model3D/Model3D.h"
+#include "Scripts/Commons/Renderings/Particle/ParticleManager.h"
 #include "Scripts/Commons/Components/Transform.h"
 #include "Scripts/Commons/Colliders/BoxCollider.h"
 #include "Scripts/Commons/Systems/JsonSerializer.h"
+#include "Scripts/GameObjects/Particles/LandingParticle.h"
+#include "Scripts/GameObjects/Particles/JumpingParticle.h"
 
 // コンストラクタ
 Player::Player(const ComponentDesc& desc)
@@ -31,6 +34,7 @@ Player::Player(const ComponentDesc& desc)
 	, m_jumpBufferTime{}
 	, m_pTransform{ GetPOwner()->GetNullReferences<Transform>() }
 	, m_pBoxCollider{ GetPOwner()->GetNullReferences<Colliders::BoxCollider>() }
+	, m_pParticleManager{ GetPOwner()->GetNullReferences<Renderings::ParticleManager>() }
 	, m_pCameraScreen{ GetPOwner()->GetNullReferences<Renderings::CameraScreen<Camera::EulerTargetCamera>>() }
 	, m_pModel{ GetPOwner()->GetNullReferences<PlayerModel>() }
 {
@@ -43,6 +47,7 @@ void Player::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pI
 	m_rotation.SetValue(m_pTransform->GetRotation());
 
 	m_pBoxCollider = GetPOwner()->GetComponent<Colliders::BoxCollider>();
+	m_pParticleManager = GetPOwner()->GetComponent<Renderings::ParticleManager>();
 
 	float moveMaxSpeed = m_moveMaxSpeed.GetMin();
 	float fallMaxSpeed = m_fallSpeed.GetMax();
@@ -77,12 +82,14 @@ void Player::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pI
 	{
 		GameObject* pObj = Instantiate("Prefab_PlayerModel");
 		m_pModel = pObj->GetComponent<PlayerModel>();
+		m_pModel->SetParticleManager(m_pParticleManager);
 	}
 
 	// カメラを設定
 	if (m_pCameraScreen != GetPOwner()->GetNullReferences<Renderings::CameraScreen<Camera::EulerTargetCamera>>())
 	{
 		m_pBoxCollider->AddICameraScreen(*m_pCameraScreen);
+		m_pParticleManager->AddICameraScreen(*m_pCameraScreen);
 		m_pModel->GetPOwner()->GetComponent<Renderings::Model3D>()->AddICameraScreen(*m_pCameraScreen);
 	}
 }
@@ -139,6 +146,8 @@ void Player::Update(float elapsedTime, const Math::Vector3& move, bool isDash, b
 	{
 		m_fallState = FallState::Falling;
 		m_fallSpeed = m_fallSpeed.GetMin();
+		// 砂煙の再生
+		m_pParticleManager->Play<JumpingParticle>();
 	}
 
 	// 回転の更新
@@ -154,6 +163,9 @@ void Player::Update(float elapsedTime, const Math::Vector3& move, bool isDash, b
 
 	// 当たり判定の更新
 	m_pBoxCollider->ApplyTransform();
+
+	// パーティクルの更新
+	m_pParticleManager->Update(elapsedTime);
 }
 
 // 直方体による座標補正
@@ -183,6 +195,12 @@ void Player::BoxCorrect(const std::vector<const Math::Box*>& pBoxes)
 			// 押出方向が上かつ落下中のとき
 			if (direction.Dot(Math::Vector3::Down) > 1.0f / 1.41421356f && m_fallSpeed > 0.0f)
 			{
+				// 落下中なら砂煙を再生
+				if (m_fallState == FallState::Falling)
+				{
+					m_pParticleManager->Play<LandingParticle>();
+				}
+
 				m_fallSpeed = 0.0f;
 				m_fallState = FallState::OnGround;
 				m_fallCoyoteTime = m_fallCoyoteTime.GetMax();
@@ -336,6 +354,8 @@ void Player::MeshCorrect(const Mesh& mesh)
 				m_fallSpeed = 0.0f;
 				m_fallState = FallState::OnGround;
 				m_fallCoyoteTime = m_fallCoyoteTime.GetMax();
+				// 砂煙の再生
+				m_pParticleManager->Play<LandingParticle>();
 			}
 			break;
 		}
