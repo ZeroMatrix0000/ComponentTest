@@ -849,13 +849,13 @@
     <FxCompile Include="Shaders\PixelShaders\TextOutline.hlsl">
       <Filter>Shaders\PixelShaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\VertexShaders\BasicInstancingVS.hlsl">
-      <Filter>Shaders\VertexShaders</Filter>
-    </FxCompile>
     <FxCompile Include="Shaders\VertexShaders\InstancingTest.hlsl">
       <Filter>Shaders\VertexShaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\PixelShaders\InstancingTest.hlsl">
+      <Filter>Shaders\PixelShaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PixelShaders\PlayerShadow.hlsl">
       <Filter>Shaders\PixelShaders</Filter>
     </FxCompile>
   </ItemGroup>
