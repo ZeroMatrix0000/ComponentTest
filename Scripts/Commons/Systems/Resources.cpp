@@ -340,7 +340,7 @@ const nlohmann::ordered_json* Systems::Resources::GetJson(const std::string& jso
 	return &it->second;
 }
 
-// Jsonの取得
+// メッシュの取得
 const Mesh* Systems::Resources::GetMesh(const std::string& meshName) const
 {
 	auto it = m_meshes.find(meshName);
@@ -378,6 +378,114 @@ const Renderings::VertexShader* Systems::Resources::GetVertexShader(const std::s
 
 // ピクセルシェーダの取得
 const Renderings::PixelShader* Systems::Resources::GetPixelShader(const std::string& shaderName) const
+{
+	auto it = m_pixelShaders.find(shaderName);
+	if (it == m_pixelShaders.end())
+	{
+		// エラーメッセージを追加
+		IErrorMessage::GetInstance()->AddMessage(Utility::FormatWString
+		(
+			L"ピクセルシェーダが見つかりません。 | name: %s",
+			Utility::string2wstring(shaderName).c_str()
+		));
+		return nullptr;
+	}
+
+	return &it->second;
+}
+
+// モデルの取得
+Renderings::Model3DSource* Systems::Resources::GetEditableModelSource(const std::string& modelName)
+{
+	auto it = m_modelSources.find(modelName);
+	if (it == m_modelSources.end())
+	{
+		// エラーメッセージを追加
+		IErrorMessage::GetInstance()->AddMessage(Utility::FormatWString
+		(
+			L"モデルが見つかりません。 | name: %s",
+			Utility::string2wstring(modelName).c_str()
+		));
+		return nullptr;
+	}
+
+	return &it->second;
+}
+
+// 画像の取得
+Renderings::ImageSource* Systems::Resources::GetEditableImageSource(const std::string& imageName)
+{
+	auto it = m_imageSources.find(imageName);
+	if (it == m_imageSources.end())
+	{
+		// エラーメッセージを追加
+		IErrorMessage::GetInstance()->AddMessage(Utility::FormatWString
+		(
+			L"画像が見つかりません。 | name: %s",
+			Utility::string2wstring(imageName).c_str()
+		));
+		return nullptr;
+	}
+
+	return &it->second;
+}
+
+// Jsonの取得
+nlohmann::ordered_json* Systems::Resources::GetEditableJson(const std::string& jsonName)
+{
+	auto it = m_jsons.find(jsonName);
+	if (it == m_jsons.end())
+	{
+		// エラーメッセージを追加
+		IErrorMessage::GetInstance()->AddMessage(Utility::FormatWString
+		(
+			L"Jsonファイルが見つかりません。 | name: %s",
+			Utility::string2wstring(jsonName).c_str()
+		));
+		return nullptr;
+	}
+
+	return &it->second;
+}
+
+// メッシュの取得
+Mesh* Systems::Resources::GetEditableMesh(const std::string& meshName)
+{
+	auto it = m_meshes.find(meshName);
+	if (it == m_meshes.end())
+	{
+		// エラーメッセージを追加
+		IErrorMessage::GetInstance()->AddMessage(Utility::FormatWString
+		(
+			L"メッシュが見つかりません。 | name: %s",
+			Utility::string2wstring(meshName).c_str()
+		));
+		return nullptr;
+	}
+
+	return &it->second;
+}
+
+// 頂点シェーダの取得
+Renderings::VertexShader* Systems::Resources::GetEditableVertexShader(const std::string& shaderName)
+{
+	auto it = m_vertexShaders.find(shaderName);
+	if (it == m_vertexShaders.end())
+	{
+		// エラーメッセージを追加
+		IErrorMessage::GetInstance()->AddMessage(Utility::FormatWString
+		(
+			L"ピクセルシェーダが見つかりません。 | name: %s",
+			Utility::string2wstring(shaderName).c_str()
+		));
+		return nullptr;
+	}
+
+	return &it->second;
+}
+
+// ピクセルシェーダの取得
+Renderings::PixelShader* Systems::Resources::GetEditablePixelShader(const std::string& shaderName)
 {
 	auto it = m_pixelShaders.find(shaderName);
 	if (it == m_pixelShaders.end())

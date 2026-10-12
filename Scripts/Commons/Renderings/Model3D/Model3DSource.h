@@ -1,7 +1,7 @@
 /*
  * FileName:     Model3DSource.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/08
+ * Last Updated: 2026/10/12
  *
  * 3Dモデルのソース
  */
@@ -11,6 +11,7 @@
 namespace Renderings
 {
 	class InstancingEffectFactory;
+	class PixelShader;
 
 	// 3Dモデルのソース
 	class Model3DSource
@@ -52,6 +53,9 @@ namespace Renderings
 			ID3D11ShaderResourceView* pSpecularMap
 		);
 
+		// ピクセルシェーダを設定
+		void SetPixelShader(const PixelShader* pPixelShader) { m_pPixelShader = pPixelShader; }
+
 		// モデルを取得
 		const auto& GetModel() const
 		{
@@ -61,6 +65,8 @@ namespace Renderings
 		// パーツごとの情報を取得
 		const PartInfo& GetPartInfo(size_t index) const { return m_partInfos.at(index); };
 
+		// ピクセルシェーダを取得
+		const PixelShader* GetPPixelShader() const { return m_pPixelShader; }
 
 		/* 静的関数 */
 
@@ -78,6 +84,9 @@ namespace Renderings
 
 		// パーツごとの情報
 		std::vector<PartInfo> m_partInfos;
+
+		// ピクセルシェーダ
+		const PixelShader* m_pPixelShader;
 
 	};
 }

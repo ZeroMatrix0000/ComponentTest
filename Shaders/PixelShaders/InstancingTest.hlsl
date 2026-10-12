@@ -11,8 +11,20 @@ Texture2D<float4> Texture : register(t0);
 // サンプラー
 SamplerState Sampler : register(s0);
 
-// 定数バッファ
-cbuffer ConstantBuffer : register(b0)
+// 環境
+cbuffer Environment : register(b0)
+{
+	// 環境光色
+	float3 AmbientColor;
+	// 光の方向
+	float3 LightDirection;
+	// ライトの色
+	float3 LightColor;
+	// 目線の位置
+	float3 EyePosition;
+}
+// マテリアル
+cbuffer Material : register(b1)
 {
 	// 拡散反射色
 	float3 DiffuseColor;
@@ -22,15 +34,6 @@ cbuffer ConstantBuffer : register(b0)
 	float3 SpecularColor;
 	// 鏡面反射の強さ
 	float SpecularPower;
-	
-	// 環境光色
-	float3 AmbientColor;
-	// 光の方向
-	float3 LightDirection;
-	// ライトの色
-	float3 LightColor;
-	// 目線の位置
-	float3 EyePosition;
 }
 
 // 出力

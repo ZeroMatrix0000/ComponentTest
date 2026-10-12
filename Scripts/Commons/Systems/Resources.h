@@ -54,12 +54,26 @@ namespace Systems
 		const Renderings::ImageSource*   GetImageSource(const std::string& imageName)   const override;
 		// Jsonの取得
 		const nlohmann::ordered_json*    GetJson(const std::string& jsonName)           const override;
-		// Jsonの取得
+		// メッシュの取得
 		const Mesh*                      GetMesh(const std::string& meshName)           const override;
 		// 頂点シェーダの取得
 		const Renderings::VertexShader*  GetVertexShader(const std::string& shaderName) const override;
 		// ピクセルシェーダの取得
 		const Renderings::PixelShader*   GetPixelShader(const std::string& shaderName)  const override;
+		
+
+		// モデルの取得
+		Renderings::Model3DSource* GetEditableModelSource(const std::string& modelName);
+		// 画像の取得
+		Renderings::ImageSource*   GetEditableImageSource(const std::string& imageName);
+		// Jsonの取得
+		nlohmann::ordered_json*    GetEditableJson(const std::string& jsonName);
+		// メッシュの取得
+		Mesh*                      GetEditableMesh(const std::string& meshName);
+		// 頂点シェーダの取得
+		Renderings::VertexShader*  GetEditableVertexShader(const std::string& shaderName);
+		// ピクセルシェーダの取得
+		Renderings::PixelShader*   GetEditablePixelShader(const std::string& shaderName);
 
 
 	private:

@@ -14,7 +14,10 @@
 #include "Scripts/Commons/Systems/IInput.h"
 #include "Scripts/Commons/Scenes/ISceneManager.h"
 #include "Scripts/Commons/Renderings/Image/Image.h"
+#include "Scripts/Commons/Renderings/Model3D/Model3D.h"
+#include "Scripts/Commons/Renderings/Model3D/Model3DSource.h"
 #include "Scripts/Commons/Renderings/Shader/PixelShader.h"
+#include "Scripts/Commons/Renderings/Shader/ConstantBuffer.h"
 #include "Scripts/Commons/Renderings/Canvas.h"
 #include "Scripts/Commons/Renderings/CameraScreen.h"
 #include "Scripts/Commons/Components/RectTransform.h"
@@ -61,7 +64,9 @@ void TitleScene::Initialize(const SceneTransitionData& data)
 	m_pCanvas->SetSize(outputSize);
 
 	// 地面を取得
-	pIGameObjectManager->Find("Ground")->GetComponent<Colliders::MeshCollider>()->ApplyTransform();
+	GameObject* pGround = pIGameObjectManager->Find("Ground");
+	pGround->GetComponent<Colliders::MeshCollider>()->ApplyTransform();
+	pGround->GetComponent<Renderings::Model3D>()->GetPModelSource()->GetPPixelShader()->GetConstantBuffer()->SetVariable("ShadowCount", 0);
 
 	// 選択メニューを取得
 	m_pSelectMenu = pIGameObjectManager->Find("TitleMenu")->GetComponent<SelectMenu>();

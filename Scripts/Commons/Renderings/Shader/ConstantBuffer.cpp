@@ -1,7 +1,7 @@
 /*
  * FileName:     ConstantBuffer.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/08
+ * Last Updated: 2026/10/12
  *
  * 定数バッファ
  */
@@ -33,6 +33,10 @@ void Renderings::ConstantBuffer::Initialize(ID3D11Device5* pDevice, ID3DBlob* pB
 	D3D11_SHADER_DESC shaderDesc{};
 	Utility::ThrowIfFailed(reflection->GetDesc(&shaderDesc));
 
+	// データの数を設定
+	m_data.resize(shaderDesc.ConstantBuffers);
+	m_buffer.resize(shaderDesc.ConstantBuffers);
+
 	for (UINT i = 0; i < shaderDesc.ConstantBuffers; i++)
 	{
 		// 定数バッファ
@@ -42,7 +46,13 @@ void Renderings::ConstantBuffer::Initialize(ID3D11Device5* pDevice, ID3DBlob* pB
 		D3D11_SHADER_BUFFER_DESC bufferDesc{};
 		Utility::ThrowIfFailed(buffer->GetDesc(&bufferDesc));
 
-		m_data.resize(m_data.size() + bufferDesc.Size);
+		m_data.at(i).resize(bufferDesc.Size);
+
+		// バッファサイズが 0 ならスキップ
+		if (bufferDesc.Size == 0)
+		{
+			continue;
+		}
 
 		for (UINT j = 0; j < bufferDesc.Variables; j++)
 		{
@@ -57,16 +67,13 @@ void Renderings::ConstantBuffer::Initialize(ID3D11Device5* pDevice, ID3DBlob* pB
 			m_variables.emplace
 			(
 				variableDesc.Name,
-				Variable{ variableDesc.StartOffset, variableDesc.Size }
+				Variable{ i, variableDesc.StartOffset }
 			);
 		}
-	}
 
-	if (m_data.size() != 0)
-	{
 		// 定数バッファの詳細
-		CD3D11_BUFFER_DESC cbDesc{ static_cast<UINT>(m_data.size()), D3D11_BIND_CONSTANT_BUFFER };
+		CD3D11_BUFFER_DESC cbDesc{ static_cast<UINT>(m_data.at(i).size()), D3D11_BIND_CONSTANT_BUFFER};
 		// d3dバッファ
-		Utility::ThrowIfFailed(pDevice->CreateBuffer(&cbDesc, nullptr, m_buffer.GetAddressOf()));
+		Utility::ThrowIfFailed(pDevice->CreateBuffer(&cbDesc, nullptr, m_buffer.at(i).GetAddressOf()));
 	}
 }

@@ -1,7 +1,7 @@
 /*
  * FileName:     Game.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/09
+ * Last Updated: 2026/10/12
  *
  * ゲーム
  */
@@ -57,9 +57,14 @@ private:
 
 	/* メンバ関数 */
 
-	// 対応付け
+	// リソースの初期化
+	void InitializeResources();
+
+	// コンポーネント対応付け
 	void RegisterComponents();
 
+	// シーン管理の初期化
+	void InitializeSceneManager();
 
 	/* メンバ変数 */
 

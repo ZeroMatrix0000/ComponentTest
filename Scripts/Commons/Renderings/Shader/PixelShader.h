@@ -1,7 +1,7 @@
 /*
  * FileName:     PixelShader.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/08
+ * Last Updated: 2026/10/12
  *
  * ピクセルシェーダ
  */
@@ -34,7 +34,7 @@ namespace Renderings
 		auto* GetConstantBuffer() const { return m_constantBuffer.get(); }
 
 		// 定数バッファを GPU に送信
-		void SetConstantBuffer(ID3D11Device5* pDevice, ID3D11DeviceContext4* pContext) const;
+		void SetConstantBuffer(ID3D11Device5* pDevice, ID3D11DeviceContext4* pContext, UINT index) const;
 
 		/* 静的関数 */
 

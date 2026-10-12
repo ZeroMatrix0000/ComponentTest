@@ -82,15 +82,26 @@ void Renderings::Model3DRenderer::Render(bool isInstance)
 		// 定数バッファを設定
 		pVSConstantBuffer->SetVariable("View", pICameraScreen->GetViewMatrix().Transpose());
 		pVSConstantBuffer->SetVariable("Projection", pICameraScreen->GetProjectionMatrix().Transpose());
-		m_pVertexShader->SetConstantBuffer(m_pDevice, m_pContext);
+		m_pVertexShader->SetConstantBuffer(m_pDevice, m_pContext, 0);
 		pPSConstantBuffer->SetVariable("AmbientColor", Math::Vector3{ 0.5f, 0.5f, 0.5f });
 		pPSConstantBuffer->SetVariable("LightDirection", Math::Vector3{ -0.25f, -1.0f, -0.5f });
 		pPSConstantBuffer->SetVariable("LightColor", Math::Vector3{ 0.5f, 0.5f, 0.5f });
 		pPSConstantBuffer->SetVariable("EyePosition", pICameraScreen->GetEyePosition());
-		m_pPixelShader->SetConstantBuffer(m_pDevice, m_pContext);
+		m_pPixelShader->SetConstantBuffer(m_pDevice, m_pContext, 0);
 
 		for (const auto& [pModelSource, renderObjects] : renderObjectsList)
 		{
+			// ピクセルシェーダ
+			const Renderings::PixelShader* pPixelShader = pModelSource->GetPPixelShader();
+
+			if (pPixelShader)
+			{
+				// ピクセルシェーダを設定
+				m_pContext->PSSetShader(pPixelShader->GetD3DShader(), nullptr, 0);
+				// 定数バッファを設定
+				pPixelShader->SetConstantBuffer(m_pDevice, m_pContext, 2);
+			}
+
 			// 行列リスト
 			std::vector<DirectX::XMFLOAT3X4> instMatrices{};
 			instMatrices.reserve(renderObjects.pModels.size() + renderObjects.pParticleElements.size());
@@ -176,6 +187,11 @@ void Renderings::Model3DRenderer::Render(bool isInstance)
 
 					partIndex++;
 				}
+			}
+
+			if (pPixelShader)
+			{
+				m_pContext->PSSetShader(m_pPixelShader->GetD3DShader(), nullptr, 0);
 			}
 		}
 	}
@@ -485,7 +501,7 @@ void Renderings::Model3DRenderer::SetPartInfo(const Model3DSource::PartInfo& par
 	pConstantBuffer->SetVariable("EmissiveColor", partInfo.effectInfo.emissiveColor);
 	pConstantBuffer->SetVariable("SpecularColor", partInfo.effectInfo.specularColor);
 	pConstantBuffer->SetVariable("SpecularPower", partInfo.effectInfo.specularPower);
-	m_pPixelShader->SetConstantBuffer(m_pDevice, m_pContext);
+	m_pPixelShader->SetConstantBuffer(m_pDevice, m_pContext, 1);
 }
 
 // 描画

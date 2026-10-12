@@ -1,7 +1,7 @@
 /*
  * FileName:     GamePlaySceneInitializer.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/11
+ * Last Updated: 2026/10/12
  *
  * ゲームプレイシーンの初期化関数
  */
@@ -21,6 +21,10 @@
 #include "Scripts/Commons/GameObjects/IGameObjectManager.h"
 #include "Scripts/Commons/Colliders/MeshCollider.h"
 #include "Scripts/Commons/Renderings/Canvas.h"
+#include "Scripts/Commons/Renderings/Model3D/Model3D.h"
+#include "Scripts/Commons/Renderings/Model3D/Model3DSource.h"
+#include "Scripts/Commons/Renderings/Shader/PixelShader.h"
+#include "Scripts/Commons/Renderings/Shader/ConstantBuffer.h"
 #include "Scripts/Commons/Systems/IInput.h"
 #include "Scripts/Commons/Systems/IWindowController.h"
 
@@ -58,8 +62,10 @@ void GamePlaySceneInitializer::operator()(GamePlaySceneInternals* pInternals) co
 	pInternals->pNPCManager = pIGameObjectManager->Find("NPCManager")->GetComponent<NPCManager>();
 
 	// 地面を取得
-	pInternals->pGround = pIGameObjectManager->Find("Ground")->GetComponent<Colliders::MeshCollider>();
-	pInternals->pGround->ApplyTransform();
+	GameObject* pGround = pIGameObjectManager->Find("Ground");
+	pInternals->pGroundMesh = pGround->GetComponent<Colliders::MeshCollider>();
+	pInternals->pGroundModel = pGround->GetComponent<Renderings::Model3D>();
+	pInternals->pGroundMesh->ApplyTransform();
 
 	// はなすを取得
 	pInternals->pZ2Talk = pIGameObjectManager->Find("Z2Talk")->GetComponent<Z2Talk>();
@@ -73,4 +79,17 @@ void GamePlaySceneInitializer::operator()(GamePlaySceneInternals* pInternals) co
 
 	// アクション管理を取得
 	pInternals->pActionManager = pIGameObjectManager->Find("ActionManager")->GetComponent<ActionManager>();
+
+	// シェーダにプレイヤーの座標を設定
+	Renderings::ConstantBuffer* pConstantBuffer = pInternals->pGroundModel->GetPModelSource()->GetPPixelShader()->GetConstantBuffer();
+	pConstantBuffer->SetVariable("ShadowPosition", pInternals->pPlayer->GetPosition() + Math::Vector3::Down * pInternals->pPlayer->GetBox().size.y / 2.0f);
+	pConstantBuffer->SetVariable("ShadowRadius", 0.75f);
+	// NPC の当たり判定
+	const auto nPCBoxes = pInternals->pNPCManager->GetPBoxes();
+	for (size_t i = 0; i < nPCBoxes.size(); i++)
+	{
+		pConstantBuffer->SetVariable("ShadowPosition", nPCBoxes.at(i)->position + Math::Vector3::Down * nPCBoxes.at(i)->size.y / 2.0f, 16 * (i + 1));
+		pConstantBuffer->SetVariable("ShadowRadius", 0.75f, 16 * (i + 1));
+	}
+	pConstantBuffer->SetVariable("ShadowCount", static_cast<int>(1 + nPCBoxes.size()));
 }

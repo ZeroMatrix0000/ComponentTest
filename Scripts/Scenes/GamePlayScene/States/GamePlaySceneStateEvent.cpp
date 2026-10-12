@@ -1,7 +1,7 @@
 /*
  * FileName:     GamePlaySceneStateEvent.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/11
+ * Last Updated: 2026/10/12
  *
  * ゲームプレイシーンのイベント状態
  */
@@ -55,7 +55,7 @@ void GamePlaySceneStateEvent::Update(GamePlaySceneInternals* pInternals, float e
 	// プレイヤーの更新
 	RotatePlayer(pInternals);
 	pInternals->pPlayer->Update(elapsedTime, Math::Vector3::Zero, false, false);
-	pInternals->pPlayer->MeshCorrect(pInternals->pGround->GetWorldMesh());
+	pInternals->pPlayer->MeshCorrect(pInternals->pGroundMesh->GetWorldMesh());
 	pInternals->pPlayer->BoxCorrect(pInternals->pNPCManager->GetPBoxes());
 	pInternals->pPlayer->UpdateModel(elapsedTime);
 
@@ -72,7 +72,7 @@ void GamePlaySceneStateEvent::Update(GamePlaySceneInternals* pInternals, float e
 		(pInternals->pPlayer->GetCameraTarget() + pInternals->pNPCManager->GetPFocusedNPC()->GetBox().position) / 2.0f
 	);
 	pInternals->pPlayerCamera->Rotate(pIGameInput->GetPlayerCameraRotate());
-	pInternals->pPlayerCamera->MeshCorrect(pInternals->pGround->GetWorldMesh(), pInternals->pPlayer->GetPosition());
+	pInternals->pPlayerCamera->MeshCorrect(pInternals->pGroundMesh->GetWorldMesh(), pInternals->pPlayer->GetPosition());
 	pInternals->pPlayerCamera->Update(elapsedTime);
 	pInternals->pCameraScreen->UpdateViewMatrix();
 

@@ -1,7 +1,7 @@
 /*
  * FileName:     VertexShader.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/08
+ * Last Updated: 2026/10/12
  *
  * 頂点シェーダ
  */
@@ -37,16 +37,22 @@ void Renderings::VertexShader::Initialize(ID3D11Device5* device, const std::wstr
 }
 
 // 定数バッファを GPU に送信
-void Renderings::VertexShader::SetConstantBuffer(ID3D11Device5* pDevice, ID3D11DeviceContext4* pContext) const
+void Renderings::VertexShader::SetConstantBuffer(ID3D11Device5* pDevice, ID3D11DeviceContext4* pContext, UINT index) const
 {
-	auto& data = GetConstantBuffer()->GetData();
-	auto* buffer = GetConstantBuffer()->GetBuffer();
+	// バッファがなければ終了
+	if (index >= m_constantBuffer->GetBufferCount())
+	{
+		return;
+	}
+
+	auto& data = GetConstantBuffer()->GetData(index);
+	auto* buffer = GetConstantBuffer()->GetBuffer(index);
 
 	if (data.size() != 0)
 	{
 		// 定数バッファを設定
 		pContext->UpdateSubresource(buffer, 0, nullptr, data.data(), 0, 0);
-		pContext->VSSetConstantBuffers(0, 1, &buffer);
+		pContext->VSSetConstantBuffers(index, 1, &buffer);
 	}
 }
 

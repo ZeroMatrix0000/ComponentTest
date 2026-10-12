@@ -1,7 +1,7 @@
 /*
  * FileName:     ConstantBuffer.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/08
+ * Last Updated: 2026/10/12
  *
  * 定数バッファ
  */
@@ -28,10 +28,10 @@ namespace Renderings
 
 		// 値を変更
 		template<typename T>
-		void SetVariable(const std::string& name, T value)
+		void SetVariable(const std::string& name, T value, size_t offset = 0)
 		{
 			auto it = m_variables.find(name);
-			if (it == m_variables.end() || it->second.size != sizeof(T))
+			if (it == m_variables.end())
 			{
 				// エラーメッセージを追加
 				Systems::IErrorMessage::GetInstance()->AddMessage(Utility::FormatWString
@@ -42,15 +42,15 @@ namespace Renderings
 				return;
 			}
 
-			std::memcpy(m_data.data() + it->second.offset, &value, sizeof(T));
+			std::memcpy(m_data.at(it->second.index).data() + it->second.offset + offset, &value, sizeof(T));
 		}
 
 		// 値を取得
 		template<typename T>
-		T GetVariable(const std::string& name) const
+		T GetVariable(const std::string& name, size_t offset = 0) const
 		{
 			auto it = m_variables.find(name);
-			if (it == m_variables.end() || it->second.size != sizeof(T))
+			if (it == m_variables.end())
 			{
 				// エラーメッセージを追加
 				Systems::IErrorMessage::GetInstance()->AddMessage(Utility::FormatWString
@@ -62,15 +62,17 @@ namespace Renderings
 			}
 
 			T temp{};
-			std::memcpy(&temp, m_data.data() + it->second.offset, sizeof(T));
+			std::memcpy(&temp, m_data.at(it->second.index).data() + it->second.offset + offset, sizeof(T));
 			return temp;
 		}
 
 		// データを取得
-		const std::vector<std::byte>& GetData() const { return m_data; }
+		const std::vector<std::byte>& GetData(size_t index) const { return m_data.at(index); }
 
 		// d3dバッファを取得
-		auto* GetBuffer() const { return m_buffer.Get(); }
+		auto* GetBuffer(size_t index) const { return m_buffer.at(index).Get(); }
+		// 定数バッファ数を取得
+		size_t GetBufferCount() const { return m_buffer.size(); }
 
 
 	private:
@@ -81,22 +83,23 @@ namespace Renderings
 		// 変数情報
 		struct Variable
 		{
+			// 定数バッファの番号
+			size_t index{};
 			// 位置
-			size_t offset;
-			size_t size;
+			size_t offset{};
 		};
 
 
 		/* メンバ変数 */
 
 		// データ
-		std::vector<std::byte> m_data;
+		std::vector<std::vector<std::byte>> m_data;
 
 		// 変数リスト
 		std::unordered_map<std::string, Variable> m_variables;
 
 		// バッファ
-		Microsoft::WRL::ComPtr<ID3D11Buffer> m_buffer;
+		std::vector<Microsoft::WRL::ComPtr<ID3D11Buffer>> m_buffer;
 
 	};
 }

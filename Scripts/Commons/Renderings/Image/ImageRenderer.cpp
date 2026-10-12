@@ -168,7 +168,7 @@ void Renderings::ImageRenderer::Draw(const Image* pImage)
 		// ピクセルシェーダを設定
 		m_pContext->PSSetShader(pPixelShader->GetD3DShader(), nullptr, 0);
 		// 定数バッファを設定
-		pPixelShader->SetConstantBuffer(m_pDevice, m_pContext);
+		pPixelShader->SetConstantBuffer(m_pDevice, m_pContext, 0);
 	}
 
 	// 描画

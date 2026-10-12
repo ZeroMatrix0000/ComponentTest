@@ -1,7 +1,7 @@
 /*
  * FileName:     Model3DSource.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/08
+ * Last Updated: 2026/10/12
  *
  * 3Dモデルのソース
  */
@@ -14,6 +14,8 @@
 // コンストラクタ
 Renderings::Model3DSource::Model3DSource()
 	: m_model{}
+	, m_partInfos{}
+	, m_pPixelShader{}
 {
 }
 

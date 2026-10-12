@@ -82,85 +82,9 @@ void Game::Initialize(const HWND& hWindow)
 
 	// コモンステート
 	const auto& commonStates = m_renderingResources.GetCommonStates();
-	// エフェクトファクトリー
-	auto* fx = m_renderingResources.GetEffectFactory();
 
-	// 画像の読み込み
-	m_resources.LoadImageSources(device, L"Resources\\Images");
-	// モデルソースの読み込み
-	m_resources.LoadModelSources(device, fx, L"Resources\\Models");
-	// Jsonの読み込み
-	m_resources.LoadJsons(L"Resources\\Jsons");
-	m_resources.AddJsonFromStr
-	(
-		"Prefab_ErrorMessage",
-		R"(
-{
-	"Text": {
-		"Str": "",
-		"FontName": "GenEi M Gothic v2",
-		"FontSize": 24.0,
-		"FontColor": {
-			"R": 1.0,
-			"G": 1.0,
-			"B": 0.0,
-			"A": 1.0
-		},
-		"OutlineWidth": 2.0,
-		"OrderInLayer": 65535
-	},
-	"RectTransform": {
-		"Position": {
-			"X": 10.0,
-			"Y": 10.0
-		},
-		"Size": {
-			"X": 100000.0,
-			"Y": 100000.0
-		},
-		"Pivot": "TopLeft",
-		"Anchor": "TopLeft"
-	}
-}
-		)"
-	);
-	m_resources.AddJsonFromStr
-	(
-		"Prefab_Canvas",
-		R"(
-{
-	"Canvas": {
-	}
-}
-		)"
-	);
-	m_resources.AddJsonFromStr
-	(
-		"Prefab_SceneTransitionAnimation",
-		R"(
-{
-	"Image": {
-		"ImageSourceName": "Box",
-		"Color": {
-			"R": 0.0,
-			"G": 0.0,
-			"B": 0.0,
-			"A": 1.0
-		},
-		"OrderInLayer": 32767
-	},
-	"RectTransform": {
-		"Angle": 15.0
-	}
-}
-		)"
-	);
-	// メッシュの読み込み
-	m_resources.LoadMeshes(L"Resources\\Meshes");
-	// 頂点シェーダの読み込み
-	m_resources.LoadVertexShaders(device, L"Resources\\Shaders\\VertexShaders");
-	// ピクセルシェーダの読み込み
-	m_resources.LoadPixelShaders(device, L"Resources\\Shaders\\PixelShaders");
+	// リソースの初期化
+	InitializeResources();
 
 	// 描画の初期化
 	m_renderer.Initialize(device, context, swapChain, commonStates);
@@ -191,27 +115,11 @@ void Game::Initialize(const HWND& hWindow)
 	// 対応付け
 	RegisterComponents();
 
-	// コンポーネント管理のインタフェース
-	IComponentManager* pIComponentManager = &m_componentManager;
-
 	// エラーメッセージのオブジェクトを生成
 	m_errorMessage.CreateObjects(&m_gameObjectManager);
 
-	// シーンの追加
-	m_sceneManager.AddScene<SampleScene>([pIComponentManager]
-	{
-		return std::unique_ptr<SampleScene>{ static_cast<SampleScene*>(pIComponentManager->Create<SampleScene>().release()) };
-	});
-	m_sceneManager.AddScene<TitleScene>([pIComponentManager]
-	{
-		return std::unique_ptr<TitleScene>{ static_cast<TitleScene*>(pIComponentManager->Create<TitleScene>().release()) };
-	});
-	m_sceneManager.AddScene<GamePlayScene>([pIComponentManager]
-	{
-		return std::unique_ptr<GamePlayScene>{ static_cast<GamePlayScene*>(pIComponentManager->Create<GamePlayScene>().release()) };
-	});
 	// シーン管理の初期化
-	m_sceneManager.Initialize(m_windowController.GetOutputSize(), &m_gameObjectManager);
+	InitializeSceneManager();
 
 	// コンテキストの初期化
 	m_context.Initialize
@@ -317,7 +225,97 @@ void Game::OnWindowSizeChanged(const Math::Vector2Int& outputSize)
 	m_sceneManager.OnWindowSizeChanged(outputSize);
 }
 
-// 対応付け
+// リソースの初期化
+void Game::InitializeResources()
+{
+	// デバイス
+	auto* device = m_deviceResources.GetD3DDevice();
+
+	// エフェクトファクトリー
+	auto* fx = m_renderingResources.GetEffectFactory();
+
+	// 画像の読み込み
+	m_resources.LoadImageSources(device, L"Resources\\Images");
+	// モデルソースの読み込み
+	m_resources.LoadModelSources(device, fx, L"Resources\\Models");
+	// Jsonの読み込み
+	m_resources.LoadJsons(L"Resources\\Jsons");
+	m_resources.AddJsonFromStr
+	(
+		"Prefab_ErrorMessage",
+		R"(
+{
+	"Text": {
+		"Str": "",
+		"FontName": "GenEi M Gothic v2",
+		"FontSize": 24.0,
+		"FontColor": {
+			"R": 1.0,
+			"G": 1.0,
+			"B": 0.0,
+			"A": 1.0
+		},
+		"OutlineWidth": 2.0,
+		"OrderInLayer": 65535
+	},
+	"RectTransform": {
+		"Position": {
+			"X": 10.0,
+			"Y": 10.0
+		},
+		"Size": {
+			"X": 100000.0,
+			"Y": 100000.0
+		},
+		"Pivot": "TopLeft",
+		"Anchor": "TopLeft"
+	}
+}
+		)"
+	);
+	m_resources.AddJsonFromStr
+	(
+		"Prefab_Canvas",
+		R"(
+{
+	"Canvas": {
+	}
+}
+		)"
+	);
+	m_resources.AddJsonFromStr
+	(
+		"Prefab_SceneTransitionAnimation",
+		R"(
+{
+	"Image": {
+		"ImageSourceName": "Box",
+		"Color": {
+			"R": 0.0,
+			"G": 0.0,
+			"B": 0.0,
+			"A": 1.0
+		},
+		"OrderInLayer": 32767
+	},
+	"RectTransform": {
+		"Angle": 15.0
+	}
+}
+		)"
+	);
+	// メッシュの読み込み
+	m_resources.LoadMeshes(L"Resources\\Meshes");
+	// 頂点シェーダの読み込み
+	m_resources.LoadVertexShaders(device, L"Resources\\Shaders\\VertexShaders");
+	// ピクセルシェーダの読み込み
+	m_resources.LoadPixelShaders(device, L"Resources\\Shaders\\PixelShaders");
+
+	// シェーダを適用
+	m_resources.GetEditableModelSource("NewGrounds")->SetPixelShader(m_resources.GetPixelShader("PlayerShadow"));
+}
+
+// コンポーネント対応付け
 void Game::RegisterComponents()
 {
 	// 3Dモデル
@@ -419,4 +417,27 @@ void Game::RegisterComponents()
 	// NPC管理
 	m_gameObjectManager.Register<NPC>("NPC");
 	m_gameObjectManager.Register<NPCManager>("NPCManager");
+}
+
+// シーン管理の初期化
+void Game::InitializeSceneManager()
+{
+	// コンポーネント管理のインタフェース
+	IComponentManager* pIComponentManager = &m_componentManager;
+
+	// シーンの追加
+	m_sceneManager.AddScene<SampleScene>([pIComponentManager]
+		{
+			return std::unique_ptr<SampleScene>{ static_cast<SampleScene*>(pIComponentManager->Create<SampleScene>().release()) };
+		});
+	m_sceneManager.AddScene<TitleScene>([pIComponentManager]
+		{
+			return std::unique_ptr<TitleScene>{ static_cast<TitleScene*>(pIComponentManager->Create<TitleScene>().release()) };
+		});
+	m_sceneManager.AddScene<GamePlayScene>([pIComponentManager]
+		{
+			return std::unique_ptr<GamePlayScene>{ static_cast<GamePlayScene*>(pIComponentManager->Create<GamePlayScene>().release()) };
+		});
+	// シーン管理の初期化
+	m_sceneManager.Initialize(m_windowController.GetOutputSize(), &m_gameObjectManager);
 }

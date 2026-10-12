@@ -1,7 +1,7 @@
 /*
  * FileName:     Player.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/28
+ * Last Updated: 2026/10/12
  * 
  *
  * プレイヤー
@@ -274,6 +274,20 @@ void Player::MeshCorrect(const Mesh& mesh)
 	{
 		m_pTransform->Translate(direction * distance);
 		box.position += direction * distance;
+
+		// 押出方向が上かつ落下中のとき
+		if (direction.Dot(Math::Vector3::Down) > 1.0f / 1.41421356f && m_fallSpeed > 0.0f)
+		{
+			// 落下中なら砂煙を再生
+			if (m_fallState == FallState::Falling)
+			{
+				m_pParticleManager->Play<LandingParticle>();
+			}
+
+			m_fallSpeed = 0.0f;
+			m_fallState = FallState::OnGround;
+			m_fallCoyoteTime = m_fallCoyoteTime.GetMax();
+		}
 	}
 
 	distance = Math::INFTY;

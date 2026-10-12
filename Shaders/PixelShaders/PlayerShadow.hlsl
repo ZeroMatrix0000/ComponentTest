@@ -11,8 +11,20 @@ Texture2D<float4> Texture : register(t0);
 // サンプラー
 SamplerState Sampler : register(s0);
 
-// 定数バッファ
-cbuffer ConstantBuffer : register(b0)
+// 環境
+cbuffer Environment : register(b0)
+{
+	// 環境光色
+	float3 AmbientColor;
+	// 光の方向
+	float3 LightDirection;
+	// ライトの色
+	float3 LightColor;
+	// 目線の位置
+	float3 EyePosition;
+}
+// マテリアル
+cbuffer Material : register(b1)
 {
 	// 拡散反射色
 	float3 DiffuseColor;
@@ -22,18 +34,16 @@ cbuffer ConstantBuffer : register(b0)
 	float3 SpecularColor;
 	// 鏡面反射の強さ
 	float SpecularPower;
-	
-	// 環境光色
-	float3 AmbientColor;
-	// 光の方向
-	float3 LightDirection;
-	// ライトの色
-	float3 LightColor;
-	// 目線の位置
-	float3 EyePosition;
-	
-	// プレイヤーの座標
-	float3 PlayerPosition;
+}
+// プレイヤー
+cbuffer Shadow : register(b2)
+{
+	// 影の個数
+	int ShadowCount;
+	// 影の座標
+	float3 ShadowPosition[100];
+	// 影の半径
+	float ShadowRadius[100];
 }
 
 // 出力
@@ -49,6 +59,24 @@ struct PSInput
 	// 法線
 	float3 normal : TEXCOORD2;
 };
+
+float Shadow(float3 worldPosition, float3 normal)
+{
+	// 影の濃さ
+	float shadow = 0.0f;
+	
+	for (int i = 0; i < ShadowCount; i++)
+	{
+		// プレイヤーとの距離
+		float3 delta = worldPosition - ShadowPosition[i];
+		// 縦に伸ばす
+		delta *= float3(1.0f, 0.2f, 1.0f);
+		
+		shadow = max(shadow, step(length(delta), ShadowRadius[i]) * step(0.1, dot(normal, float3(0.0f, 1.0f, 0.0f))) * 0.5f);
+	}
+
+	return shadow;
+}
 
 float4 main(PSInput input) : SV_Target
 {
@@ -80,13 +108,8 @@ float4 main(PSInput input) : SV_Target
 	// 描画色
 	float3 color = ambientColor + diffuseColor + specularColor + EmissiveColor;
 	
-	// プレイヤーとの距離
-	float3 sub = input.worldPosition - PlayerPosition;
-	// 縦に伸ばす
-	sub *= float3(1.0f, 0.5f, 1.0f);
+	// 影の濃さ
+	float shadow = Shadow(input.worldPosition, normal);
 	
-	float shadow = step(3.0f, sub);
-	
-	
-	return float4(color * shadow, textureColor.a);
+	return float4(color * (1.0f - shadow), textureColor.a);
 }
