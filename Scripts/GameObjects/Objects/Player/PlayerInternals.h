@@ -1,0 +1,92 @@
+/*
+ * FileName:     PlayerInternals.h
+ * Author:       Takao Hayata
+ * Last Updated: 2026/08/21
+ *
+ * プレイヤーの内部データ
+ */
+
+#pragma once
+
+#include "Scripts/Commons/Renderings/CameraScreen.h"
+
+namespace Components
+{
+	class Transform;
+}
+namespace Colliders
+{
+	class BoxCollider;
+}
+namespace Renderings
+{
+	class ParticleManager;
+}
+
+class PlayerModel;
+
+struct PlayerInternals
+{
+
+	/* 列挙型 */
+
+	// 落下状態
+	enum class FallState
+	{
+		OnGround,
+		OnAir,
+		Falling
+	};
+
+
+	/* メンバ変数 */
+
+	// 移動加速度
+	float MOVE_ACCELERATION{};
+	// ダッシュ時の速度倍率
+	float DASH_RATIO{};
+
+	// 落下加速度
+	float FALL_ACCELERATION{};
+
+	// カメラの速度の参照量
+	float CAMERA_VELOCITY_COEFFICIENT{};
+
+	// カメラ画面のポインタ
+	const Renderings::CameraScreen<Camera::EulerTargetCamera>* P_CAMERA_SCREEN{};
+
+	// 移動入力
+	Math::Vector3 move{};
+	// ダッシュ入力
+	bool isDash{};
+	// ジャンプ入力入力
+	bool isJump{};
+
+	// 移動速度
+	Math::Vector3 moveVelocity{};
+	// 移動の速さの最大
+	Limited moveMaxSpeed{};
+	// 落下速度
+	Limited fallSpeed{};
+
+	// プレイヤーの回転
+	Spring<Math::Quaternion> rotation{};
+
+	// 落下状態
+	FallState fallState{};
+	// 落下猶予
+	Limited fallCoyoteTime{};
+	// ジャンプの先行入力猶予
+	Limited jumpBufferTime{};
+
+	// トランスフォーム
+	Transform* pTransform{};
+	// 長方形の当たり判定
+	Colliders::BoxCollider* pBoxCollider{};
+	// パーティクル管理
+	Renderings::ParticleManager* pParticleManager{};
+
+	// プレイヤーのモデル
+	PlayerModel* pModel{};
+
+};

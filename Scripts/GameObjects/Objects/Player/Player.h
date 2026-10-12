@@ -1,48 +1,22 @@
 /*
  * FileName:     Player.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/11
+ * Last Updated: 2026/09/12
  *
  * プレイヤー
  */
 
 #pragma once
 
-#include "PlayerParams.h"
+#include "PlayerInternals.h"
+#include "State/PlayerState.h"
 #include "Scripts/Commons/Components/Component.h"
-#include "Scripts/Commons/Renderings/CameraScreen.h"
-
-namespace Components
-{
-	class Transform;
-}
-namespace Colliders
-{
-	class BoxCollider;
-}
-namespace Renderings
-{
-	class ParticleManager;
-}
-
-class PlayerModel;
 
  // プレイヤー
 class Player : public Component
 {
 
 public:
-
-
-	/* 列挙型 */
-
-	// 落下状態
-	enum class FallState
-	{
-		OnGround,
-		OnAir,
-		Falling
-	};
 
 
 	/* メンバ関数 */
@@ -65,7 +39,7 @@ public:
 	void UpdateModel(float elapsedTime = 0.0f);
 
 	// 回転を設定
-	void SetRotation(const Math::Quaternion& rotation) { m_rotation.SetTarget(rotation); }
+	void SetRotation(const Math::Quaternion& rotation) { m_internals.rotation.SetTarget(rotation); }
 
 	// 中心座標を取得
 	const Math::Vector3& GetPosition() const;
@@ -76,10 +50,10 @@ public:
 	float GetMoveVelocityRatio() const;
 
 	// 落下速度
-	float GetFallSpeed() const { return m_fallSpeed; }
+	float GetFallSpeed() const { return m_internals.fallSpeed; }
 
 	// 落下状態を取得
-	FallState GetFallState() const { return m_fallState; }
+	PlayerInternals::FallState GetFallState() const { return m_internals.fallState; }
 
 	// カメラの目標座標を取得
 	Math::Vector3 GetCameraTarget() const;
@@ -88,38 +62,18 @@ public:
 private:
 
 
+	/* メンバ関数 */
+
+	// 状態を変更
+	void SetState(std::unique_ptr<PlayerState> state);
+
+
 	/* メンバ変数 */
 
-	// パラメータ
-	PlayerParams m_params;
+	// 内部データ
+	PlayerInternals m_internals;
 
-	// 移動速度
-	Math::Vector3 m_moveVelocity;
-	// 移動の速さの最大
-	Limited m_moveMaxSpeed;
-	// 落下速度
-	Limited m_fallSpeed;
-
-	// プレイヤーの回転
-	Spring<Math::Quaternion> m_rotation;
-
-	// 落下状態
-	FallState m_fallState;
-	// 落下猶予
-	Limited m_fallCoyoteTime;
-	// ジャンプの先行入力猶予
-	Limited m_jumpBufferTime;
-
-	// トランスフォーム
-	Transform* m_pTransform;
-	// 長方形の当たり判定
-	Colliders::BoxCollider* m_pBoxCollider;
-	// パーティクル管理
-	Renderings::ParticleManager* m_pParticleManager;
-	// カメラ画面のポインタ
-	const Renderings::CameraScreen<Camera::EulerTargetCamera>* m_pCameraScreen;
-
-	// プレイヤーのモデル
-	PlayerModel* m_pModel;
+	// 状態
+	std::unique_ptr<PlayerState> m_currentState;
 
 };

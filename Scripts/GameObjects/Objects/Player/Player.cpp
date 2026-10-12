@@ -24,155 +24,166 @@
 // コンストラクタ
 Player::Player(const ComponentDesc& desc)
 	: Component{ desc }
-	, m_params{}
-	, m_moveVelocity{}
-	, m_fallSpeed{}
-	, m_moveMaxSpeed{}
-	, m_rotation{}
-	, m_fallState{}
-	, m_fallCoyoteTime{}
-	, m_jumpBufferTime{}
-	, m_pTransform{ GetPOwner()->GetNullReferences<Transform>() }
-	, m_pBoxCollider{ GetPOwner()->GetNullReferences<Colliders::BoxCollider>() }
-	, m_pParticleManager{ GetPOwner()->GetNullReferences<Renderings::ParticleManager>() }
-	, m_pCameraScreen{ GetPOwner()->GetNullReferences<Renderings::CameraScreen<Camera::EulerTargetCamera>>() }
-	, m_pModel{ GetPOwner()->GetNullReferences<PlayerModel>() }
+	, m_internals{}
 {
+	m_internals.P_CAMERA_SCREEN = GetPOwner()->GetNullReferences<Renderings::CameraScreen<Camera::EulerTargetCamera>>();
+	m_internals.pTransform = GetPOwner()->GetNullReferences<Transform>();
+	m_internals.pBoxCollider = GetPOwner()->GetNullReferences<Colliders::BoxCollider>();
+	m_internals.pParticleManager = GetPOwner()->GetNullReferences<Renderings::ParticleManager>();
+	m_internals.pModel = GetPOwner()->GetNullReferences<PlayerModel>();
 }
 
 // 初期化処理
 void Player::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
 {
-	m_pTransform = GetPOwner()->GetComponent<Transform>();
-	m_rotation.SetValue(m_pTransform->GetRotation());
+	m_internals.pTransform = GetPOwner()->GetComponent<Transform>();
+	m_internals.pBoxCollider = GetPOwner()->GetComponent<Colliders::BoxCollider>();
+	m_internals.pParticleManager = GetPOwner()->GetComponent<Renderings::ParticleManager>();
 
-	m_pBoxCollider = GetPOwner()->GetComponent<Colliders::BoxCollider>();
-	m_pParticleManager = GetPOwner()->GetComponent<Renderings::ParticleManager>();
+	m_internals.rotation.SetValue(m_internals.pTransform->GetRotation());
 
-	float moveMaxSpeed = m_moveMaxSpeed.GetMin();
-	float fallMaxSpeed = m_fallSpeed.GetMax();
-	float jumpPower = -m_fallSpeed.GetMin();
-	float coyoteTime = m_fallCoyoteTime.GetMax();
+	float moveMaxSpeed = m_internals.moveMaxSpeed.GetMin();
+	float fallMaxSpeed = m_internals.fallSpeed.GetMax();
+	float jumpPower = -m_internals.fallSpeed.GetMin();
+	float coyoteTime = m_internals.fallCoyoteTime.GetMax();
 
 	Systems::JsonSerializer serializer{ pIGameObjectFinder };
 	serializer.AddParameter(&moveMaxSpeed, "MoveMaxSpeed");
-	serializer.AddParameter(&m_params.moveAcceleration, "MoveAcceleration");
-	serializer.AddParameter(&m_params.dashRatio, "DashRatio");
+	serializer.AddParameter(&m_internals.MOVE_ACCELERATION, "MoveAcceleration");
+	serializer.AddParameter(&m_internals.DASH_RATIO, "DashRatio");
 	serializer.AddParameter(&fallMaxSpeed, "FallMaxSpeed");
-	serializer.AddParameter(&m_params.fallAcceleration, "FallAcceleration");
+	serializer.AddParameter(&m_internals.FALL_ACCELERATION, "FallAcceleration");
 	serializer.AddParameter(&jumpPower, "JumpPower");
-	serializer.AddParameter(&m_params.cameraVelocityCoefficient, "CameraVelocityCoefficient");
+	serializer.AddParameter(&m_internals.CAMERA_VELOCITY_COEFFICIENT, "CameraVelocityCoefficient");
 	serializer.AddParameter(&coyoteTime, "CoyoteTime");
-	serializer.AddParameter(&m_pCameraScreen, "CameraScreen");
+	serializer.AddParameter(&m_internals.P_CAMERA_SCREEN, "CameraScreen");
 	serializer.Load(json);
 
-	m_moveMaxSpeed.Initialize(0.0f, moveMaxSpeed, moveMaxSpeed * m_params.dashRatio);
+	m_internals.moveMaxSpeed.Initialize(0.0f, moveMaxSpeed, moveMaxSpeed * m_internals.DASH_RATIO);
 
-	m_fallSpeed.Initialize(0.0f, -jumpPower, fallMaxSpeed);
+	m_internals.fallSpeed.Initialize(0.0f, -jumpPower, fallMaxSpeed);
 
-	m_fallState = FallState::OnGround;
-	m_fallCoyoteTime.Initialize(0.0f, 0.0f, coyoteTime);
-	m_jumpBufferTime.Initialize(0.0f, 0.0f, coyoteTime);
+	m_internals.fallState = PlayerInternals::FallState::OnGround;
+	m_internals.fallCoyoteTime.Initialize(0.0f, 0.0f, coyoteTime);
+	m_internals.jumpBufferTime.Initialize(0.0f, 0.0f, coyoteTime);
 
 	// 当たり判定の更新
-	m_pBoxCollider->ApplyTransform();
+	m_internals.pBoxCollider->ApplyTransform();
 
 	// モデルの取得
-	if (m_pModel == GetPOwner()->GetNullReferences<PlayerModel>())
+	if (m_internals.pModel == GetPOwner()->GetNullReferences<PlayerModel>())
 	{
 		GameObject* pObj = Instantiate("Prefab_PlayerModel");
-		m_pModel = pObj->GetComponent<PlayerModel>();
-		m_pModel->SetParticleManager(m_pParticleManager);
+		m_internals.pModel = pObj->GetComponent<PlayerModel>();
+		m_internals.pModel->SetParticleManager(m_internals.pParticleManager);
 	}
 
 	// カメラを設定
-	if (m_pCameraScreen != GetPOwner()->GetNullReferences<Renderings::CameraScreen<Camera::EulerTargetCamera>>())
+	if (m_internals.P_CAMERA_SCREEN != GetPOwner()->GetNullReferences<Renderings::CameraScreen<Camera::EulerTargetCamera>>())
 	{
-		m_pBoxCollider->AddICameraScreen(*m_pCameraScreen);
-		m_pParticleManager->AddICameraScreen(*m_pCameraScreen);
-		m_pModel->GetPOwner()->GetComponent<Renderings::Model3D>()->AddICameraScreen(*m_pCameraScreen);
+		m_internals.pBoxCollider->AddICameraScreen(*m_internals.P_CAMERA_SCREEN);
+		m_internals.pParticleManager->AddICameraScreen(*m_internals.P_CAMERA_SCREEN);
+		m_internals.pModel->GetPOwner()->GetComponent<Renderings::Model3D>()->AddICameraScreen(*m_internals.P_CAMERA_SCREEN);
 	}
+
+	// 現在の状態を初期化
+	//SetState(std::make_unique<GamePlaySceneStateField>());
 }
 
 // 更新処理
 void Player::Update(float elapsedTime, const Math::Vector3& move, bool isDash, bool isJump)
 {
+	// 入力を受け取る
+	m_internals.move = move;
+	m_internals.isDash = isDash;
+	m_internals.isJump = isJump;
+
 	// カメラのY軸回転
-	Math::Quaternion cameraRotation = Math::Quaternion::CreateFromAxisAngle(Math::Vector3::UnitY, Math::Deg2Rad(m_pCameraScreen->GetCamera().rotation.y));
+	Math::Quaternion cameraRotation = Math::Quaternion::CreateFromAxisAngle(Math::Vector3::UnitY, Math::Deg2Rad(m_internals.P_CAMERA_SCREEN->GetCamera().rotation.y));
 
 	// 最大の早さを調整
-	m_moveMaxSpeed += m_params.moveAcceleration * elapsedTime * m_params.dashRatio * (isDash ? 1.0f : -1.0f);
+	m_internals.moveMaxSpeed += m_internals.MOVE_ACCELERATION* elapsedTime * m_internals.DASH_RATIO * (isDash ? 1.0f : -1.0f);
 
 	// 加速度がない
 	if (move == Math::Vector3::Zero)
 	{
 		// 速さ
-		Limited speed = Limited::Create(m_moveVelocity.Length() - m_params.moveAcceleration * elapsedTime, 0.0f, m_moveMaxSpeed);
-		m_moveVelocity.Normalize();
-		m_moveVelocity *= speed;
+		Limited speed = Limited::Create(m_internals.moveVelocity.Length() - m_internals.MOVE_ACCELERATION* elapsedTime, 0.0f, m_internals.moveMaxSpeed);
+		m_internals.moveVelocity.Normalize();
+		m_internals.moveVelocity *= speed;
 	}
 	// 加速度がある
 	else
 	{
 		// 速度に加速度を足す
-		m_moveVelocity += Math::Vector3::Transform(move, cameraRotation) * m_params.moveAcceleration * elapsedTime * (isDash ? m_params.dashRatio : 1.0f);
+		m_internals.moveVelocity += Math::Vector3::Transform(move, cameraRotation) * m_internals.MOVE_ACCELERATION* elapsedTime * (isDash ? m_internals.DASH_RATIO : 1.0f);
 		// 速さを最大に収める
-		if (m_moveVelocity.Length() > m_moveMaxSpeed)
+		if (m_internals.moveVelocity.Length() > m_internals.moveMaxSpeed)
 		{
-			m_moveVelocity.Normalize();
-			m_moveVelocity *= m_moveMaxSpeed;
+			m_internals.moveVelocity.Normalize();
+			m_internals.moveVelocity *= m_internals.moveMaxSpeed;
 		}
 
-		m_rotation.SetTarget
+		m_internals.rotation.SetTarget
 		(
-			Math::Quaternion::CreateFromAxisAngle(Math::Vector3::UnitY, Math::Arctan2(m_moveVelocity.x, m_moveVelocity.z)),
+			Math::Quaternion::CreateFromAxisAngle(Math::Vector3::UnitY, Math::Arctan2(m_internals.moveVelocity.x, m_internals.moveVelocity.z)),
 			200.0f,
 			25.0f
 		);
 	}
 
-	m_fallSpeed += m_params.fallAcceleration * elapsedTime;
+	m_internals.fallSpeed += m_internals.FALL_ACCELERATION * elapsedTime;
 
 	// ジャンプ入力
 	if (isJump)
 	{
-		m_jumpBufferTime = m_jumpBufferTime.GetMax();
+		m_internals.jumpBufferTime = m_internals.jumpBufferTime.GetMax();
 	}
 
-	m_jumpBufferTime -= elapsedTime;
+	m_internals.jumpBufferTime -= elapsedTime;
 
 	// ジャンプ
-	if (m_jumpBufferTime != 0.0f && m_fallState != FallState::Falling)
+	if (m_internals.jumpBufferTime != 0.0f && m_internals.fallState != PlayerInternals::FallState::Falling)
 	{
-		m_fallState = FallState::Falling;
-		m_fallSpeed = m_fallSpeed.GetMin();
+		m_internals.fallState = PlayerInternals::FallState::Falling;
+		m_internals.fallSpeed = m_internals.fallSpeed.GetMin();
 		// 砂煙の再生
-		m_pParticleManager->Play<JumpingParticle>();
+		m_internals.pParticleManager->Play<JumpingParticle>();
 	}
 
 	// 回転の更新
-	m_rotation.Tick(elapsedTime);
+	m_internals.rotation.Tick(elapsedTime);
 
 	// 位置に速度を足す
-	m_pTransform->Translate((m_moveVelocity - Math::Vector3::UnitY * m_fallSpeed) * elapsedTime);
+	m_internals.pTransform->Translate((m_internals.moveVelocity - Math::Vector3::UnitY * m_internals.fallSpeed) * elapsedTime);
 	// 回転させる
-	m_pTransform->SetRotation(m_rotation.GetCurrent());
+	m_internals.pTransform->SetRotation(m_internals.rotation.GetCurrent());
 
 	// 落下猶予
-	m_fallCoyoteTime -= elapsedTime;
+	m_internals.fallCoyoteTime -= elapsedTime;
 
 	// 当たり判定の更新
-	m_pBoxCollider->ApplyTransform();
+	m_internals.pBoxCollider->ApplyTransform();
 
 	// パーティクルの更新
-	m_pParticleManager->Update(elapsedTime);
+	m_internals.pParticleManager->Update(elapsedTime);
+
+	//// 次の状態に遷移
+	//std::unique_ptr<Systems::State<GamePlaySceneInternals>> nextState{ m_currentState->MoveNextState() };
+	//if (nextState)
+	//{
+	//	SetState(std::move(nextState));
+	//}
+
+	//// 状態ごとの処理
+	//m_currentState->Update(m_internals.get(), elapsedTime);
 }
 
 // 直方体による座標補正
 void Player::BoxCorrect(const std::vector<const Math::Box*>& pBoxes)
 {
 	// 直方体
-	Math::Box box = m_pBoxCollider->GetWorldBox();
+	Math::Box box = m_internals.pBoxCollider->GetWorldBox();
 
 	for (const auto* pBox : pBoxes)
 	{
@@ -189,36 +200,36 @@ void Player::BoxCorrect(const std::vector<const Math::Box*>& pBoxes)
 		// めり込んでいるなら
 		if (distance < 0.0f)
 		{
-			m_pTransform->Translate(direction * distance);
+			m_internals.pTransform->Translate(direction * distance);
 			box.position += direction * distance;
 
 			// 押出方向が上かつ落下中のとき
-			if (direction.Dot(Math::Vector3::Down) > 1.0f / 1.41421356f && m_fallSpeed > 0.0f)
+			if (direction.Dot(Math::Vector3::Down) > 1.0f / 1.41421356f && m_internals.fallSpeed > 0.0f)
 			{
 				// 落下中なら砂煙を再生
-				if (m_fallState == FallState::Falling)
+				if (m_internals.fallState == PlayerInternals::FallState::Falling)
 				{
-					m_pParticleManager->Play<LandingParticle>();
+					m_internals.pParticleManager->Play<LandingParticle>();
 				}
 
-				m_fallSpeed = 0.0f;
-				m_fallState = FallState::OnGround;
-				m_fallCoyoteTime = m_fallCoyoteTime.GetMax();
+				m_internals.fallSpeed = 0.0f;
+				m_internals.fallState = PlayerInternals::FallState::OnGround;
+				m_internals.fallCoyoteTime = m_internals.fallCoyoteTime.GetMax();
 			}
 		}
 	}
 
 	// 当たり判定の更新
-	m_pBoxCollider->ApplyTransform();
+	m_internals.pBoxCollider->ApplyTransform();
 }
 
 // メッシュによる座標補正
 void Player::MeshCorrect(const Mesh& mesh)
 {
 	// 直方体
-	Math::Box box = m_pBoxCollider->GetWorldBox();
+	Math::Box box = m_internals.pBoxCollider->GetWorldBox();
 	// 外接する非回転直方体（少し広めに）
-	Math::NonRotatingBox nonRotatingBox = m_pBoxCollider->GetWorldBox().CreateNonRotatingBox();
+	Math::NonRotatingBox nonRotatingBox = m_internals.pBoxCollider->GetWorldBox().CreateNonRotatingBox();
 	nonRotatingBox.size += Math::Vector3::One;
 
 	// 壁リスト
@@ -272,21 +283,21 @@ void Player::MeshCorrect(const Mesh& mesh)
 	// めり込んでいるなら
 	if (distance < 0.0f)
 	{
-		m_pTransform->Translate(direction * distance);
+		m_internals.pTransform->Translate(direction * distance);
 		box.position += direction * distance;
 
 		// 押出方向が上かつ落下中のとき
-		if (direction.Dot(Math::Vector3::Down) > 1.0f / 1.41421356f && m_fallSpeed > 0.0f)
+		if (direction.Dot(Math::Vector3::Down) > 1.0f / 1.41421356f && m_internals.fallSpeed > 0.0f)
 		{
 			// 落下中なら砂煙を再生
-			if (m_fallState == FallState::Falling)
+			if (m_internals.fallState == PlayerInternals::FallState::Falling)
 			{
-				m_pParticleManager->Play<LandingParticle>();
+				m_internals.pParticleManager->Play<LandingParticle>();
 			}
 
-			m_fallSpeed = 0.0f;
-			m_fallState = FallState::OnGround;
-			m_fallCoyoteTime = m_fallCoyoteTime.GetMax();
+			m_internals.fallSpeed = 0.0f;
+			m_internals.fallState = PlayerInternals::FallState::OnGround;
+			m_internals.fallCoyoteTime = m_internals.fallCoyoteTime.GetMax();
 		}
 	}
 
@@ -319,9 +330,9 @@ void Player::MeshCorrect(const Mesh& mesh)
 	}
 
 	// 落下状態ごとの処理
-	switch (m_fallState)
+	switch (m_internals.fallState)
 	{
-	case Player::FallState::OnGround:
+	case PlayerInternals::FallState::OnGround:
 		// 地面に貼り付ける
 		if (distance < box.size.y / 8.0f)
 		{
@@ -329,47 +340,47 @@ void Player::MeshCorrect(const Mesh& mesh)
 
 			if (distance < 0.0f || Math::Sign(arccos) == -1)
 			{
-				m_pTransform->Translate(Math::Vector3::UnitY * (Math::Sign(arccos) * distance));
+				m_internals.pTransform->Translate(Math::Vector3::UnitY * (Math::Sign(arccos) * distance));
 				box.position += Math::Vector3::UnitY * (Math::Sign(arccos) * distance);
-				m_fallSpeed = 0.0f;
-				m_fallCoyoteTime = m_fallCoyoteTime.GetMax();
+				m_internals.fallSpeed = 0.0f;
+				m_internals.fallCoyoteTime = m_internals.fallCoyoteTime.GetMax();
 				break;
 			}
 		}
-		m_fallState = FallState::OnAir;
+		m_internals.fallState = PlayerInternals::FallState::OnAir;
 		break;
-	case Player::FallState::OnAir:
+	case PlayerInternals::FallState::OnAir:
 		if (distance < 0.0f)
 		{
 			float arccos = direction.Dot(Math::Vector3::UnitY);
 
-			m_pTransform->Translate(Math::Vector3::UnitY * (Math::Sign(arccos) * distance));
+			m_internals.pTransform->Translate(Math::Vector3::UnitY * (Math::Sign(arccos) * distance));
 			box.position += Math::Vector3::UnitY * (Math::Sign(arccos) * distance);
-			m_fallSpeed = 0.0f;
-			m_fallState = FallState::OnGround;
-			m_fallCoyoteTime = m_fallCoyoteTime.GetMax();
+			m_internals.fallSpeed = 0.0f;
+			m_internals.fallState = PlayerInternals::FallState::OnGround;
+			m_internals.fallCoyoteTime = m_internals.fallCoyoteTime.GetMax();
 			break;
 		}
-		if (m_fallCoyoteTime.IsMin())
+		if (m_internals.fallCoyoteTime.IsMin())
 		{
-			m_fallState = FallState::Falling;
+			m_internals.fallState = PlayerInternals::FallState::Falling;
 		}
 		break;
-	case Player::FallState::Falling:
+	case PlayerInternals::PlayerInternals::FallState::Falling:
 		if (distance < 0.0f)
 		{
 			float arccos = direction.Dot(Math::Vector3::UnitY);
 
-			m_pTransform->Translate(Math::Vector3::UnitY * (Math::Sign(arccos) * distance));
+			m_internals.pTransform->Translate(Math::Vector3::UnitY * (Math::Sign(arccos) * distance));
 			box.position += Math::Vector3::UnitY * (Math::Sign(arccos) * distance);
 			// 落下中のとき
-			if (m_fallSpeed > 0.0f)
+			if (m_internals.fallSpeed > 0.0f)
 			{
-				m_fallSpeed = 0.0f;
-				m_fallState = FallState::OnGround;
-				m_fallCoyoteTime = m_fallCoyoteTime.GetMax();
+				m_internals.fallSpeed = 0.0f;
+				m_internals.fallState = PlayerInternals::FallState::OnGround;
+				m_internals.fallCoyoteTime = m_internals.fallCoyoteTime.GetMax();
 				// 砂煙の再生
-				m_pParticleManager->Play<LandingParticle>();
+				m_internals.pParticleManager->Play<LandingParticle>();
 			}
 			break;
 		}
@@ -379,36 +390,47 @@ void Player::MeshCorrect(const Mesh& mesh)
 	}
 
 	// 当たり判定の更新
-	m_pBoxCollider->ApplyTransform();
+	m_internals.pBoxCollider->ApplyTransform();
 }
 
 // モデルの更新
 void Player::UpdateModel(float elapsedTime)
 {
-	m_pModel->SetTransform(*m_pTransform);
-	m_pModel->Update(elapsedTime, *this);
+	m_internals.pModel->SetTransform(*m_internals.pTransform);
+	m_internals.pModel->Update(elapsedTime, *this);
 }
 
 // 中心座標を取得
 const Math::Vector3& Player::GetPosition() const
 {
-	return m_pBoxCollider->GetWorldBox().position;
+	return m_internals.pBoxCollider->GetWorldBox().position;
 }
 
 // 当たり判定を取得
 const Math::Box& Player::GetBox() const
 {
-	return m_pBoxCollider->GetWorldBox();
+	return m_internals.pBoxCollider->GetWorldBox();
 }
 
 // 移動速度の比率を取得
 float Player::GetMoveVelocityRatio() const
 {
-	return m_moveVelocity.Length() / m_moveMaxSpeed.GetMin();
+	return m_internals.moveVelocity.Length() / m_internals.moveMaxSpeed.GetMin();
 }
 
 // カメラの目標座標を取得
 Math::Vector3 Player::GetCameraTarget() const
 {
-	return GetPosition() + (m_moveVelocity + m_fallSpeed * Math::Vector3::Down) * m_params.cameraVelocityCoefficient;
+	return GetPosition() + (m_internals.moveVelocity + m_internals.fallSpeed * Math::Vector3::Down) * m_internals.CAMERA_VELOCITY_COEFFICIENT;
+}
+
+// 状態を変更
+void Player::SetState(std::unique_ptr<PlayerState> state)
+{
+	if (m_currentState != nullptr)
+	{
+		m_currentState->Exit(&m_internals);
+	}
+	m_currentState = std::move(state);
+	m_currentState->Enter(&m_internals);
 }

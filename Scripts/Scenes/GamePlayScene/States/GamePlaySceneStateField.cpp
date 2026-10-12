@@ -71,7 +71,7 @@ void GamePlaySceneStateField::Update(GamePlaySceneInternals* pInternals, float e
 	if
 	(
 		pFocusedNPC &&
-		pInternals->pPlayer->GetFallState() == Player::FallState::OnGround &&
+		pInternals->pPlayer->GetFallState() == PlayerInternals::FallState::OnGround &&
 		pIGameInput->GetPlayerMove() == Math::Vector3::Zero &&
 		pIGameInput->GetFieldInteract()
 	)

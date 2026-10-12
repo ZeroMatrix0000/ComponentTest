@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerModel.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/11
+ * Last Updated: 2026/09/12
  *
  * プレイヤーのモデル
  */
@@ -55,7 +55,7 @@ void PlayerModel::Update(float elapsedTime, const Player& player)
 {
 	switch (player.GetFallState())
 	{
-	case Player::FallState::Falling:
+	case PlayerInternals::FallState::Falling:
 	{
 		m_bounceTime = 0.0f;
 		m_fallingHeight.SetTarget(0.0f);
