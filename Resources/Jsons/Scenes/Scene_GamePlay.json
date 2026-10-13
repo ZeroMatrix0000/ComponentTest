@@ -240,6 +240,22 @@
 		}
 	},
 	{
+		"Name": "Reticle",
+		"Components": {
+			"RectTransform": {
+				"Size": {
+					"X": 32.0,
+					"Y": 32.0
+				}
+			},
+			"Image": {
+				"ImageSourceName": "Reticle",
+				"OrderInLayer": 100,
+				"Canvas": "Canvas"
+			}
+		}
+	},
+	{
 		"Name": "ActionManager",
 		"Components": {
 			"ActionManager": {},

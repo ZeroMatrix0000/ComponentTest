@@ -13,6 +13,7 @@
 #include "GamePlaySceneStates.h"
 #include "Scripts/GameObjects/Objects/Player/Player.h"
 #include "Scripts/GameObjects/Objects/Player/PlayerCamera.h"
+#include "Scripts/GameObjects/Objects/Player/States/PlayerStates.h"
 #include "Scripts/GameObjects/Objects/NPC/NPCManager.h"
 #include "Scripts/GameObjects/UIs/Z2Talk/Z2Talk.h"
 #include "Scripts/GameObjects/UIs/BlackBelt/BlackBelt.h"
@@ -71,7 +72,7 @@ void GamePlaySceneStateField::Update(GamePlaySceneInternals* pInternals, float e
 	if
 	(
 		pFocusedNPC &&
-		pInternals->pPlayer->GetFallState() == PlayerInternals::FallState::OnGround &&
+		pInternals->pPlayer->IsState<PlayerStateOnGround>() &&
 		pIGameInput->GetPlayerMove() == Math::Vector3::Zero &&
 		pIGameInput->GetFieldInteract()
 	)

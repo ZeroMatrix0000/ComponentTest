@@ -69,7 +69,7 @@ void GamePlaySceneStateEvent::Update(GamePlaySceneInternals* pInternals, float e
 	// カメラの更新
 	pInternals->pPlayerCamera->SetTarget
 	(
-		(pInternals->pPlayer->GetCameraTarget() + pInternals->pNPCManager->GetPFocusedNPC()->GetBox().position) / 2.0f
+		(pInternals->pPlayer->GetCameraTarget() + pInternals->pNPCManager->GetPFocusedNPC()->GetPosition()) / 2.0f
 	);
 	pInternals->pPlayerCamera->Rotate(pIGameInput->GetPlayerCameraRotate());
 	pInternals->pPlayerCamera->MeshCorrect(pInternals->pGroundMesh->GetWorldMesh(), pInternals->pPlayer->GetPosition());

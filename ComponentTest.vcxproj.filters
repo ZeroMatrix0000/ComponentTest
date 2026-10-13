@@ -130,6 +130,9 @@
     <Filter Include="Scripts\GameObjects\Particles">
       <UniqueIdentifier>{bc5e8623-40c5-4939-8e07-857ea6f280d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scripts\GameObjects\Objects\Player\States">
+      <UniqueIdentifier>{76a37496-b3b5-4a42-9ac6-b367b05486a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Scripts\Main\WinMain.cpp">
@@ -391,6 +394,13 @@
     <ClCompile Include="Scripts\GameObjects\Particles\JumpingParticle.cpp">
       <Filter>Scripts\GameObjects\Particles</Filter>
     </ClCompile>
+    <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateOnGround.cpp">
+      <Filter>Scripts\GameObjects\Objects\Player\States</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateOnAir.cpp">
+      <Filter>Scripts\GameObjects\Objects\Player\States</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateFalling.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Pch.h" />
@@ -634,9 +644,6 @@
     <ClInclude Include="Scripts\Scenes\GamePlayScene\GamePlayScene.h">
       <Filter>Scripts\Scenes\GamePlayScene</Filter>
     </ClInclude>
-    <ClInclude Include="Scripts\GameObjects\Objects\Player\PlayerParams.h">
-      <Filter>Scripts\GameObjects\Objects\Player</Filter>
-    </ClInclude>
     <ClInclude Include="Scripts\Commons\Systems\JsonSerializer.h">
       <Filter>Scripts\Commons\Systems</Filter>
     </ClInclude>
@@ -772,6 +779,24 @@
     <ClInclude Include="Scripts\GameObjects\Particles\JumpingParticle.h">
       <Filter>Scripts\GameObjects\Particles</Filter>
     </ClInclude>
+    <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerState.h">
+      <Filter>Scripts\GameObjects\Objects\Player\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStateOnGround.h">
+      <Filter>Scripts\GameObjects\Objects\Player\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\GameObjects\Objects\Player\PlayerInternals.h">
+      <Filter>Scripts\GameObjects\Objects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStateOnAir.h">
+      <Filter>Scripts\GameObjects\Objects\Player\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStates.h">
+      <Filter>Scripts\GameObjects\Objects\Player\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStateFalling.h">
+      <Filter>Scripts\GameObjects\Objects\Player\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -833,9 +858,6 @@
       <Filter>Jsons\Prefabs</Filter>
     </None>
     <None Include="Resources\Jsons\Events\Event_TalkTestColor.json">
-      <Filter>Jsons\Events</Filter>
-    </None>
-    <None Include="Resources\Jsons\Events\Event_TalkTestMaykit.json">
       <Filter>Jsons\Events</Filter>
     </None>
   </ItemGroup>

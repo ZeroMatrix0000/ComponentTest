@@ -69,35 +69,10 @@ void PlayerCamera::Rotate(const Math::Vector2& rotate)
 void PlayerCamera::MeshCorrect(const Mesh& mesh, const Math::Vector3& centerPosition)
 {
 	// レイの方向
-	Math::Vector3 direction = m_target - centerPosition;
-	direction.Normalize();
-
-	// 方向指定最短距離
-	float angledDistance = Math::INFTY;
-
-	for (const auto& face : mesh.f)
-	{
-		// メッシュの三角形を取得
-		Math::Triangle triangle = Math::Triangle{ mesh.v.at(face.at(0)), mesh.v.at(face.at(1)), mesh.v.at(face.at(2)) };
-
-		float newDistance = Math::Geometry::AngledDistance(centerPosition, triangle, direction);
-
-		if (newDistance > 0.0f)
-		{
-			angledDistance = Math::Min(angledDistance, newDistance);
-		}
-	}
-
-	if (angledDistance - 0.1f < (m_target - centerPosition).Length())
-	{
-		m_target = centerPosition + direction * (angledDistance - 0.1f);
-	}
-
-	// レイの方向
-	direction = Math::Vector3::Transform(Math::Vector3::UnitZ, Math::Euler{ m_rotationXDeg, m_rotationYDeg, 0.0f }.CreateQuaternion());
+	Math::Vector3 direction = Math::Vector3::Transform(Math::Vector3::UnitZ, Math::Euler{ m_rotationXDeg, m_rotationYDeg, 0.0f }.CreateQuaternion());
 	
 	// 方向指定最短距離
-	angledDistance = Math::INFTY;
+	float angledDistance = Math::INFTY;
 
 	for (const auto& face : mesh.f)
 	{
@@ -119,26 +94,10 @@ void PlayerCamera::MeshCorrect(const Mesh& mesh, const Math::Vector3& centerPosi
 void PlayerCamera::BoxCorrect(const Math::Box& box, const Math::Vector3& centerPosition)
 {
 	// レイの方向
-	Math::Vector3 direction = m_target - centerPosition;
-	direction.Normalize();
+	Math::Vector3 direction = Math::Vector3::Transform(Math::Vector3::UnitZ, Math::Euler{ m_rotationXDeg, m_rotationYDeg, 0.0f }.CreateQuaternion());
 
 	// 方向指定最短距離
-	float angledDistance = Math::Geometry::AngledDistance(centerPosition, box, direction);
-	if (angledDistance <= 0.0f)
-	{
-		angledDistance = Math::INFTY;
-	}
-
-	if (angledDistance - 0.1f < (m_target - centerPosition).Length())
-	{
-		m_target = centerPosition + direction * (angledDistance - 0.1f);
-	}
-
-	// レイの方向
-	direction = Math::Vector3::Transform(Math::Vector3::UnitZ, Math::Euler{ m_rotationXDeg, m_rotationYDeg, 0.0f }.CreateQuaternion());
-
-	// 方向指定最短距離
-	angledDistance = Math::Geometry::AngledDistance(m_target, box, direction);
+	float angledDistance = Math::Geometry::AngledDistance(m_target, box, direction);
 	if (angledDistance <= 0.0f)
 	{
 		angledDistance = Math::INFTY;

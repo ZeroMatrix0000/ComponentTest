@@ -26,12 +26,6 @@ public:
 	// デストラクタ
 	virtual ~PlayerState() = default;
 
-
-protected:
-
-
-	/* メンバ関数 */
-
 	// 座標補正
 	virtual void PositionCorrect(PlayerInternals* pInternals, float distance, const Math::Vector3& direction) = 0;
 

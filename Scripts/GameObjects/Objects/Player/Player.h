@@ -1,7 +1,7 @@
 /*
  * FileName:     Player.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/12
+ * Last Updated: 2026/09/13
  *
  * プレイヤー
  */
@@ -9,7 +9,7 @@
 #pragma once
 
 #include "PlayerInternals.h"
-#include "State/PlayerState.h"
+#include "States/PlayerState.h"
 #include "Scripts/Commons/Components/Component.h"
 
  // プレイヤー
@@ -52,8 +52,9 @@ public:
 	// 落下速度
 	float GetFallSpeed() const { return m_internals.fallSpeed; }
 
-	// 落下状態を取得
-	PlayerInternals::FallState GetFallState() const { return m_internals.fallState; }
+	// 状態が一致しているか
+	template<typename T> requires IsDerived<T, PlayerState>
+	bool IsState() const { return dynamic_cast<T*>(m_currentState.get()); }
 
 	// カメラの目標座標を取得
 	Math::Vector3 GetCameraTarget() const;

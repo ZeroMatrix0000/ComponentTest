@@ -32,6 +32,7 @@ void GamePlaySceneInitializer::operator()(GamePlaySceneInternals* pInternals) co
 {
 	// マウスをループ
 	pInternals->gameContext.GetPIInput()->SetMousePositionLoop(true);
+	pInternals->gameContext.GetPIInput()->DisplayCursor(false);
 
 	// 出力サイズ
 	const Math::Vector2& outputSize = pInternals->gameContext.GetPIWindowController()->GetOutputSize();
@@ -50,7 +51,7 @@ void GamePlaySceneInitializer::operator()(GamePlaySceneInternals* pInternals) co
 	GameObject* pCamera = pIGameObjectManager->Find("PlayerCamera");
 	pInternals->pCameraScreen = pCamera->GetComponent<Renderings::ICameraScreen>();
 	pInternals->pPlayerCamera = pCamera->GetComponent<PlayerCamera>();
-	pInternals->pPlayerCamera->SetPosition(pInternals->pPlayer->GetBox().position);
+	pInternals->pPlayerCamera->SetPosition(pInternals->pPlayer->GetCameraTarget());
 	pInternals->pCameraScreen->UpdateViewMatrix();
 	pInternals->pCameraScreen->SetProjectionMatrix(outputSize);
 

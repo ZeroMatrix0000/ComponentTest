@@ -206,7 +206,9 @@
     <ClCompile Include="Scripts\GameObjects\Objects\Player\Player.cpp" />
     <ClCompile Include="Scripts\GameObjects\Objects\Player\PlayerCamera.cpp" />
     <ClCompile Include="Scripts\GameObjects\Objects\Player\PlayerModel.cpp" />
-    <ClCompile Include="Scripts\GameObjects\Objects\Player\State\PlayerStateOnGround.cpp" />
+    <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateFalling.cpp" />
+    <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateOnAir.cpp" />
+    <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateOnGround.cpp" />
     <ClCompile Include="Scripts\GameObjects\Particles\JumpingParticle.cpp" />
     <ClCompile Include="Scripts\GameObjects\Particles\LandingParticle.cpp" />
     <ClCompile Include="Scripts\GameObjects\UIs\BlackBelt\BlackBelt.cpp" />
@@ -312,8 +314,11 @@
     <ClInclude Include="Scripts\GameObjects\Objects\Player\PlayerCamera.h" />
     <ClInclude Include="Scripts\GameObjects\Objects\Player\PlayerModel.h" />
     <ClInclude Include="Scripts\GameObjects\Objects\Player\PlayerInternals.h" />
-    <ClInclude Include="Scripts\GameObjects\Objects\Player\State\PlayerState.h" />
-    <ClInclude Include="Scripts\GameObjects\Objects\Player\State\PlayerStateOnGround.h" />
+    <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerState.h" />
+    <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStateFalling.h" />
+    <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStateOnAir.h" />
+    <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStateOnGround.h" />
+    <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStates.h" />
     <ClInclude Include="Scripts\GameObjects\Particles\JumpingParticle.h" />
     <ClInclude Include="Scripts\GameObjects\Particles\LandingParticle.h" />
     <ClInclude Include="Scripts\GameObjects\UIs\BlackBelt\BlackBelt.h" />

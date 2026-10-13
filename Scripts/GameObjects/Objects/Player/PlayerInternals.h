@@ -56,11 +56,11 @@ struct PlayerInternals
 	const Renderings::CameraScreen<Camera::EulerTargetCamera>* P_CAMERA_SCREEN{};
 
 	// 移動入力
-	Math::Vector3 move{};
+	Math::Vector3 MOVE{};
 	// ダッシュ入力
-	bool isDash{};
+	bool IS_DASH{};
 	// ジャンプ入力入力
-	bool isJump{};
+	bool IS_JUMP{};
 
 	// 移動速度
 	Math::Vector3 moveVelocity{};
@@ -72,8 +72,6 @@ struct PlayerInternals
 	// プレイヤーの回転
 	Spring<Math::Quaternion> rotation{};
 
-	// 落下状態
-	FallState fallState{};
 	// 落下猶予
 	Limited fallCoyoteTime{};
 	// ジャンプの先行入力猶予

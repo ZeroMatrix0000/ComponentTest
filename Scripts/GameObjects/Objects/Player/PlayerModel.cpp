@@ -10,6 +10,7 @@
 #include "PlayerModel.h"
 
 #include "Player.h"
+#include "States/PlayerStates.h"
 #include "Scripts/Commons/Components/Transform.h"
 #include "Scripts/Commons/GameObjects/GameObject.h"
 #include "Scripts/Commons/Renderings/Particle/ParticleManager.h"
@@ -53,9 +54,7 @@ void PlayerModel::Initalize(const nlohmann::ordered_json& json, IGameObjectFinde
 // 更新処理
 void PlayerModel::Update(float elapsedTime, const Player& player)
 {
-	switch (player.GetFallState())
-	{
-	case PlayerInternals::FallState::Falling:
+	if (player.IsState<PlayerStateFalling>())
 	{
 		m_bounceTime = 0.0f;
 		m_fallingHeight.SetTarget(0.0f);
@@ -63,10 +62,8 @@ void PlayerModel::Update(float elapsedTime, const Player& player)
 
 		Math::Vector3 position = m_pTransform->GetPosition() + Math::Vector3::Up * m_fallingHeight.GetCurrent();
 		m_pTransform->SetPosition(position);
-
-		break;
 	}
-	default:
+	else
 	{
 		float bounceTime = m_bounceTime;
 		m_bounceTime += elapsedTime;
@@ -77,16 +74,13 @@ void PlayerModel::Update(float elapsedTime, const Player& player)
 			// 砂煙の再生
 			m_pParticleManager->Play<JumpingParticle>();
 		}
-		
+
 		// 跳ねる高さ
 		float height = m_bounceHeight * Math::Sin(m_bounceTime.GetRatio() * Math::PI) * player.GetMoveVelocityRatio();
 		m_fallingHeight.SetValue(height);
 		// 座標
 		Math::Vector3 position = m_pTransform->GetPosition() + Math::Vector3::Up * height;
 		m_pTransform->SetPosition(position);
-
-		break;
-	}
 	}
 
 	// 落下速度でスケールを変更
