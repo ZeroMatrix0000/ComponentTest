@@ -1,7 +1,7 @@
 /*
  * FileName:     Model3DSource.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/12
+ * Last Updated: 2026/10/13
  *
  * 3Dモデルのソース
  */
@@ -53,6 +53,11 @@ namespace Renderings
 			ID3D11ShaderResourceView* pSpecularMap
 		);
 
+		// 深度ステンシルステートを設定
+		void SetDepthStencilState(const D3D11_DEPTH_STENCIL_DESC& desc, ID3D11Device5* pDevice);
+		// 描画順を設定
+		void SetDrawingOrder(int drawingOrder) { m_drawingOrder = drawingOrder; }
+
 		// ピクセルシェーダを設定
 		void SetPixelShader(const PixelShader* pPixelShader) { m_pPixelShader = pPixelShader; }
 
@@ -64,6 +69,11 @@ namespace Renderings
 
 		// パーツごとの情報を取得
 		const PartInfo& GetPartInfo(size_t index) const { return m_partInfos.at(index); };
+
+		// 深度ステンシルステートを取得
+		auto* GetDepthStencilState() const { return m_depthStencilState.Get(); }
+		// 描画順を取得
+		int GetDrawingOrder() const { return m_drawingOrder; }
 
 		// ピクセルシェーダを取得
 		const PixelShader* GetPPixelShader() const { return m_pPixelShader; }
@@ -84,6 +94,11 @@ namespace Renderings
 
 		// パーツごとの情報
 		std::vector<PartInfo> m_partInfos;
+
+		// 深度ステンシルステート
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilState> m_depthStencilState;
+		// 描画順
+		int m_drawingOrder;
 
 		// ピクセルシェーダ
 		const PixelShader* m_pPixelShader;

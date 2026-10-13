@@ -81,7 +81,7 @@ void PlayerCamera::MeshCorrect(const Mesh& mesh, const Math::Vector3& centerPosi
 		
 		float newDistance = Math::Geometry::AngledDistance(m_target, triangle, direction);
 
-		if (newDistance > 0.0f)
+		if (newDistance > 0.0f && direction.Dot(triangle.GetNormal()) < 0.0f)
 		{
 			angledDistance = Math::Min(angledDistance, newDistance);
 		}

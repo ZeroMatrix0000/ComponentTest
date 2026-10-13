@@ -860,6 +860,9 @@
     <None Include="Resources\Jsons\Events\Event_TalkTestColor.json">
       <Filter>Jsons\Events</Filter>
     </None>
+    <None Include="Resources\Jsons\Prefabs\Prefab_PlayerSilhouette.json">
+      <Filter>Jsons\Prefabs</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\PixelShaders\Test2.hlsl">
@@ -878,6 +881,9 @@
       <Filter>Shaders\PixelShaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\PixelShaders\PlayerShadow.hlsl">
+      <Filter>Shaders\PixelShaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PixelShaders\PlayerSilhouette.hlsl">
       <Filter>Shaders\PixelShaders</Filter>
     </FxCompile>
   </ItemGroup>

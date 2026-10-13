@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerModel.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/12
+ * Last Updated: 2026/09/13
  *
  * プレイヤーのモデル
  */
@@ -13,6 +13,7 @@
 #include "States/PlayerStates.h"
 #include "Scripts/Commons/Components/Transform.h"
 #include "Scripts/Commons/GameObjects/GameObject.h"
+#include "Scripts/Commons/Renderings/Model3D/Model3D.h"
 #include "Scripts/Commons/Renderings/Particle/ParticleManager.h"
 #include "Scripts/Commons/Systems/JsonSerializer.h"
 #include "Scripts/GameObjects/Particles/JumpingParticle.h"
@@ -29,6 +30,7 @@ PlayerModel::PlayerModel(const ComponentDesc& desc)
 	, m_scaling{}
 	, m_dashAngle{}
 	, m_pTransform{ GetPOwner()->GetNullReferences<Transform>() }
+	, m_pSilhouette{ GetPOwner()->GetNullReferences<Transform>() }
 	, m_pParticleManager{}
 {
 }
@@ -49,6 +51,13 @@ void PlayerModel::Initalize(const nlohmann::ordered_json& json, IGameObjectFinde
 	m_bounceTime.Initialize(0.0f, 0.0f, bounceTime);
 
 	m_pTransform = GetPOwner()->GetComponent<Transform>();
+
+	// シルエットを生成
+	if (m_pSilhouette == GetPOwner()->GetNullReferences<Transform>())
+	{
+		GameObject* pObj = Instantiate("Prefab_PlayerSilhouette");
+		m_pSilhouette = pObj->GetComponent<Transform>();
+	}
 }
 
 // 更新処理
@@ -62,6 +71,7 @@ void PlayerModel::Update(float elapsedTime, const Player& player)
 
 		Math::Vector3 position = m_pTransform->GetPosition() + Math::Vector3::Up * m_fallingHeight.GetCurrent();
 		m_pTransform->SetPosition(position);
+		m_pSilhouette->SetPosition(position);
 	}
 	else
 	{
@@ -81,6 +91,7 @@ void PlayerModel::Update(float elapsedTime, const Player& player)
 		// 座標
 		Math::Vector3 position = m_pTransform->GetPosition() + Math::Vector3::Up * height;
 		m_pTransform->SetPosition(position);
+		m_pSilhouette->SetPosition(position);
 	}
 
 	// 落下速度でスケールを変更
@@ -91,11 +102,20 @@ void PlayerModel::Update(float elapsedTime, const Player& player)
 	scale.x -= m_scaling.GetCurrent() / 2.0f;
 	scale.z -= m_scaling.GetCurrent() / 2.0f;
 	m_pTransform->SetScale(scale);
+	m_pSilhouette->SetScale(scale);
 
 	// 移動速度で回転
 	m_dashAngle.SetTarget(Math::Clamp(player.GetMoveVelocityRatio() - 1.0f, 0.0f, 1.0f) * m_dashAngleMax);
 	m_dashAngle.Tick(elapsedTime);
 	m_pTransform->SetRotation(Math::Euler{ m_dashAngle.GetCurrent(), 0.0f, 0.0f }.CreateQuaternion() * m_pTransform->GetRotation());
+	m_pSilhouette->SetRotation(Math::Euler{ m_dashAngle.GetCurrent(), 0.0f, 0.0f }.CreateQuaternion() * m_pSilhouette->GetRotation());
+}
+
+// 映るカメラ画面を追加
+void PlayerModel::AddICameraScreen(const Renderings::ICameraScreen& iCameraScreen)
+{
+	GetPOwner()->GetComponent<Renderings::Model3D>()->AddICameraScreen(iCameraScreen);
+	m_pSilhouette->GetPOwner()->GetComponent<Renderings::Model3D>()->AddICameraScreen(iCameraScreen);
 }
 
 // トランスフォームを設定
@@ -104,4 +124,7 @@ void PlayerModel::SetTransform(const Transform& transform)
 	m_pTransform->SetPosition(transform.GetPosition());
 	m_pTransform->SetRotation(transform.GetRotation());
 	m_pTransform->SetScale(transform.GetScale());
+	m_pSilhouette->SetPosition(transform.GetPosition());
+	m_pSilhouette->SetRotation(transform.GetRotation());
+	m_pSilhouette->SetScale(transform.GetScale());
 }

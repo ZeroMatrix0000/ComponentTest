@@ -1,7 +1,7 @@
 /*
  * FileName:     Model3DRenderer.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/08
+ * Last Updated: 2026/10/13
  *
  * 3Dモデル描画
  */
@@ -28,6 +28,7 @@ Renderings::Model3DRenderer::Model3DRenderer()
 	, m_pDevice{}
 	, m_pContext{}
 	, m_pCommonStates{}
+	, m_pDepthStencilView{}
 	, m_pVertexShader{}
 	, m_pPixelShader{}
 	, m_whiteTexture{}
@@ -89,17 +90,40 @@ void Renderings::Model3DRenderer::Render(bool isInstance)
 		pPSConstantBuffer->SetVariable("EyePosition", pICameraScreen->GetEyePosition());
 		m_pPixelShader->SetConstantBuffer(m_pDevice, m_pContext, 0);
 
-		for (const auto& [pModelSource, renderObjects] : renderObjectsList)
+		// モデルソースリスト
+		std::vector<const Model3DSource*> pModelSources{};
+		for (const auto& [pModelSource, _] : renderObjectsList)
 		{
-			// ピクセルシェーダ
-			const Renderings::PixelShader* pPixelShader = pModelSource->GetPPixelShader();
+			pModelSources.push_back(pModelSource);
+		}
+		// 描画順にソート
+		std::ranges::sort(pModelSources, [](const Model3DSource* a, const Model3DSource* b)
+		{
+			return a->GetDrawingOrder() < b->GetDrawingOrder();
+		});
 
+		for (const auto& pModelSource : pModelSources)
+		{
+			// 描画オブジェクトリスト
+			const RenderObjects& renderObjects = renderObjectsList.at(pModelSource);
+
+			// ピクセルシェーダ
+			const PixelShader* pPixelShader = pModelSource->GetPPixelShader();
 			if (pPixelShader)
 			{
 				// ピクセルシェーダを設定
 				m_pContext->PSSetShader(pPixelShader->GetD3DShader(), nullptr, 0);
 				// 定数バッファを設定
 				pPixelShader->SetConstantBuffer(m_pDevice, m_pContext, 2);
+			}
+
+			// 深度ステンシルステート
+			ID3D11DepthStencilState* depthDtencilState = pModelSource->GetDepthStencilState();
+			if (depthDtencilState)
+			{
+				// 深度ステンシルを設定
+				m_pContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_STENCIL, 1.0f, 0);
+				m_pContext->OMSetDepthStencilState(depthDtencilState, 0);
 			}
 
 			// 行列リスト
@@ -189,9 +213,17 @@ void Renderings::Model3DRenderer::Render(bool isInstance)
 				}
 			}
 
+			// ピクセルシェーダを元に戻す
 			if (pPixelShader)
 			{
 				m_pContext->PSSetShader(m_pPixelShader->GetD3DShader(), nullptr, 0);
+			}
+
+			// 深度ステンシルを元に戻す
+			if (depthDtencilState)
+			{
+				// 深度ステンシルを設定
+				m_pContext->OMSetDepthStencilState(m_pCommonStates->DepthDefault(), 0);
 			}
 		}
 	}

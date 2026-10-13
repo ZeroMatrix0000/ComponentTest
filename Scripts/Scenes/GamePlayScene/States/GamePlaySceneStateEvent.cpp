@@ -55,8 +55,8 @@ void GamePlaySceneStateEvent::Update(GamePlaySceneInternals* pInternals, float e
 	// プレイヤーの更新
 	RotatePlayer(pInternals);
 	pInternals->pPlayer->Update(elapsedTime, Math::Vector3::Zero, false, false);
-	pInternals->pPlayer->MeshCorrect(pInternals->pGroundMesh->GetWorldMesh());
 	pInternals->pPlayer->BoxCorrect(pInternals->pNPCManager->GetPBoxes());
+	pInternals->pPlayer->MeshCorrect(pInternals->pGroundMesh->GetWorldMesh());
 	pInternals->pPlayer->UpdateModel(elapsedTime);
 
 	// はなすの更新

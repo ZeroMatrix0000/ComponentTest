@@ -1,7 +1,7 @@
 /*
  * FileName:     Model3DSource.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/12
+ * Last Updated: 2026/10/13
  *
  * 3Dモデルのソース
  */
@@ -15,6 +15,8 @@
 Renderings::Model3DSource::Model3DSource()
 	: m_model{}
 	, m_partInfos{}
+	, m_depthStencilState{}
+	, m_drawingOrder{}
 	, m_pPixelShader{}
 {
 }
@@ -40,6 +42,12 @@ void Renderings::Model3DSource::AddPartInfo
 	partInfo.texture.Attach(pTexture);
 	partInfo.normalMap.Attach(pNormalMap);
 	partInfo.specularMap.Attach(pSpecularMap);
+}
+
+// 深度ステンシルステートを設定
+void Renderings::Model3DSource::SetDepthStencilState(const D3D11_DEPTH_STENCIL_DESC& desc, ID3D11Device5* pDevice)
+{
+	Utility::ThrowIfFailed(pDevice->CreateDepthStencilState(&desc, m_depthStencilState.ReleaseAndGetAddressOf()));
 }
 
 // 生成

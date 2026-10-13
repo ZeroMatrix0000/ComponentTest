@@ -1,7 +1,7 @@
 /*
  * FileName:     Game.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/08
+ * Last Updated: 2026/10/13
  *
  * ゲーム
  */
@@ -95,6 +95,7 @@ void Game::Initialize(const HWND& hWindow)
 		m_deviceResources2D.GetContext(),
 		m_deviceResources2D.GetBackBuffer()
 	);
+	m_renderer.GetModelRenderer().SetDepthStencilView(m_deviceResources.GetDepthStencilView());
 	m_renderer.GetModelRenderer().SetVertexShader(m_resources.GetVertexShader("InstancingTest"));
 	m_renderer.GetModelRenderer().SetPixelShader(m_resources.GetPixelShader("InstancingTest"));
 	m_renderer.GetTextRenderer().CreateFontCollection(L"Resources\\Fonts");
@@ -213,13 +214,7 @@ void Game::OnWindowSizeChanged(const Math::Vector2Int& outputSize)
 
 	m_deviceResources2D.OnWindowSizeChanged();
 
-	// デバイス
-	auto* device = m_deviceResources.GetD3DDevice();
-	// コンテキスト
-	auto* context = m_deviceResources.GetD3DContext();
-	// スワップチェイン
-	auto* swapChain = m_deviceResources.GetSwapChain();
-
+	m_renderer.GetModelRenderer().SetDepthStencilView(m_deviceResources.GetDepthStencilView());
 	m_renderer.GetTextRenderer().OnWindowSizeChanged(m_deviceResources2D.GetContext(), m_deviceResources2D.GetBackBuffer());
 
 	m_sceneManager.OnWindowSizeChanged(outputSize);
@@ -313,6 +308,41 @@ void Game::InitializeResources()
 
 	// シェーダを適用
 	m_resources.GetEditableModelSource("NewGrounds")->SetPixelShader(m_resources.GetPixelShader("PlayerShadow"));
+	m_resources.GetEditableModelSource("PlayerSilhouette")->SetPixelShader(m_resources.GetPixelShader("PlayerSilhouette"));
+
+	// 描画順を設定
+	m_resources.GetEditableModelSource("PlayerSilhouette")->SetDrawingOrder(1000);
+	m_resources.GetEditableModelSource("Player")->SetDrawingOrder(2000);
+	m_resources.GetEditableModelSource("NPC")->SetDrawingOrder(2000);
+
+	// 深度ステンシルステートの詳細
+	D3D11_DEPTH_STENCIL_DESC desc = {};
+	// 深度テスト
+	desc.DepthEnable = true;
+	// 深度を変更しない
+	desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	// 深度が大きければ描画
+	desc.DepthFunc = D3D11_COMPARISON_GREATER;
+	// ステンシルテスト
+	desc.StencilEnable = true;
+	desc.StencilReadMask = 0xFF;
+	desc.StencilWriteMask = 0xFF;
+
+	// ステンシル操作の詳細
+	D3D11_DEPTH_STENCILOP_DESC stencilOp = {};
+	// ステンシル値が 0 の場合のみ描画
+	stencilOp.StencilFunc = D3D11_COMPARISON_EQUAL;
+	// 描画成功時に 値を 増やす
+	stencilOp.StencilPassOp = D3D11_STENCIL_OP_INCR;
+	// 描画失敗時は何もしない
+	stencilOp.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	stencilOp.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+
+	desc.FrontFace = stencilOp;
+	desc.BackFace = stencilOp;
+
+	// 深度ステンシルステートを設定
+	m_resources.GetEditableModelSource("PlayerSilhouette")->SetDepthStencilState(desc, device);
 }
 
 // コンポーネント対応付け

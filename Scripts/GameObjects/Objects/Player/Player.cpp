@@ -83,7 +83,7 @@ void Player::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pI
 	{
 		m_internals.pBoxCollider->AddICameraScreen(*m_internals.P_CAMERA_SCREEN);
 		m_internals.pParticleManager->AddICameraScreen(*m_internals.P_CAMERA_SCREEN);
-		m_internals.pModel->GetPOwner()->GetComponent<Renderings::Model3D>()->AddICameraScreen(*m_internals.P_CAMERA_SCREEN);
+		m_internals.pModel->AddICameraScreen(*m_internals.P_CAMERA_SCREEN);
 	}
 
 	// 現在の状態を初期化

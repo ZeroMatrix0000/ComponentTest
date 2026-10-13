@@ -38,6 +38,9 @@ namespace Renderings
 		// 描画処理
 		void Render(bool isInstance);
 
+		// 深度ステンシルビューを設定
+		void SetDepthStencilView(ID3D11DepthStencilView* pDepthStencilView) { m_pDepthStencilView = pDepthStencilView; };
+
 		// 頂点シェーダを設定
 		void SetVertexShader(const VertexShader* pVertexShader);
 		// ピクセルシェーダを設定
@@ -109,6 +112,9 @@ namespace Renderings
 		ID3D11DeviceContext4* m_pContext;
 		// コモンステートのポインタ
 		const DirectX::CommonStates* m_pCommonStates;
+
+		// 深度ステンシルビューのポインタ
+		ID3D11DepthStencilView* m_pDepthStencilView;
 
 		// 頂点シェーダのポインタ
 		const VertexShader* m_pVertexShader;

@@ -1,7 +1,7 @@
 /*
  * FileName:     DeviceResources.h
  * Author:       Takao Hayata
- * Last Updated: 2026/07/06
+ * Last Updated: 2026/10/13
  *
  * Direct3D 11に必要なリソース
  */
@@ -42,6 +42,9 @@ namespace Renderings
 
 		// スワップチェインの取得
 		auto* GetSwapChain() const { return m_swapChain.Get(); }
+
+		// 深度ステンシルビューの取得
+		auto* GetDepthStencilView() const { return m_depthStencilView.Get(); }
 
 		// DXGIデバイスを作成
 		Microsoft::WRL::ComPtr<IDXGIDevice4> CreateDXGIDevice() const;

@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerModel.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/11
+ * Last Updated: 2026/09/13
  *
  * プレイヤーのモデル
  */
@@ -17,6 +17,7 @@ namespace Components
 namespace Renderings
 {
 	class ParticleManager;
+	class ICameraScreen;
 }
 class Player;
 
@@ -37,6 +38,9 @@ public:
 
 	// 更新処理
 	void Update(float elapsedTime, const Player& player);
+
+	// 映るカメラ画面を追加
+	void AddICameraScreen(const Renderings::ICameraScreen& iCameraScreen);
 
 	// トランスフォームを設定
 	void SetTransform(const Transform& transform);
@@ -71,6 +75,9 @@ private:
 
 	// 自身のトランスフォーム
 	Transform* m_pTransform;
+
+	// シルエットのトランスフォーム
+	Transform* m_pSilhouette;
 
 	// パーティクル管理
 	Renderings::ParticleManager* m_pParticleManager;
