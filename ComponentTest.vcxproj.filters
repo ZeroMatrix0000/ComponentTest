@@ -400,7 +400,9 @@
     <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateOnAir.cpp">
       <Filter>Scripts\GameObjects\Objects\Player\States</Filter>
     </ClCompile>
-    <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateFalling.cpp" />
+    <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateFalling.cpp">
+      <Filter>Scripts\GameObjects\Objects\Player\States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Pch.h" />

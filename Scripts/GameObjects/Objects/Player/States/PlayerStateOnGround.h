@@ -32,4 +32,13 @@ public:
 	// 座標補正
 	void PositionCorrect(PlayerInternals* pInternals, float distance, const Math::Vector3& direction) override;
 
+
+private:
+
+
+	/* メンバ変数 */
+
+	// 地面についているかどうか
+	bool m_isGround;
+
 };

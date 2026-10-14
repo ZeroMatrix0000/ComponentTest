@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerInternals.h
  * Author:       Takao Hayata
- * Last Updated: 2026/08/21
+ * Last Updated: 2026/10/14
  *
  * プレイヤーの内部データ
  */
@@ -48,6 +48,9 @@ struct PlayerInternals
 
 	// 落下加速度
 	float FALL_ACCELERATION{};
+
+	// ジャンプ力
+	float JUMP_POWER{};
 
 	// カメラの速度の参照量
 	float CAMERA_VELOCITY_COEFFICIENT{};

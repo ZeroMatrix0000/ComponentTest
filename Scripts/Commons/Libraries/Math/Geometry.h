@@ -1,7 +1,7 @@
 /*
  * FileName:     Geometry.h
  * Author:       Takao Hayata
- * Last Updated: 2026/08/03
+ * Last Updated: 2026/10/14
  *
  * 数学関係
  */
@@ -43,6 +43,8 @@ namespace Libraries
 
 			// 平面と点の距離
 			inline float Distance(const Vector3& point, const Plane& plane) { return Math::Abs(plane.Normal().Dot(point) + plane.D()) / plane.Normal().Length(); }
+			// 球と点の距離
+			inline float Distance(const Vector3& point, const Sphere& sphere) { return (sphere.centerPosition - point).Length() - sphere.radius; }
 			// 直方体同士の距離
 			       float Distance(const Box& box1, const Box& box2);
 			// 直方体同士の距離

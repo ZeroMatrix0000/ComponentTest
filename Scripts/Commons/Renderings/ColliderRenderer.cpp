@@ -75,7 +75,7 @@ void Renderings::ColliderRenderer::Render()
 		{
 			m_basicEffect->SetMatrices(Math::Matrix::Identity, pICameraScreen->GetViewMatrix(), pICameraScreen->GetProjectionMatrix());
 			m_basicEffect->Apply(m_pContext);
-			DrawSphere(pSphereCollider->GetWorldSphere(), pSphereCollider->GetColor(), pICameraScreen->GetEyePosition());
+			DrawSphere(pSphereCollider->GetWorldSphere(), pSphereCollider->GetColor(), pICameraScreen->GetEyePosition(), 48);
 		}
 	}
 	// メッシュ

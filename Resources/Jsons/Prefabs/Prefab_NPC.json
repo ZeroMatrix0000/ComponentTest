@@ -9,7 +9,15 @@
 			"A": 1.0
 		}
 	},
+	"SphereCollider": {
+		"Color": {
+			"R": 1.0,
+			"G": 0.5,
+			"B": 0.5,
+			"A": 1.0
+		}
+	},
 	"NPC": {
-		"FocusDistance": 3.0
+		"FocusDistance": 5.0
 	}
 }

@@ -1,7 +1,7 @@
 /*
  * FileName:     Player.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/13
+ * Last Updated: 2026/10/14
  * 
  *
  * プレイヤー
@@ -45,7 +45,6 @@ void Player::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pI
 
 	float moveMaxSpeed = m_internals.moveMaxSpeed.GetMin();
 	float fallMaxSpeed = m_internals.fallSpeed.GetMax();
-	float jumpPower = -m_internals.fallSpeed.GetMin();
 	float coyoteTime = m_internals.fallCoyoteTime.GetMax();
 
 	Systems::JsonSerializer serializer{ pIGameObjectFinder };
@@ -54,7 +53,7 @@ void Player::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pI
 	serializer.AddParameter(&m_internals.DASH_RATIO, "DashRatio");
 	serializer.AddParameter(&fallMaxSpeed, "FallMaxSpeed");
 	serializer.AddParameter(&m_internals.FALL_ACCELERATION, "FallAcceleration");
-	serializer.AddParameter(&jumpPower, "JumpPower");
+	serializer.AddParameter(&m_internals.JUMP_POWER, "JumpPower");
 	serializer.AddParameter(&m_internals.CAMERA_VELOCITY_COEFFICIENT, "CameraVelocityCoefficient");
 	serializer.AddParameter(&coyoteTime, "CoyoteTime");
 	serializer.AddParameter(&m_internals.P_CAMERA_SCREEN, "CameraScreen");
@@ -62,7 +61,7 @@ void Player::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pI
 
 	m_internals.moveMaxSpeed.Initialize(0.0f, moveMaxSpeed, moveMaxSpeed * m_internals.DASH_RATIO);
 
-	m_internals.fallSpeed.Initialize(0.0f, -jumpPower, fallMaxSpeed);
+	m_internals.fallSpeed.Initialize(0.0f, -m_internals.JUMP_POWER * 2.0f, fallMaxSpeed);
 
 	m_internals.fallCoyoteTime.Initialize(0.0f, 0.0f, coyoteTime);
 	m_internals.jumpBufferTime.Initialize(0.0f, 0.0f, coyoteTime);
@@ -98,21 +97,8 @@ void Player::Update(float elapsedTime, const Math::Vector3& move, bool isDash, b
 	m_internals.IS_DASH = isDash;
 	m_internals.IS_JUMP = isJump;
 
-	// 次の状態に遷移
-	std::unique_ptr<Systems::State<PlayerInternals>> nextState{ m_currentState->MoveNextState() };
-	if (nextState)
-	{
-		PlayerState* pNextState = static_cast<PlayerState*>(nextState.release());
-		SetState(std::unique_ptr<PlayerState>{ pNextState });
-	}
-
 	// 状態ごとの処理
 	m_currentState->Update(&m_internals, elapsedTime);
-}
-
-// 直方体による座標補正
-void Player::BoxCorrect(const std::vector<const Math::Box*>& pBoxes)
-{
 	// 次の状態に遷移
 	std::unique_ptr<Systems::State<PlayerInternals>> nextState{ m_currentState->MoveNextState() };
 	if (nextState)
@@ -120,49 +106,27 @@ void Player::BoxCorrect(const std::vector<const Math::Box*>& pBoxes)
 		PlayerState* pNextState = static_cast<PlayerState*>(nextState.release());
 		SetState(std::unique_ptr<PlayerState>{ pNextState });
 	}
+}
 
-	// 直方体
-	Math::Box box = m_internals.pBoxCollider->GetWorldBox();
-
-	for (const auto* pBox : pBoxes)
-	{
-		// 外接する非回転直方体同士が触れていなければ何もしない
-		if (!Math::Geometry::IsCollide(box.CreateNonRotatingBox(), pBox->CreateNonRotatingBox()))
-		{
-			continue;
-		}
-
-		// 距離の方向
-		Math::Vector3 direction{};
-		// 距離
-		float distance = Math::Geometry::Distance(box, *pBox, &direction);
-
-		// 座標補正
-		m_currentState->PositionCorrect(&m_internals, distance, direction);
-	}
+// 座標補正
+void Player::PositionCorrect(float distance, const Math::Vector3& direction)
+{
+	m_currentState->PositionCorrect(&m_internals, distance, direction);
 }
 
 // メッシュによる座標補正
 void Player::MeshCorrect(const Mesh& mesh)
 {
-	// 次の状態に遷移
-	std::unique_ptr<Systems::State<PlayerInternals>> nextState{ m_currentState->MoveNextState() };
-	if (nextState)
-	{
-		PlayerState* pNextState = static_cast<PlayerState*>(nextState.release());
-		SetState(std::unique_ptr<PlayerState>{ pNextState });
-	}
-
 	// 直方体
-	Math::Box box = m_internals.pBoxCollider->GetWorldBox();
+	const Math::Box& box = GetBox();
 	// 外接する非回転直方体（少し広めに）
 	Math::NonRotatingBox nonRotatingBox = m_internals.pBoxCollider->GetWorldBox().CreateNonRotatingBox();
-	nonRotatingBox.size *= 1.5f;
+	nonRotatingBox.size *= 1.2f;
 
-	// 最短距離
-	float distance = Math::INFTY;
-	// 押出方向
-	Math::Vector3 direction{};
+	// 壁
+	std::vector<Math::Triangle> walls{};
+	// 床
+	std::vector<Math::Triangle> floors{};
 
 	for (const auto& face : mesh.f)
 	{
@@ -174,9 +138,30 @@ void Player::MeshCorrect(const Mesh& mesh)
 			continue;
 		}
 
+		float arccos = triangle.GetNormal().Dot(Math::Vector3::Up);
+
+		// 法線の角度が 45° 以上なら床、でなければ壁
+		if (Math::Abs(arccos) > 1.0f / 1.41421356f)
+		{
+			floors.push_back(triangle);
+		}
+		else
+		{
+			walls.push_back(triangle);
+		}
+	}
+
+	// 最短距離
+	float distance = Math::INFTY;
+	// 押出方向
+	Math::Vector3 direction{};
+
+	// 壁
+	for (const auto& wall : walls)
+	{
 		Math::Vector3 newDirection{};
 
-		float newDistance = Math::Geometry::Distance(triangle, box, &newDirection);
+		float newDistance = Math::Geometry::Distance(wall, box, &newDirection);
 
 		// 最短距離を更新
 		if (newDistance < distance)
@@ -185,9 +170,36 @@ void Player::MeshCorrect(const Mesh& mesh)
 			direction = newDirection;
 		}
 	}
-
 	// 座標補正
-	m_currentState->PositionCorrect(&m_internals, distance, direction);
+	PositionCorrect(distance, direction);
+
+	distance = Math::INFTY;
+	direction = Math::Vector3::Zero;
+
+	// 床
+	for (const auto& floor : floors)
+	{
+		Math::Vector3 newDirection{};
+
+		float newDistance = Math::Geometry::Distance(floor, box, &newDirection);
+
+		// 最短距離を更新
+		if (newDistance < distance)
+		{
+			distance = newDistance;
+			direction = newDirection;
+		}
+	}
+	// 座標補正
+	PositionCorrect(distance, direction);
+
+	// 次の状態に遷移
+	std::unique_ptr<Systems::State<PlayerInternals>> nextState{ m_currentState->MoveNextState() };
+	if (nextState)
+	{
+		PlayerState* pNextState = static_cast<PlayerState*>(nextState.release());
+		SetState(std::unique_ptr<PlayerState>{ pNextState });
+	}
 }
 
 // モデルの更新

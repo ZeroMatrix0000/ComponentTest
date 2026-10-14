@@ -1,7 +1,7 @@
 /*
  * FileName:     GamePlaySceneInternals.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/12
+ * Last Updated: 2026/10/14
  *
  * ゲームプレイシーンの内部データ
  */
@@ -21,6 +21,7 @@ namespace Colliders
 namespace Renderings
 {
 	class Model3D;
+	class Image;
 	class ICameraScreen;
 	class Canvas;
 }
@@ -48,6 +49,7 @@ struct GamePlaySceneInternals
 		, pNPCManager{}
 		, pGroundMesh{}
 		, pGroundModel{}
+		, pReticle{}
 		, pZ2Talk{}
 		, pBlackBelt{}
 		, pMessageWindow{}
@@ -76,6 +78,9 @@ struct GamePlaySceneInternals
 	// 地面
 	Colliders::MeshCollider* pGroundMesh;
 	Renderings::Model3D* pGroundModel;
+
+	// レティクル
+	Renderings::Image* pReticle;
 
 	// Z: はなす
 	Z2Talk* pZ2Talk;

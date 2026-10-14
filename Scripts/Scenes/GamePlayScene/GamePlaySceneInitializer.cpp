@@ -1,7 +1,7 @@
 /*
  * FileName:     GamePlaySceneInitializer.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/12
+ * Last Updated: 2026/10/14
  *
  * ゲームプレイシーンの初期化関数
  */
@@ -67,6 +67,9 @@ void GamePlaySceneInitializer::operator()(GamePlaySceneInternals* pInternals) co
 	pInternals->pGroundMesh = pGround->GetComponent<Colliders::MeshCollider>();
 	pInternals->pGroundModel = pGround->GetComponent<Renderings::Model3D>();
 	pInternals->pGroundMesh->ApplyTransform();
+
+	// レティクルを取得
+	pInternals->pReticle = pIGameObjectManager->Find("Reticle")->GetComponent<Renderings::Image>();
 
 	// はなすを取得
 	pInternals->pZ2Talk = pIGameObjectManager->Find("Z2Talk")->GetComponent<Z2Talk>();

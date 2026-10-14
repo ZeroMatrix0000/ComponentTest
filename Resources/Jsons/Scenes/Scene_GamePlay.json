@@ -74,6 +74,17 @@
 					"PlayerCamera"
 				]
 			},
+			"SphereCollider": {
+				"Position": {
+					"X": 0.0,
+					"Y": 1.0,
+					"Z": 0.0
+				},
+				"Radius": 5.0,
+				"CameraScreens": [
+					"PlayerCamera"
+				]
+			},
 			"NPC": {
 				"Name": "テスト",
 				"EventName": "Event_TalkTest1"
@@ -117,6 +128,17 @@
 					"PlayerCamera"
 				]
 			},
+			"SphereCollider": {
+				"Position": {
+					"X": 0.0,
+					"Y": 1.0,
+					"Z": 0.0
+				},
+				"Radius": 5.0,
+				"CameraScreens": [
+					"PlayerCamera"
+				]
+			},
 			"NPC": {
 				"Name": "Test",
 				"EventName": "Event_TalkTest2"
@@ -156,6 +178,17 @@
 					"Y": 2.0,
 					"Z": 1.0
 				},
+				"CameraScreens": [
+					"PlayerCamera"
+				]
+			},
+			"SphereCollider": {
+				"Position": {
+					"X": 0.0,
+					"Y": 1.0,
+					"Z": 0.0
+				},
+				"Radius": 5.0,
 				"CameraScreens": [
 					"PlayerCamera"
 				]

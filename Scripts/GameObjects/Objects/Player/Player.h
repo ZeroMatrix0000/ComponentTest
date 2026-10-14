@@ -30,8 +30,8 @@ public:
 	// 更新処理
 	void Update(float elapsedTime, const Math::Vector3& move, bool isDash, bool isJump);
 
-	// 直方体による座標補正
-	void BoxCorrect(const std::vector<const Math::Box*>& pBoxes);
+	// 座標補正
+	void PositionCorrect(float distance, const Math::Vector3& direction);
 	// メッシュによる座標補正
 	void MeshCorrect(const Mesh& mesh);
 

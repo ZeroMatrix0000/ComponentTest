@@ -1,7 +1,7 @@
 /*
  * FileName:     NPC.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/05
+ * Last Updated: 2026/10/14
  *
  * NPC
  */
@@ -18,6 +18,7 @@ namespace Components
 namespace Colliders
 {
 	class BoxCollider;
+	class SphereCollider;
 }
 namespace Renderings
 {
@@ -57,6 +58,8 @@ public:
 	const Math::Vector3& GetPosition() const;
 	// 当たり判定を取得
 	const Math::Box& GetBox() const;
+	// 当たり判定を取得
+	const Math::Sphere& GetSphere() const;
 
 
 private:
@@ -81,5 +84,7 @@ private:
 	Transform* m_pTransform;
 	// 長方形の当たり判定
 	Colliders::BoxCollider* m_pBoxCollider;
+	// 球の当たり判定
+	Colliders::SphereCollider* m_pSphereCollider;
 
 };

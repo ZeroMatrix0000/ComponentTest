@@ -99,14 +99,14 @@ void Systems::Input::MousePositionCorrect()
 		mousePosition.x = Math::Cycle
 		(
 			static_cast<int>(mousePosition.x),
-			static_cast<int>(windowRect.left) + 1,
-			static_cast<int>(windowRect.right) - 2
+			static_cast<int>(windowRect.left) + 10,
+			static_cast<int>(windowRect.right) - 11
 		);
 		mousePosition.y = Math::Cycle
 		(
 			static_cast<int>(mousePosition.y),
-			static_cast<int>(windowRect.top) + 1,
-			static_cast<int>(windowRect.bottom) - 2
+			static_cast<int>(windowRect.top) + 31,
+			static_cast<int>(windowRect.bottom) - 11
 		);
 
 		// 変更前の座標

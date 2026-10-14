@@ -1,7 +1,7 @@
 /*
  * FileName:     NPCManager.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/28
+ * Last Updated: 2026/10/14
  *
  * NPC管理
  */
@@ -9,13 +9,14 @@
 #include "Pch.h"
 #include "NPCManager.h"
 
+#include "NPC.h"
+#include "../Player/Player.h"
 #include "Scripts/Commons/Components/RectTransform.h"
 #include "Scripts/Commons/Renderings/ICameraScreen.h"
 #include "Scripts/Commons/Renderings/Canvas.h"
 #include "Scripts/Commons/Renderings/Text/Text.h"
 #include "Scripts/Commons/Renderings/Image/Image.h"
 #include "Scripts/Commons/Systems/JsonSerializer.h"
-#include "NPC.h"
 #include "Scripts/GameObjects/UIs/InteractCursor/InteractCursor.h"
 
 // コンストラクタ
@@ -72,9 +73,9 @@ void NPCManager::SetRotation(const Math::Vector3& playerPosition)
 	for (auto* pNPC : m_pNPCList)
 	{
 		// プレイヤーとの中心距離（XZ平面）
-		float distance = ((playerPosition - pNPC->GetPosition()) * Math::Vector3{ 1.0f, 0.0f, 1.0f }).Length();
+		float distance = Math::Geometry::Distance(playerPosition, pNPC->GetSphere());
 		// 距離がある程度近かったら
-		if (distance < pNPC->GetFocusDistance())
+		if (distance < 0.0f)
 		{
 			// 向く方向
 			Math::Vector3 direction = playerPosition - pNPC->GetPosition();
@@ -116,6 +117,32 @@ void NPCManager::SetCursor(const Renderings::ICameraScreen& iCameraScreen)
 		);
 
 		m_pInteractCursorList.at(i)->SetPosition(screenPosition);
+	}
+}
+
+// プレイヤーとの当たり判定
+void NPCManager::PlayerCollide(Player* pPlayer)
+{
+	// 直方体
+	const Math::Box& playerBox = pPlayer->GetBox();
+
+	for (const auto* pNPC : m_pNPCList)
+	{
+		const Math::Box& nPCBox = pNPC->GetBox();
+
+		// 外接する非回転直方体同士が触れていなければ何もしない
+		if (!Math::Geometry::IsCollide(playerBox.CreateNonRotatingBox(), nPCBox.CreateNonRotatingBox()))
+		{
+			continue;
+		}
+
+		// 距離の方向
+		Math::Vector3 direction{};
+		// 距離
+		float distance = Math::Geometry::Distance(playerBox, nPCBox, &direction);
+
+		// 座標補正
+		pPlayer->PositionCorrect(distance, direction);
 	}
 }
 

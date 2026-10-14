@@ -20,6 +20,7 @@ namespace Renderings
 }
 class NPC;
 class InteractCursor;
+class Player;
 
 // NPC管理
 class NPCManager : public Component
@@ -47,6 +48,9 @@ public:
 
 	// カーソルを隠す
 	void HideCursor(bool isHideCursor) { m_isHideCursor = isHideCursor; }
+
+	// プレイヤーとの当たり判定
+	void PlayerCollide(Player* pPlayer);
 
 	// 当たり判定を取得
 	std::vector<const Math::Box*> GetPBoxes() const;

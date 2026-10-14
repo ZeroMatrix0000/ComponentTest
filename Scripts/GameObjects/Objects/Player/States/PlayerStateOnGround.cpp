@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerStateOnGround.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/13
+ * Last Updated: 2026/10/14
  *
  * プレイヤーの地面にいる状態
  */
@@ -17,6 +17,7 @@
 
 // コンストラクタ
 PlayerStateOnGround::PlayerStateOnGround()
+	: m_isGround{}
 {
 }
 
@@ -29,6 +30,8 @@ void PlayerStateOnGround::Enter(PlayerInternals* pInternals)
 // 更新処理
 void PlayerStateOnGround::Update(PlayerInternals* pInternals, float elapsedTime)
 {
+	m_isGround = false;
+
 	// カメラのY軸回転
 	Math::Quaternion cameraRotation = Math::Quaternion::CreateFromAxisAngle(Math::Vector3::UnitY, Math::Deg2Rad(pInternals->P_CAMERA_SCREEN->GetCamera().rotation.y));
 
@@ -77,7 +80,7 @@ void PlayerStateOnGround::Update(PlayerInternals* pInternals, float elapsedTime)
 	if (pInternals->jumpBufferTime != 0.0f)
 	{
 		SetNextState(std::make_unique<PlayerStateFalling>());
-		pInternals->fallSpeed = pInternals->fallSpeed.GetMin();
+		pInternals->fallSpeed = -pInternals->JUMP_POWER;
 		pInternals->jumpBufferTime = pInternals->jumpBufferTime.GetMin();
 		// 砂煙の再生
 		pInternals->pParticleManager->Play<JumpingParticle>();
@@ -109,7 +112,7 @@ void PlayerStateOnGround::PositionCorrect(PlayerInternals* pInternals, float dis
 	float arccos = direction.Dot(Math::Vector3::Up);
 
 	// めり込んでいる、または、距離が近いかつ移動方向が下
-	if (distance < 0.0f || (distance < pInternals->pBoxCollider->GetWorldBox().size.y / 8.0f && Math::Sign(arccos) == -1))
+	if (distance < 0.0f || (distance < pInternals->pBoxCollider->GetWorldBox().size.y / 8.0f && Math::Abs(arccos) > 1.0f / 1.41421356f))
 	{
 		// 移動量
 		Math::Vector3 displacement = direction * distance;
@@ -126,10 +129,22 @@ void PlayerStateOnGround::PositionCorrect(PlayerInternals* pInternals, float dis
 		pInternals->pTransform->Translate(displacement);
 		// トランスフォームを適用
 		pInternals->pBoxCollider->ApplyTransform();
+
+		// 地面についていることを確定させる
+		m_isGround = true;
+		// 空中にいる状態になっているならリセット
+		if (GetNextState())
+		{
+			ResetNextState();
+		}
 	}
 	else
 	{
-		// 空中にいる状態にする
-		SetNextState(std::make_unique<PlayerStateOnAir>());
+		// 確定していないなら
+		if (!m_isGround)
+		{
+			// 空中にいる状態にする
+			SetNextState(std::make_unique<PlayerStateOnAir>());
+		}
 	}
 }

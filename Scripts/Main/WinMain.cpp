@@ -217,6 +217,14 @@ LRESULT CALLBACK WndProcW
 			//s_game->GetTextInput().AddChar(ch);
 		}
 		break;
+	// ウィンドウサイズ最小値最大値変更
+	case WM_GETMINMAXINFO:
+	{
+		MINMAXINFO* info = reinterpret_cast<MINMAXINFO*>(lParam);
+		info->ptMinTrackSize.x = 200;
+		info->ptMinTrackSize.y = 200;
+	}
+	break;
 	// その他
 	default:
 		break;

@@ -1,7 +1,7 @@
 /*
  * FileName:     GameObject.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/07/21
+ * Last Updated: 2026/10/14
  *
  * ゲームオブジェクト
  */
@@ -18,4 +18,13 @@ GameObjects::GameObject::GameObject(IComponentManager* pIComponentManager)
 	, m_pComponents{}
 	, m_pIComponentManager{ pIComponentManager }
 {
+}
+
+// メッセージを受け取る
+void GameObjects::GameObject::AcceptMessage(const std::string& message) const
+{
+	for (const auto& component : m_components)
+	{
+		component.first->AcceptMessage(message);
+	}
 }

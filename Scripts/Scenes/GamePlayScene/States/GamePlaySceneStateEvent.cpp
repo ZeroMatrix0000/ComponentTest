@@ -1,7 +1,7 @@
 /*
  * FileName:     GamePlaySceneStateEvent.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/12
+ * Last Updated: 2026/10/14
  *
  * ゲームプレイシーンのイベント状態
  */
@@ -34,6 +34,9 @@ void GamePlaySceneStateEvent::Enter(GamePlaySceneInternals* pInternals)
 	// イベントを設定
 	pInternals->pActionManager->LoadEvent(pInternals->pNPCManager->GetPFocusedNPC()->GetEventName());
 
+	// レティクルを非表示
+	pInternals->pReticle->SetColor(Math::Color{ 1.0f, 1.0f, 1.0f, 0.0f });
+
 	// カーソルを隠す
 	pInternals->pNPCManager->HideCursor(true);
 
@@ -55,7 +58,7 @@ void GamePlaySceneStateEvent::Update(GamePlaySceneInternals* pInternals, float e
 	// プレイヤーの更新
 	RotatePlayer(pInternals);
 	pInternals->pPlayer->Update(elapsedTime, Math::Vector3::Zero, false, false);
-	pInternals->pPlayer->BoxCorrect(pInternals->pNPCManager->GetPBoxes());
+	pInternals->pNPCManager->PlayerCollide(pInternals->pPlayer);
 	pInternals->pPlayer->MeshCorrect(pInternals->pGroundMesh->GetWorldMesh());
 	pInternals->pPlayer->UpdateModel(elapsedTime);
 

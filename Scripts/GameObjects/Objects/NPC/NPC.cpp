@@ -1,7 +1,7 @@
 /*
  * FileName:     NPC.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/28
+ * Last Updated: 2026/10/14
  *
  * NPC
  */
@@ -13,6 +13,7 @@
 #include "Scripts/Commons/GameObjects/IGameObjectFinder.h"
 #include "Scripts/Commons/Components/Transform.h"
 #include "Scripts/Commons/Colliders/BoxCollider.h"
+#include "Scripts/Commons/Colliders/SphereCollider.h"
 #include "Scripts/Commons/Renderings/Text/Text.h"
 #include "Scripts/Commons/Systems/JsonSerializer.h"
 
@@ -26,6 +27,7 @@ NPC::NPC(const ComponentDesc& desc)
 	, m_rotation{}
 	, m_pTransform{ GetPOwner()->GetNullReferences<Transform>() }
 	, m_pBoxCollider{ GetPOwner()->GetNullReferences<Colliders::BoxCollider>() }
+	, m_pSphereCollider{ GetPOwner()->GetNullReferences<Colliders::SphereCollider>() }
 {
 }
 
@@ -35,6 +37,8 @@ void NPC::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGam
 	m_pTransform = GetPOwner()->GetComponent<Transform>();
 	m_pBoxCollider = GetPOwner()->GetComponent<Colliders::BoxCollider>();
 	m_pBoxCollider->ApplyTransform();
+	m_pSphereCollider = GetPOwner()->GetComponent<Colliders::SphereCollider>();
+	m_pSphereCollider->ApplyTransform();
 
 	m_baseRotation = m_pTransform->GetRotation();
 	m_rotation.SetValue(m_baseRotation);
@@ -53,6 +57,7 @@ void NPC::Update(float elapsedTime)
 
 	m_pTransform->SetRotation(m_rotation.GetCurrent());
 	m_pBoxCollider->ApplyTransform();
+	m_pSphereCollider->ApplyTransform();
 }
 
 // 回転を設定
@@ -79,4 +84,10 @@ const Math::Vector3& NPC::GetPosition() const
 const Math::Box& NPC::GetBox() const
 {
 	return m_pBoxCollider->GetWorldBox();
+}
+
+// 当たり判定を取得
+const Math::Sphere& NPC::GetSphere() const
+{
+	return m_pSphereCollider->GetWorldSphere();
 }

@@ -1,7 +1,7 @@
 /*
  * FileName:     State.h
  * Author:       Takao Hayata
- * Last Updated: 2026/07/08
+ * Last Updated: 2026/10/14
  *
  * 状態
  */
@@ -32,8 +32,14 @@ namespace Systems
 		// 終了処理
 		virtual void Exit(TInternals* pInternals) = 0;
 
+		// 次のシーンをリセット
+		void ResetNextState() { m_nextState.reset(); }
+
 		// 次のシーンをムーブ
 		std::unique_ptr<State> MoveNextState() { return std::move(m_nextState); }
+
+		// 次のシーンを取得
+		State* GetNextState() const { return m_nextState.get(); }
 
 
 	protected:

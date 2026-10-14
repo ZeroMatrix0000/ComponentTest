@@ -77,7 +77,7 @@ void PlayerStateOnAir::Update(PlayerInternals* pInternals, float elapsedTime)
 	if (pInternals->jumpBufferTime != 0.0f)
 	{
 		SetNextState(std::make_unique<PlayerStateFalling>());
-		pInternals->fallSpeed = pInternals->fallSpeed.GetMin();
+		pInternals->fallSpeed = -pInternals->JUMP_POWER;
 		pInternals->jumpBufferTime = pInternals->jumpBufferTime.GetMin();
 		// 砂煙の再生
 		pInternals->pParticleManager->Play<JumpingParticle>();
