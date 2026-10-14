@@ -138,10 +138,10 @@ void Player::MeshCorrect(const Mesh& mesh)
 			continue;
 		}
 
-		float arccos = triangle.GetNormal().Dot(Math::Vector3::Up);
+		float cos = triangle.GetNormal().Dot(Math::Vector3::Up);
 
 		// 法線の角度が 45° 以上なら床、でなければ壁
-		if (Math::Abs(arccos) > 1.0f / 1.41421356f)
+		if (Math::Abs(cos) > 1.0f / 1.41421356f)
 		{
 			floors.push_back(triangle);
 		}

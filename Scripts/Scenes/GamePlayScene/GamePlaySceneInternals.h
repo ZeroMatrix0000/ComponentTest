@@ -32,6 +32,7 @@ class NPCManager;
 class Z2Talk;
 class BlackBelt;
 class MessageWindow;
+class TargetPoint;
 class ActionManager;
 
 // ゲームプレイシーンの内部データ
@@ -53,6 +54,7 @@ struct GamePlaySceneInternals
 		, pZ2Talk{}
 		, pBlackBelt{}
 		, pMessageWindow{}
+		, pTargetPoint{}
 		, pCameraScreen{}
 		, pCanvas{}
 		, pActionManager{}
@@ -90,6 +92,9 @@ struct GamePlaySceneInternals
 
 	// メッセージウィンドウ
 	MessageWindow* pMessageWindow;
+
+	// ターゲット照準
+	TargetPoint* pTargetPoint;
 
 	// カメラ画面
 	Renderings::ICameraScreen* pCameraScreen;

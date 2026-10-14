@@ -1,7 +1,7 @@
 /*
  * FileName:     EulerTargetCamera.h
  * Author:       Takao Hayata
- * Last Updated: 2026/07/06
+ * Last Updated: 2026/10/14
  *
  * ターゲットカメラ（オイラー角）
  */
@@ -30,4 +30,10 @@ Math::Vector3 Libraries::Camera::EulerTargetCamera::GetEyePosition() const
 	Math::Vector3    direction = Math::Vector3::Transform(Math::Vector3::Forward, q);
 
 	return position - direction * distance;
+}
+
+// 目線の方向を取得
+Math::Vector3 Libraries::Camera::EulerTargetCamera::GetEyeDirection() const
+{
+	return Math::Vector3::Transform(Math::Vector3::Forward, rotation.CreateQuaternion());
 }

@@ -1,7 +1,7 @@
 /*
  * FileName:     QuaternionTargetCamera.h
  * Author:       Takao Hayata
- * Last Updated: 2026/07/03
+ * Last Updated: 2026/10/14
  *
  * ターゲットカメラ（四元数）
  */
@@ -38,6 +38,8 @@ namespace Libraries
 
 			// 目線の位置を取得
 			Math::Vector3 GetEyePosition() const;
+			// 目線の方向を取得
+			Math::Vector3 GetEyeDirection() const;
 
 
 			/* 静的関数 */

@@ -40,11 +40,17 @@ namespace Libraries
 			bool IsCollide(const NonRotatingBox& box1, const NonRotatingBox& box2);
 			// 直方体同士が触れているかどうか
 			bool IsCollide(const Box& box1, const Box& box2);
+			// 線分と三角形が触れているかどうか
+			bool IsCollide(const Line& line, const Triangle& triangle);
 
-			// 平面と点の距離
+			// 点と球の距離
+			inline float Distance(const Vector3& point, const Sphere& sphere) { return Vector3::Distance(sphere.centerPosition, point) - sphere.radius; }
+			// 点と線分の距離
+			       float Distance(const Vector3& point, const Line& line);
+			// 球と線分の距離
+			inline float Distance(const Sphere& sphere, const Line& line) { return Distance(sphere.centerPosition, line) - sphere.radius; };
+			// 点と平面の距離
 			inline float Distance(const Vector3& point, const Plane& plane) { return Math::Abs(plane.Normal().Dot(point) + plane.D()) / plane.Normal().Length(); }
-			// 球と点の距離
-			inline float Distance(const Vector3& point, const Sphere& sphere) { return (sphere.centerPosition - point).Length() - sphere.radius; }
 			// 直方体同士の距離
 			       float Distance(const Box& box1, const Box& box2);
 			// 直方体同士の距離

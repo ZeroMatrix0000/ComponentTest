@@ -18,6 +18,7 @@
 #include "Scripts/GameObjects/UIs/Z2Talk/Z2Talk.h"
 #include "Scripts/GameObjects/UIs/BlackBelt/BlackBelt.h"
 #include "Scripts/GameObjects/UIs/MessageWindow/MessageWindow.h"
+#include "Scripts/GameObjects/UIs/TargetPoint/TargetPoint.h"
 #include "Scripts/Main/GameContext.h"
 #include "Scripts/Main/IGameInput.h"
 #include "Scripts/Commons/Colliders/MeshCollider.h"
@@ -31,7 +32,9 @@ GamePlaySceneStateField::GamePlaySceneStateField()
 void GamePlaySceneStateField::Enter(GamePlaySceneInternals* pInternals)
 {
 	// レティクルを表示
-	pInternals->pReticle->SetColor(Math::Color{ 1.0f, 1.0f, 1.0f, 1.0f });
+	pInternals->pReticle->SetColor(DirectX::Colors::White);
+	// ターゲット照準を表示
+	pInternals->pTargetPoint->Appear(true);
 }
 
 // 更新処理
@@ -84,6 +87,10 @@ void GamePlaySceneStateField::Update(GamePlaySceneInternals* pInternals, float e
 
 	// メッセージウィンドウの更新
 	pInternals->pMessageWindow->Update(elapsedTime);
+
+	// ターゲット照準の更新
+	pInternals->pTargetPoint->Update(elapsedTime);
+	pInternals->pTargetPoint->SetTarget(pInternals->pPlayer->GetPosition(), *pInternals->pCameraScreen);
 }
 
 // 終了処理

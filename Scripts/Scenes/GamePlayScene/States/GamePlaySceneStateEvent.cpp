@@ -19,6 +19,7 @@
 #include "Scripts/GameObjects/UIs/Z2Talk/Z2Talk.h"
 #include "Scripts/GameObjects/UIs/BlackBelt/BlackBelt.h"
 #include "Scripts/GameObjects/UIs/MessageWindow/MessageWindow.h"
+#include "Scripts/GameObjects/UIs/TargetPoint/TargetPoint.h"
 #include "Scripts/Main/GameContext.h"
 #include "Scripts/Main/IGameInput.h"
 #include "Scripts/Commons/Colliders/MeshCollider.h"
@@ -35,13 +36,16 @@ void GamePlaySceneStateEvent::Enter(GamePlaySceneInternals* pInternals)
 	pInternals->pActionManager->LoadEvent(pInternals->pNPCManager->GetPFocusedNPC()->GetEventName());
 
 	// レティクルを非表示
-	pInternals->pReticle->SetColor(Math::Color{ 1.0f, 1.0f, 1.0f, 0.0f });
+	pInternals->pReticle->SetColor(DirectX::Colors::Transparent);
 
 	// カーソルを隠す
 	pInternals->pNPCManager->HideCursor(true);
 
 	// 黒帯を出現させる
 	pInternals->pBlackBelt->Appear(true);
+
+	// ターゲット照準を非表示
+	pInternals->pTargetPoint->Appear(false);
 }
 
 // 更新処理

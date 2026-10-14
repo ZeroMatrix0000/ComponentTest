@@ -17,6 +17,7 @@
 #include "Scripts/GameObjects/UIs/Z2Talk/Z2Talk.h"
 #include "Scripts/GameObjects/UIs/BlackBelt/BlackBelt.h"
 #include "Scripts/GameObjects/UIs/MessageWindow/MessageWindow.h"
+#include "Scripts/GameObjects/UIs/TargetPoint/TargetPoint.h"
 #include "Scripts/GameObjects/Objects/DebugCamera/DebugCamera.h"
 #include "Scripts/GameObjects/Objects/Player/Player.h"
 #include "Scripts/GameObjects/Objects/Player/PlayerModel.h"
@@ -438,6 +439,8 @@ void Game::RegisterComponents()
 	m_gameObjectManager.Register<BlackBelt>("BlackBelt");
 	// メッセージウィンドウ
 	m_gameObjectManager.Register<MessageWindow>("MessageWindow");
+	// ターゲット照準
+	m_gameObjectManager.Register<TargetPoint>("TargetPoint");
 	// デバッグ用カメラ
 	m_gameObjectManager.Register<DebugCamera>("DebugCamera");
 	// プレイヤー

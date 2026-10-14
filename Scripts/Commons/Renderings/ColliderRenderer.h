@@ -1,7 +1,7 @@
 /*
  * FileName:     ColliderRenderer.h
  * Author:       Takao Hayata
- * Last Updated: 2026/08/22
+ * Last Updated: 2026/10/14
  *
  * 当たり判定描画
  */
@@ -53,9 +53,9 @@ namespace Renderings
 		// 直方体を描画
 		void DrawBox(const Math::Box& box, const Math::Color& color) const;
 		// 球を描画
-		void DrawSphere(const Math::Sphere& sphere, const Math::Color& color, const Math::Vector3& eyePosition, int segmentCount = 24) const;
+		void DrawSphere(const Math::Sphere& sphere, const Math::Color& color, const Math::Vector3& eyePosition, int segmentCount) const;
 		// 円を描画
-		void DrawCircle(const Math::Circle& circle, const Math::Color& color, int segmentCount = 64) const;
+		void DrawCircle(const Math::Circle& circle, const Math::Color& color, int segmentCount) const;
 		// 三角形を描画
 		void DrawTriangle(const Math::Triangle& triangle, const Math::Color& color) const;
 		// メッシュを描画

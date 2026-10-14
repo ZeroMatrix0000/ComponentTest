@@ -1,7 +1,7 @@
 /*
  * FileName:     Geometry.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/08/03
+ * Last Updated: 2026/10/14
  *
  * 数学関係
  */
@@ -131,6 +131,78 @@ bool Libraries::Math::Geometry::IsCollide(const Box& box1, const Box& box2)
 	}
 
 	return true;
+}
+
+// 線分と三角形が触れているかどうか
+bool Libraries::Math::Geometry::IsCollide(const Line& line, const Triangle& triangle)
+{
+	// 三角形を含む平面
+	Plane plane{ triangle.v1, triangle.v2, triangle.v3 };
+
+	Vector3 v = line.v2 - line.v1;
+
+	/*
+	 * p = line.v1
+	 * v = line.v2 - line.v1
+	 * q = p + tv // 交点
+	 *
+	 * ax + by + cz + d = 0 // plane
+	 * a = (a, b, c)
+	 * a･q = -d
+	 *
+	 * -d = a･p + ta･v
+	 * t = -(a･p + d) / a･v
+	 */
+
+	 // レイの倍率
+	float t = -(plane.Normal().Dot(line.v1) + plane.D()) / plane.Normal().Dot(v);
+
+	if (t < 0.0f || t > 1.0f)
+	{
+		return false;
+	}
+
+	// 公差位置
+	Vector3 intersection = line.v1 + v * t;
+
+	Vector3 normal1 = (triangle.v1 - triangle.v2).Cross(triangle.v1 - intersection);
+	Vector3 normal2 = (triangle.v2 - triangle.v3).Cross(triangle.v2 - intersection);
+	Vector3 normal3 = (triangle.v3 - triangle.v1).Cross(triangle.v3 - intersection);
+
+	// いずれかの法線方向が逆なら公差位置は三角形の外
+	if (Math::Sign(normal1.Dot(normal2)) == -1 || Math::Sign(normal2.Dot(normal3)) == -1)
+	{
+		return false;
+	}
+	return true;
+}
+
+// 点と線分の距離
+float Libraries::Math::Geometry::Distance(const Vector3& point, const Line& line)
+{
+	Vector3 v = line.v2 - line.v1;
+
+	/*
+	 * a = line.v1
+	 * v = line.v2 - line.v1
+	 * p = point
+	 * 
+	 * q = a + tv
+	 * (q - p)･v = 0
+	 * 
+	 * q - p = a - p + tv // これの長さが点と線分の距離
+	 * 0 = (a - p)･v + t|v|^2
+	 * t = (p - a)･v / |v|^2
+	 */
+
+	float t = v.Dot(point - line.v1) / v.LengthSquared();
+
+	if (t < 0.0f || t > 1.0f)
+	{
+		return Math::Min(Vector3::Distance(line.v1, point), Vector3::Distance(line.v2, point));
+	}
+
+	return (line.v1 - point + t * v).Length();
 }
 
 // 直方体同士の距離
@@ -347,6 +419,19 @@ float Libraries::Math::Geometry::AngledDistance(const Vector3& from, const Trian
 	// 三角形を含む平面
 	Plane plane{ to.v1, to.v2, to.v3 };
 
+	/*
+	 * p = from
+	 * v = direction
+	 * q = p + tv // 交点
+	 * 
+	 * ax + by + cz + d = 0 // plane
+	 * a = (a, b, c)
+	 * a･q = -d
+	 * 
+	 * -d = a･p + ta･v
+	 * t = -(a･p + d) / a･v
+	 */
+
 	// レイの倍率
 	float t = -(plane.Normal().Dot(from) + plane.D()) / plane.Normal().Dot(direction);
 
@@ -376,6 +461,27 @@ float Libraries::Math::Geometry::AngledDistance(const Line& from, const Line& to
 	Vector3 c = direction;
 	Vector3 p = from.v1;
 	Vector3 q = to.v1;
+
+	/*
+	 * p' = p + ta
+	 * q' = q + sb
+	 * q' - q' = uc
+	 * 
+	 * q + sb - p - ta = uc
+	 * q - p = ta - sb + uc
+	 * 
+	 * [          ][ t ]
+	 * [ a, -b, c ][ s ] = q - p
+	 * [          ][ u ]
+	 * 
+	 * [  t ]   [         ]-1
+	 * [ -s ] = [ a, b, c ]  (q - p)
+	 * [  u ]   [         ]
+	 * 
+	 *           1 [ b×c ]
+	 *        = ---[ c×a ](q - p)
+	 *          det[ a×b ]
+	 */
 
 	// 行列式
 	float det = a.Dot(b.Cross(c));

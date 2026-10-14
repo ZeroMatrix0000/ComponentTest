@@ -1,7 +1,7 @@
 /*
  * FileName:     EulerCamera.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/07/06
+ * Last Updated: 2026/10/14
  *
  * カメラ（オイラー角）
  */
@@ -19,4 +19,10 @@ Math::Matrix Libraries::Camera::EulerCamera::CreateViewMatrix() const
 	Math::Vector3    up        = Math::Vector3::Transform(Math::Vector3::Up, q);
 
 	return Math::Matrix::CreateLookAt(position, position + direction, up);
+}
+
+// 目線の方向を取得
+Math::Vector3 Libraries::Camera::EulerCamera::GetEyeDirection() const
+{
+	return Math::Vector3::Transform(Math::Vector3::Forward, rotation.CreateQuaternion());
 }

@@ -1,7 +1,7 @@
 /*
  * FileName:     ColliderRenderer.h
  * Author:       Takao Hayata
- * Last Updated: 2026/08/22
+ * Last Updated: 2026/10/14
  *
  * 当たり判定描画
  */
@@ -254,7 +254,7 @@ void Renderings::ColliderRenderer::DrawSphere(const Math::Sphere& sphere, const 
 	// 描画する円の半径
 	float radius = distance * Math::Tan(cornAngle);
 
-	DrawCircle(Math::Circle{ centerPosition, radius, unitZ }, color);
+	DrawCircle(Math::Circle{ centerPosition, radius, unitZ }, color, segmentCount);
 }
 
 // 円を描画

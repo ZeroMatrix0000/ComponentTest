@@ -94,6 +94,8 @@ namespace Renderings
 
 		// 目の座標を取得
 		const Math::Vector3 GetEyePosition() const override { return m_camera.GetEyePosition(); }
+		// 回転を取得
+		const Math::Vector3 GetEyeDirection() const override { return m_camera.GetEyeDirection(); };
 
 		// 出力サイズを取得
 		const Math::Vector2& GetOutputSize() const override { return m_outputSize; }

@@ -97,14 +97,14 @@ void PlayerStateFalling::PositionCorrect(PlayerInternals* pInternals, float dist
 {
 	if (distance < 0.0f)
 	{
-		float arccos = direction.Dot(Math::Vector3::Up);
+		float cos = direction.Dot(Math::Vector3::Up);
 
 		// 移動量
 		Math::Vector3 displacement = direction * distance;
 		// 移動方向の角度が 45° 以上なら真上に移動する
-		if (Math::Abs(arccos) > 1.0f / 1.41421356f)
+		if (Math::Abs(cos) > 1.0f / 1.41421356f)
 		{
-			displacement = Math::Vector3::Up / arccos * distance;
+			displacement = Math::Vector3::Up / cos * distance;
 
 			// 落下中のとき
 			if (pInternals->fallSpeed > 0.0f)

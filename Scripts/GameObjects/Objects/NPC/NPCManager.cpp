@@ -72,7 +72,7 @@ void NPCManager::SetRotation(const Math::Vector3& playerPosition)
 
 	for (auto* pNPC : m_pNPCList)
 	{
-		// プレイヤーとの中心距離（XZ平面）
+		// プレイヤーとの距離
 		float distance = Math::Geometry::Distance(playerPosition, pNPC->GetSphere());
 		// 距離がある程度近かったら
 		if (distance < 0.0f)

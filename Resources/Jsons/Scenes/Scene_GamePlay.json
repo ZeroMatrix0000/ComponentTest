@@ -289,6 +289,42 @@
 		}
 	},
 	{
+		"Name": "TargetPoint",
+		"Components": {
+			"RectTransform": {
+				"Position": {
+					"X": -10.0,
+					"Y": -10.0
+				},
+				"Size": {
+					"X": 32.0,
+					"Y": 32.0
+				},
+				"Anchor": "TopLeft"
+			},
+			"Image": {
+				"ImageSourceName": "Reticle",
+				"Color": {
+					"R": 1.0,
+					"G": 0.0,
+					"B": 0.0,
+					"A": 1.0
+				},
+				"OrderInLayer": 99,
+				"Canvas": "Canvas"
+			},
+			"TargetPoint": {
+				"TargetDistance": 20.0,
+				"BrightInterval": 0.1,
+				"Targets": [
+					"NPCテスト",
+					"NPCTest",
+					"NPC色付けテスト"
+				]
+			}
+		}
+	},
+	{
 		"Name": "ActionManager",
 		"Components": {
 			"ActionManager": {},

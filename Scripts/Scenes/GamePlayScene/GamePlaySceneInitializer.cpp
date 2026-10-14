@@ -16,6 +16,7 @@
 #include "Scripts/GameObjects/UIs/Z2Talk/Z2Talk.h"
 #include "Scripts/GameObjects/UIs/BlackBelt/BlackBelt.h"
 #include "Scripts/GameObjects/UIs/MessageWindow/MessageWindow.h"
+#include "Scripts/GameObjects/UIs/TargetPoint/TargetPoint.h"
 #include "Scripts/Scenes/GamePlayScene/Actions/ActionManager.h"
 #include "Scripts/Main/GameContext.h"
 #include "Scripts/Commons/GameObjects/IGameObjectManager.h"
@@ -80,6 +81,9 @@ void GamePlaySceneInitializer::operator()(GamePlaySceneInternals* pInternals) co
 
 	// メッセージウィンドウを取得
 	pInternals->pMessageWindow = pIGameObjectManager->Find("MessageWindow")->GetComponent<MessageWindow>();
+
+	// ターゲット照準を取得
+	pInternals->pTargetPoint = pIGameObjectManager->Find("TargetPoint")->GetComponent<TargetPoint>();
 
 	// アクション管理を取得
 	pInternals->pActionManager = pIGameObjectManager->Find("ActionManager")->GetComponent<ActionManager>();

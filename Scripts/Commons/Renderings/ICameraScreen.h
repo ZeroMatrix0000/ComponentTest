@@ -43,6 +43,8 @@ namespace Renderings
 
 		// 目の座標を取得
 		virtual const Math::Vector3 GetEyePosition() const = 0;
+		// 回転を取得
+		virtual const Math::Vector3 GetEyeDirection() const = 0;
 
 		// 出力サイズを取得
 		virtual const Math::Vector2& GetOutputSize() const = 0;

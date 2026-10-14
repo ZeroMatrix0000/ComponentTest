@@ -109,18 +109,18 @@ void PlayerStateOnGround::Exit(PlayerInternals* pInternals)
 // 座標補正
 void PlayerStateOnGround::PositionCorrect(PlayerInternals* pInternals, float distance, const Math::Vector3& direction)
 {
-	float arccos = direction.Dot(Math::Vector3::Up);
+	float cos = direction.Dot(Math::Vector3::Up);
 
 	// めり込んでいる、または、距離が近いかつ移動方向が下
-	if (distance < 0.0f || (distance < pInternals->pBoxCollider->GetWorldBox().size.y / 8.0f && Math::Abs(arccos) > 1.0f / 1.41421356f))
+	if (distance < 0.0f || (distance < pInternals->pBoxCollider->GetWorldBox().size.y / 8.0f && Math::Abs(cos) > 1.0f / 1.41421356f))
 	{
 		// 移動量
 		Math::Vector3 displacement = direction * distance;
 
 		// 移動方向の角度が 45° 以上なら真上に移動する
-		if (Math::Abs(arccos) > 1.0f / 1.41421356f)
+		if (Math::Abs(cos) > 1.0f / 1.41421356f)
 		{
-			displacement = Math::Vector3::Up / arccos * distance;
+			displacement = Math::Vector3::Up / cos * distance;
 			// 落下速度を 0 にする
 			pInternals->fallSpeed = 0.0f;
 		}

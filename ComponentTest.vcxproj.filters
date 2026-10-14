@@ -133,6 +133,9 @@
     <Filter Include="Scripts\GameObjects\Objects\Player\States">
       <UniqueIdentifier>{76a37496-b3b5-4a42-9ac6-b367b05486a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scripts\GameObjects\UIs\TargetPoint">
+      <UniqueIdentifier>{21746c16-cc3e-459a-a450-d01b1cd55da7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Scripts\Main\WinMain.cpp">
@@ -402,6 +405,9 @@
     </ClCompile>
     <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateFalling.cpp">
       <Filter>Scripts\GameObjects\Objects\Player\States</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\GameObjects\UIs\TargetPoint\TargetPoint.cpp">
+      <Filter>Scripts\GameObjects\UIs\TargetPoint</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -798,6 +804,9 @@
     </ClInclude>
     <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStateFalling.h">
       <Filter>Scripts\GameObjects\Objects\Player\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\GameObjects\UIs\TargetPoint\TargetPoint.h">
+      <Filter>Scripts\GameObjects\UIs\TargetPoint</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
