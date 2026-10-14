@@ -48,6 +48,11 @@ void GamePlaySceneStateField::Update(GamePlaySceneInternals* pInternals, float e
 	// ゲーム入力
 	auto* pIGameInput = pInternals->gameContext.GetPIGameInput();
 
+	if (pIGameInput->GetPlayerStretchThread())
+	{
+		pInternals->pPlayer->StretchThread(pInternals->pTargetPoint->GetTargetPosition(), pInternals->pTargetPoint->GetTarget());
+	}
+
 	// プレイヤーの更新
 	pInternals->pPlayer->Update(elapsedTime, pIGameInput->GetPlayerMove(), pIGameInput->GetPlayerDash(), pIGameInput->GetPlayerJump());
 	pInternals->pNPCManager->PlayerCollide(pInternals->pPlayer);

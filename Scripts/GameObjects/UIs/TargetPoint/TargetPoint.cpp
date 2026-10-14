@@ -23,6 +23,7 @@ TargetPoint::TargetPoint(const ComponentDesc& desc)
 	, m_targetDistance{}
 	, m_brightInterval{}
 	, m_brightTimer{}
+	, m_targetPosition{}
 	, m_pTransform{ GetPOwner()->GetNullReferences<RectTransform>() }
 	, m_pImage{ GetPOwner()->GetNullReferences<Renderings::Image>() }
 	, m_pTargets{}
@@ -62,6 +63,12 @@ void TargetPoint::SetTarget(const Math::Vector3& playerPosition, const Rendering
 	// 距離の最小
 	float distanceMin = 0.0f;
 
+	// カメラの目線の位置
+	Math::Vector3 eyePosition = iCameraScreen.GetEyePosition();
+
+	// ターゲットの位置を設定
+	m_targetPosition = eyePosition + iCameraScreen.GetEyeDirection() * m_targetDistance;
+
 	m_pTarget = nullptr;
 
 	for (auto* pTarget : m_pTargets)
@@ -75,14 +82,15 @@ void TargetPoint::SetTarget(const Math::Vector3& playerPosition, const Rendering
 			sphere,
 			Math::Line{ iCameraScreen.GetEyePosition(), iCameraScreen.GetEyePosition() + iCameraScreen.GetEyeDirection() * 100.0f }
 		);
-
+		
 		// 最も距離が短いターゲットを記録
 		if (distance < distanceMin)
 		{
-			float playerDistance = Math::Geometry::Distance(playerPosition, sphere);
+			float playerDistance = Math::Vector3::Distance(playerPosition, sphere.centerPosition);
 			if (playerDistance >= 0.0f && playerDistance <= m_targetDistance)
 			{
 				distanceMin = distance;
+				m_targetPosition = sphere.centerPosition;
 				m_pTarget = pTarget;
 			}
 		}

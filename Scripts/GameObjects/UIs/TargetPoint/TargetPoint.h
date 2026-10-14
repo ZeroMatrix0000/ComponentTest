@@ -48,6 +48,12 @@ public:
 	// ターゲットを表示
 	void Appear(bool isAppear);
 
+	// ターゲットの座標を取得
+	const Math::Vector3& GetTargetPosition() const { return m_targetPosition; }
+
+	// ターゲットを取得
+	Colliders::SphereCollider* GetTarget() const { return m_pTarget; }
+
 
 private:
 
@@ -61,6 +67,9 @@ private:
 	float m_brightInterval;
 	// 点滅タイマー
 	float m_brightTimer;
+
+	// ターゲットの座標
+	Math::Vector3 m_targetPosition;
 
 	// 画像のトランスフォーム
 	RectTransform* m_pTransform;

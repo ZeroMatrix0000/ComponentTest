@@ -1,7 +1,7 @@
 /*
  * FileName:     GameInput.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/10
+ * Last Updated: 2026/10/14
  *
  * ゲームの入力
  */
@@ -72,6 +72,12 @@ bool GameInput::GetPlayerDash() const
 bool GameInput::GetPlayerJump() const
 {
 	return m_input.GetKeyDown(KeyName::Space);
+}
+
+// プレイヤーの糸伸ばし入力を取得
+bool GameInput::GetPlayerStretchThread() const
+{
+	return m_input.GetMouseButtonDown(MouseButtonName::Right);
 }
 
 // フィールド上のオブジェクトのインタラクト入力を取得

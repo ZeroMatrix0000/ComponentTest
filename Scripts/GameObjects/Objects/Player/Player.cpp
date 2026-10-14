@@ -209,6 +209,12 @@ void Player::UpdateModel(float elapsedTime)
 	m_internals.pModel->Update(elapsedTime, *this);
 }
 
+// 意図を伸ばす
+void Player::StretchThread(const Math::Vector3& targetPosition, bool isTarget)
+{
+	SetState(std::make_unique<PlayerStateStretchThread>());
+}
+
 // 中心座標を取得
 const Math::Vector3& Player::GetPosition() const
 {

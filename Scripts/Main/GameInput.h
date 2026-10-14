@@ -1,7 +1,7 @@
 /*
  * FileName:     GameInput.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/10
+ * Last Updated: 2026/10/14
  *
  * ゲームの入力
  */
@@ -30,6 +30,8 @@ public:
 	bool          GetPlayerDash()         const override;
 	// プレイヤーのジャンプ入力を取得
 	bool          GetPlayerJump()         const override;
+	// プレイヤーの糸伸ばし入力を取得
+	bool          GetPlayerStretchThread() const override;
 
 	// フィールド上のオブジェクトのインタラクト入力を取得
 	bool GetFieldInteract() const override;
