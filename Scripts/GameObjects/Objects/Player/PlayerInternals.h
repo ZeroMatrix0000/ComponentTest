@@ -39,6 +39,17 @@ struct PlayerInternals
 	};
 
 
+	/* 列挙型 */
+
+	// ターゲットの種類
+	enum class TargetType
+	{
+		Object,
+		Ground,
+		Air
+	};
+
+
 	/* メンバ変数 */
 
 	// 移動加速度

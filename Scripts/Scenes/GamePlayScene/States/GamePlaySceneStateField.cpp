@@ -1,7 +1,7 @@
 /*
  * FileName:     GamePlaySceneStateField.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/14
+ * Last Updated: 2026/10/15
  *
  * ゲームプレイシーンのフィールド状態
  */
@@ -48,9 +48,11 @@ void GamePlaySceneStateField::Update(GamePlaySceneInternals* pInternals, float e
 	// ゲーム入力
 	auto* pIGameInput = pInternals->gameContext.GetPIGameInput();
 
+	// 糸伸ばし入力で糸を伸ばす
 	if (pIGameInput->GetPlayerStretchThread())
 	{
-		pInternals->pPlayer->StretchThread(pInternals->pTargetPoint->GetTargetPosition(), pInternals->pTargetPoint->GetTarget());
+		TargetPoint::Info info = pInternals->pTargetPoint->CreateTargetInfo();
+		pInternals->pPlayer->StretchThread(info.position, static_cast<PlayerInternals::TargetType>(info.type));
 	}
 
 	// プレイヤーの更新
@@ -93,9 +95,8 @@ void GamePlaySceneStateField::Update(GamePlaySceneInternals* pInternals, float e
 	// メッセージウィンドウの更新
 	pInternals->pMessageWindow->Update(elapsedTime);
 
-	// ターゲット照準の更新
+	// ターゲットの更新
 	pInternals->pTargetPoint->Update(elapsedTime);
-	pInternals->pTargetPoint->SetTarget(pInternals->pPlayer->GetPosition(), *pInternals->pCameraScreen);
 }
 
 // 終了処理

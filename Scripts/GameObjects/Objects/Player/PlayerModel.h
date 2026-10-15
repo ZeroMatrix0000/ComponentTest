@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerModel.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/13
+ * Last Updated: 2026/09/15
  *
  * プレイヤーのモデル
  */
@@ -39,6 +39,13 @@ public:
 	// 更新処理
 	void Update(float elapsedTime, const Player& player);
 
+	// 移動
+	void Translate(float elapsedTime, const Player& player);
+	// スケーリング
+	void Scaling(float elapsedTime, const Player& player);
+	// 回転
+	void Rotate(float elapsedTime, const Player& player);
+
 	// 映るカメラ画面を追加
 	void AddICameraScreen(const Renderings::ICameraScreen& iCameraScreen);
 
@@ -69,7 +76,7 @@ private:
 	// ジャンプまたは落下中の高さ
 	Spring<float> m_fallingHeight;
 	// スケールの差
-	Spring<float> m_scaling;
+	Spring<Math::Vector3> m_scaling;
 	// ダッシュ時の傾き
 	Spring<float> m_dashAngle;
 

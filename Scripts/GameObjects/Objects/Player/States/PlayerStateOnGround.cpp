@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerStateOnGround.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/14
+ * Last Updated: 2026/10/15
  *
  * プレイヤーの地面にいる状態
  */
@@ -33,7 +33,11 @@ void PlayerStateOnGround::Update(PlayerInternals* pInternals, float elapsedTime)
 	m_isGround = false;
 
 	// カメラのY軸回転
-	Math::Quaternion cameraRotation = Math::Quaternion::CreateFromAxisAngle(Math::Vector3::UnitY, Math::Deg2Rad(pInternals->P_CAMERA_SCREEN->GetCamera().rotation.y));
+	Math::Quaternion cameraRotation = Math::Quaternion::CreateFromAxisAngle
+	(
+		Math::Vector3::UnitY,
+		Math::Deg2Rad(pInternals->P_CAMERA_SCREEN->GetCamera().rotation.y)
+	);
 
 	// 最大の早さを調整
 	pInternals->moveMaxSpeed += pInternals->MOVE_ACCELERATION * elapsedTime * pInternals->DASH_RATIO * (pInternals->IS_DASH ? 1.0f : -1.0f);
@@ -42,7 +46,12 @@ void PlayerStateOnGround::Update(PlayerInternals* pInternals, float elapsedTime)
 	if (pInternals->MOVE == Math::Vector3::Zero)
 	{
 		// 速さ
-		float speed = Math::Clamp(pInternals->moveVelocity.Length() - pInternals->MOVE_ACCELERATION * elapsedTime, 0.0f, static_cast<float>(pInternals->moveMaxSpeed));
+		float speed = Math::Clamp
+		(
+			pInternals->moveVelocity.Length() - pInternals->MOVE_ACCELERATION * elapsedTime,
+			0.0f,
+			static_cast<float>(pInternals->moveMaxSpeed)
+		);
 		pInternals->moveVelocity.Normalize();
 		pInternals->moveVelocity *= speed;
 	}
@@ -50,7 +59,8 @@ void PlayerStateOnGround::Update(PlayerInternals* pInternals, float elapsedTime)
 	else
 	{
 		// 速度に加速度を足す
-		pInternals->moveVelocity += Math::Vector3::Transform(pInternals->MOVE, cameraRotation) * pInternals->MOVE_ACCELERATION * elapsedTime * (pInternals->IS_DASH ? pInternals->DASH_RATIO : 1.0f);
+		pInternals->moveVelocity += Math::Vector3::Transform(pInternals->MOVE, cameraRotation) *
+			pInternals->MOVE_ACCELERATION * elapsedTime * (pInternals->IS_DASH ? pInternals->DASH_RATIO : 1.0f);
 		// 速さを最大に収める
 		if (pInternals->moveVelocity.Length() > pInternals->moveMaxSpeed)
 		{

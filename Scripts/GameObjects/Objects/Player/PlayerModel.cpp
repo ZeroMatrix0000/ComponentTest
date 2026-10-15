@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerModel.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/13
+ * Last Updated: 2026/09/15
  *
  * プレイヤーのモデル
  */
@@ -63,7 +63,19 @@ void PlayerModel::Initalize(const nlohmann::ordered_json& json, IGameObjectFinde
 // 更新処理
 void PlayerModel::Update(float elapsedTime, const Player& player)
 {
-	if (player.IsState<PlayerStateFalling>())
+	// 移動
+	Translate(elapsedTime, player);
+	// 回転
+	Rotate(elapsedTime, player);
+	// スケーリング
+	Scaling(elapsedTime, player);
+}
+
+// 移動
+void PlayerModel::Translate(float elapsedTime, const Player& player)
+{
+	// 落下状態 or 糸伸ばし状態
+	if (player.IsState<PlayerStateFalling>() || player.IsState<PlayerStateStretchThread>())
 	{
 		m_bounceTime = 0.0f;
 		m_fallingHeight.SetTarget(0.0f);
@@ -93,19 +105,44 @@ void PlayerModel::Update(float elapsedTime, const Player& player)
 		m_pTransform->SetPosition(position);
 		m_pSilhouette->SetPosition(position);
 	}
+}
 
-	// 落下速度でスケールを変更
-	m_scaling.SetTarget(Math::Clamp(-player.GetFallSpeed() * m_fallSpeedCoefficient, -0.1f, 0.1f), 250.0f, 30.0f);
+// スケーリング
+void PlayerModel::Scaling(float elapsedTime, const Player& player)
+{
+	// 糸伸ばし状態
+	if (player.IsState<PlayerStateStretchThread>())
+	{
+		m_scaling.SetTarget(Math::Vector3::Zero, 250.0f, 30.0f);
+	}
+	else
+	{
+		// 落下によるスケーリングの大きさ
+		float fallScaling = Math::Clamp(-player.GetFallSpeed() * m_fallSpeedCoefficient, -0.2f, 0.2f);
+		// 落下速度でスケールを変更
+		m_scaling.SetTarget(Math::Vector3{ -fallScaling / 2.0f, fallScaling, -fallScaling / 2.0f }, 250.0f, 30.0f);
+	}
+
 	m_scaling.Tick(elapsedTime);
-	Math::Vector3 scale = m_pTransform->GetScale();
-	scale.y += m_scaling.GetCurrent();
-	scale.x -= m_scaling.GetCurrent() / 2.0f;
-	scale.z -= m_scaling.GetCurrent() / 2.0f;
+	Math::Vector3 scale = m_pTransform->GetScale() + m_scaling.GetCurrent();
 	m_pTransform->SetScale(scale);
 	m_pSilhouette->SetScale(scale);
+}
 
-	// 移動速度で回転
-	m_dashAngle.SetTarget(Math::Clamp(player.GetMoveVelocityRatio() - 1.0f, 0.0f, 1.0f) * m_dashAngleMax);
+// 回転
+void PlayerModel::Rotate(float elapsedTime, const Player& player)
+{
+	// 糸伸ばし状態
+	if (player.IsState<PlayerStateStretchThread>())
+	{
+		m_dashAngle.SetTarget(0.0f);
+	}
+	else
+	{
+		// 移動速度で回転
+		m_dashAngle.SetTarget(Math::Clamp(player.GetMoveVelocityRatio() - 1.0f, 0.0f, 1.0f) * m_dashAngleMax);
+	}
+
 	m_dashAngle.Tick(elapsedTime);
 	m_pTransform->SetRotation(Math::Euler{ m_dashAngle.GetCurrent(), 0.0f, 0.0f }.CreateQuaternion() * m_pTransform->GetRotation());
 	m_pSilhouette->SetRotation(Math::Euler{ m_dashAngle.GetCurrent(), 0.0f, 0.0f }.CreateQuaternion() * m_pSilhouette->GetRotation());

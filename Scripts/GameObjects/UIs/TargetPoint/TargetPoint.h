@@ -1,7 +1,7 @@
 /*
  * FileName:     TargetPoint.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/14
+ * Last Updated: 2026/10/15
  *
  * ターゲット照準
  */
@@ -16,7 +16,9 @@ namespace Components
 }
 namespace Colliders
 {
+	class BoxCollider;
 	class SphereCollider;
+	class MeshCollider;
 }
 namespace Renderings
 {
@@ -31,6 +33,29 @@ class TargetPoint : public Component
 public:
 
 
+	/* 列挙型 */
+
+	// 種類
+	enum class Type
+	{
+		Object,
+		Ground,
+		Air
+	};
+
+
+	/* 構造体 */
+
+	// 情報
+	struct Info
+	{
+		// ターゲットの位置
+		Math::Vector3 position{};
+		// 種類
+		Type type{};
+	};
+
+
 	/* メンバ関数 */
 
 	// コンストラクタ
@@ -42,17 +67,14 @@ public:
 	// 更新処理
 	void Update(float elapsedTime);
 
-	// ターゲットを設定
-	void SetTarget(const Math::Vector3& playerPosition, const Renderings::ICameraScreen& iCameraScreen);
-
 	// ターゲットを表示
 	void Appear(bool isAppear);
 
-	// ターゲットの座標を取得
-	const Math::Vector3& GetTargetPosition() const { return m_targetPosition; }
-
 	// ターゲットを取得
-	Colliders::SphereCollider* GetTarget() const { return m_pTarget; }
+	Colliders::SphereCollider* GetPTargetObject() const { return m_pTargetObject; }
+
+	// ターゲット情報を生成
+	Info CreateTargetInfo() const;
 
 
 private:
@@ -62,24 +84,32 @@ private:
 
 	// ターゲットにできる距離
 	float m_targetDistance;
+	// レイの長さ
+	float m_rayLength;
 
 	// 点滅間隔
 	float m_brightInterval;
 	// 点滅タイマー
 	float m_brightTimer;
 
-	// ターゲットの座標
-	Math::Vector3 m_targetPosition;
-
 	// 画像のトランスフォーム
 	RectTransform* m_pTransform;
 	// 画像
 	Renderings::Image* m_pImage;
 
+	// プレイヤー
+	Colliders::BoxCollider* m_pPlayer;
+
+	// カメラ画面
+	Renderings::ICameraScreen* m_pICameraScreen;
+
 	// ターゲットリスト
-	std::vector<Colliders::SphereCollider*> m_pTargets;
+	std::vector<Colliders::SphereCollider*> m_pTargetObjects;
+
+	// 地面リスト
+	std::vector<Colliders::MeshCollider*> m_pGrounds;
 
 	// 照準を合わせるターゲット
-	Colliders::SphereCollider* m_pTarget;
+	Colliders::SphereCollider* m_pTargetObject;
 
 };

@@ -1,7 +1,7 @@
 /*
  * FileName:     Geometry.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/14
+ * Last Updated: 2026/10/15
  *
  * 数学関係
  */
@@ -411,6 +411,60 @@ float Libraries::Math::Geometry::Distance(const Triangle& triangle, const Box& b
 
 	*pDirection = maxAxis;
 	return distanceMax;
+}
+
+// 点から球への方向指定最短距離
+std::pair<float, float> Libraries::Math::Geometry::AngledDistance(const Vector3& from, const Sphere& to, const Vector3& direction)
+{
+	/*
+	 * a = from
+	 * v = direction
+	 * p = to.centerPosition
+	 * r = to.radius
+	 * 
+	 * q = a + tv // 交点
+	 * |q - p| = r
+	 * 
+	 * q - p = a - p + tv
+	 * r^2 = |a - p|^2 + 2t(a - p)･v + t^2|v|^2
+	 * 
+	 * A = |v|^2
+	 * B = 2(a - p)･v
+	 * C = |a - p|^2 - r^2
+	 * 
+	 * At^2 + Bt + C = 0
+	 * 
+	 * D = B^2 - 4AC
+	 * D < 0: 解なし
+	 * D = 0: 重解
+	 * D > 0: 解2つ
+	 * 
+	 * t = (-B ± √D) / 2A
+	 */
+
+	float A = direction.LengthSquared();
+	float B = 2.0f * direction.Dot(from - to.centerPosition);
+	float C = (from - to.centerPosition).LengthSquared() - to.radius * to.radius;
+
+	float D = B * B - 4.0f * A * C;
+
+	if (D < 0.0f)
+	{
+		return std::make_pair(Math::INFTY, Math::INFTY);
+	}
+
+	float length = direction.Length();
+
+	if (D == 0.0f)
+	{
+		float t = -B / 2.0f / A;
+		return std::make_pair(length * t, length * t);
+	}
+
+	float sqrtD = Math::Sqrt(D);
+	float t1 = (-B - sqrtD) / 2.0f / A;
+	float t2 = (-B + sqrtD) / 2.0f / A;
+	return std::make_pair(length * t1, length * t2);
 }
 
 // 点から三角形への方向指定最短距離

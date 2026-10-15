@@ -1,7 +1,7 @@
 /*
  * FileName:     Geometry.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/14
+ * Last Updated: 2026/10/15
  *
  * 数学関係
  */
@@ -58,6 +58,8 @@ namespace Libraries
 			// 三角形と直方体の距離
 			       float Distance(const Triangle& triangle, const Box& box, Vector3* pDirection);
 
+			// 点から球への方向指定最短距離
+			std::pair<float, float> AngledDistance(const Vector3& from, const Sphere& to, const Vector3& direction);
 			// 点から三角形への方向指定最短距離
 			float AngledDistance(const Vector3& from, const Triangle& to, const Vector3& direction);
 			// 線分同士の方向指定最短距離

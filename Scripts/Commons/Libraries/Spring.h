@@ -1,7 +1,7 @@
 /*
  * FileName:     Spring.h
  * Author:       Takao Hayata
- * Last Updated: 2026/07/10
+ * Last Updated: 2026/10/15
  *
  * ばね
  */
@@ -59,6 +59,7 @@ namespace Libraries
 		void SetValue(T value)
 		{
 			m_current = value;
+			m_target = value;
 			m_velocity = T{};
 		}
 		// 目的値を設定
@@ -165,6 +166,7 @@ namespace Libraries
 		void SetValue(const Math::Quaternion& value)
 		{
 			m_current = value;
+			m_target = value;
 			m_velocity = Math::Vector3::Zero;
 		}
 		// 目的値を設定

@@ -315,11 +315,17 @@
 			},
 			"TargetPoint": {
 				"TargetDistance": 20.0,
+				"RayLength": 50.0,
 				"BrightInterval": 0.1,
-				"Targets": [
+				"Player": "Player",
+				"CameraScreen": "PlayerCamera",
+				"TargetObjects": [
 					"NPCテスト",
 					"NPCTest",
 					"NPC色付けテスト"
+				],
+				"Grounds": [
+					"Ground"
 				]
 			}
 		}

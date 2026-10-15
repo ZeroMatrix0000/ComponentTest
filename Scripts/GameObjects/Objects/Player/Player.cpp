@@ -1,7 +1,7 @@
 /*
  * FileName:     Player.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/14
+ * Last Updated: 2026/10/15
  * 
  *
  * プレイヤー
@@ -209,10 +209,10 @@ void Player::UpdateModel(float elapsedTime)
 	m_internals.pModel->Update(elapsedTime, *this);
 }
 
-// 意図を伸ばす
-void Player::StretchThread(const Math::Vector3& targetPosition, bool isTarget)
+// 糸を伸ばす
+void Player::StretchThread(const Math::Vector3& targetPosition, PlayerInternals::TargetType targetType)
 {
-	SetState(std::make_unique<PlayerStateStretchThread>());
+	SetState(std::make_unique<PlayerStateStretchThread>(targetPosition, targetType));
 }
 
 // 中心座標を取得

@@ -1,7 +1,7 @@
 /*
  * FileName:     Player.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/14
+ * Last Updated: 2026/09/15
  *
  * プレイヤー
  */
@@ -38,8 +38,8 @@ public:
 	// モデルの更新
 	void UpdateModel(float elapsedTime = 0.0f);
 
-	// 意図を伸ばす
-	void StretchThread(const Math::Vector3& targetPosition, bool isTarget);
+	// 糸を伸ばす
+	void StretchThread(const Math::Vector3& targetPosition, PlayerInternals::TargetType targetType);
 
 	// 回転を設定
 	void SetRotation(const Math::Quaternion& rotation) { m_internals.rotation.SetTarget(rotation); }
