@@ -1,5 +1,5 @@
 /*
- * FileName:     TargetPoint.h
+ * FileName:     TargetPoint.cpp
  * Author:       Takao Hayata
  * Last Updated: 2026/10/15
  *
@@ -97,7 +97,7 @@ void TargetPoint::Update(float elapsedTime)
 			{
 				// プレイヤーとの距離
 				float playerDistance = Math::Vector3::Distance(playerPosition, sphere.centerPosition);
-				if (playerDistance >= 0.0f && playerDistance <= m_targetDistance)
+				if (playerDistance >= sphere.radius && playerDistance <= m_targetDistance)
 				{
 					distanceMin = distance;
 					m_pTargetObject = pTargetObject;

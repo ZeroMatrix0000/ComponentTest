@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerState.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/12
+ * Last Updated: 2026/10/15
  *
  * プレイヤーの状態
  */
@@ -12,7 +12,7 @@
 
 struct PlayerInternals;
 
-	// 状態
+// プレイヤーの状態
 class PlayerState : public Systems::State<PlayerInternals>
 {
 

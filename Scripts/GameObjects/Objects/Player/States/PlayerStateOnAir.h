@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerStateOnAir.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/13
+ * Last Updated: 2026/10/15
  *
  * プレイヤーの空中にいる状態
  */
@@ -10,7 +10,7 @@
 
 #include "PlayerState.h"
 
- // 状態
+// プレイヤーの空中にいる状態
 class PlayerStateOnAir : public PlayerState
 {
 

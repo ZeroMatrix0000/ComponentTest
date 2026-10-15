@@ -412,6 +412,7 @@
     <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateStretchThread.cpp">
       <Filter>Scripts\GameObjects\Objects\Player\States</Filter>
     </ClCompile>
+    <ClCompile Include="Scripts\GameObjects\Objects\Player\PlayerThread.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Pch.h" />
@@ -814,6 +815,9 @@
     <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStateStretchThread.h">
       <Filter>Scripts\GameObjects\Objects\Player\States</Filter>
     </ClInclude>
+    <ClInclude Include="Scripts\GameObjects\Objects\Player\PlayerThread.h">
+      <Filter>Scripts\GameObjects\Objects\Player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -878,6 +882,9 @@
       <Filter>Jsons\Events</Filter>
     </None>
     <None Include="Resources\Jsons\Prefabs\Prefab_PlayerSilhouette.json">
+      <Filter>Jsons\Prefabs</Filter>
+    </None>
+    <None Include="Resources\Jsons\Prefabs\Prefab_PlayerThread.json">
       <Filter>Jsons\Prefabs</Filter>
     </None>
   </ItemGroup>

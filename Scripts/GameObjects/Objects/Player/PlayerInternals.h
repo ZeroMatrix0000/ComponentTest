@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerInternals.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/14
+ * Last Updated: 2026/10/15
  *
  * プレイヤーの内部データ
  */
@@ -24,6 +24,7 @@ namespace Renderings
 }
 
 class PlayerModel;
+class PlayerThread;
 
 struct PlayerInternals
 {
@@ -100,5 +101,8 @@ struct PlayerInternals
 
 	// プレイヤーのモデル
 	PlayerModel* pModel{};
+
+	// プレイヤーの糸
+	PlayerThread* pThread{};
 
 };

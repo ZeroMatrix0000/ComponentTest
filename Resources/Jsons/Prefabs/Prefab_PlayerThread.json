@@ -1,0 +1,17 @@
+{
+	"Transform": {
+		"Scale": {
+			"X": 0.0,
+			"Y": 0.0,
+			"Z": 0.0
+		}
+	},
+	"Model3D": {
+		"ModelSourceName": "Box"
+	},
+	"PlayerThread": {
+		"Thickness": 0.2,
+		"StretchSpeed": 50.0,
+		"RotationSpeed": 1000.0
+	}
+}

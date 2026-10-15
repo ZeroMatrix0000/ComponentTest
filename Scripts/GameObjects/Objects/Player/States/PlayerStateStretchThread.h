@@ -11,7 +11,7 @@
 #include "PlayerState.h"
 #include "../PlayerInternals.h"
 
- // 状態
+ // プレイヤーの糸を伸ばす状態
 class PlayerStateStretchThread : public PlayerState
 {
 
@@ -43,5 +43,8 @@ private:
 	Math::Vector3 m_targetPosition;
 	// ターゲットの種類
 	PlayerInternals::TargetType m_targetType;
+
+	// プレイヤーの座標
+	Math::Vector3 m_playerPosition;
 
 };

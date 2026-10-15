@@ -3,7 +3,7 @@
  * Author:       Takao Hayata
  * Last Updated: 2026/10/15
  *
- * 数学関係
+ * 幾何学関係
  */
 
 #pragma once
@@ -12,6 +12,7 @@ namespace Libraries
 {
 	namespace Math
 	{
+		// 幾何学関係
 		namespace Geometry
 		{
 			// 3次元上の座標を2次元に投影

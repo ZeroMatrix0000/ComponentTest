@@ -24,7 +24,6 @@ PlayerStateOnGround::PlayerStateOnGround()
 // 開始処理
 void PlayerStateOnGround::Enter(PlayerInternals* pInternals)
 {
-	pInternals->fallSpeed = 0.0f;
 }
 
 // 更新処理

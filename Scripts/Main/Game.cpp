@@ -21,6 +21,7 @@
 #include "Scripts/GameObjects/Objects/DebugCamera/DebugCamera.h"
 #include "Scripts/GameObjects/Objects/Player/Player.h"
 #include "Scripts/GameObjects/Objects/Player/PlayerModel.h"
+#include "Scripts/GameObjects/Objects/Player/PlayerThread.h"
 #include "Scripts/GameObjects/Objects/Player/PlayerCamera.h"
 #include "Scripts/GameObjects/Objects/NPC/NPC.h"
 #include "Scripts/GameObjects/Objects/NPC/NPCManager.h"
@@ -315,6 +316,7 @@ void Game::InitializeResources()
 	m_resources.GetEditableModelSource("PlayerSilhouette")->SetDrawingOrder(1000);
 	m_resources.GetEditableModelSource("Player")->SetDrawingOrder(2000);
 	m_resources.GetEditableModelSource("NPC")->SetDrawingOrder(2000);
+	m_resources.GetEditableModelSource("Box")->SetDrawingOrder(2000);
 
 	// 深度ステンシルステートの詳細
 	D3D11_DEPTH_STENCIL_DESC desc = {};
@@ -446,6 +448,7 @@ void Game::RegisterComponents()
 	// プレイヤー
 	m_gameObjectManager.Register<Player>("Player");
 	m_gameObjectManager.Register<PlayerModel>("PlayerModel");
+	m_gameObjectManager.Register<PlayerThread>("PlayerThread");
 	m_gameObjectManager.Register<PlayerCamera>("PlayerCamera");
 	// NPC管理
 	m_gameObjectManager.Register<NPC>("NPC");

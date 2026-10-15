@@ -206,6 +206,7 @@
     <ClCompile Include="Scripts\GameObjects\Objects\Player\Player.cpp" />
     <ClCompile Include="Scripts\GameObjects\Objects\Player\PlayerCamera.cpp" />
     <ClCompile Include="Scripts\GameObjects\Objects\Player\PlayerModel.cpp" />
+    <ClCompile Include="Scripts\GameObjects\Objects\Player\PlayerThread.cpp" />
     <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateFalling.cpp" />
     <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateOnAir.cpp" />
     <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateOnGround.cpp" />
@@ -249,6 +250,7 @@
     <None Include="Resources\Jsons\Prefabs\Prefab_Player.json" />
     <None Include="Resources\Jsons\Prefabs\Prefab_PlayerModel.json" />
     <None Include="Resources\Jsons\Prefabs\Prefab_PlayerSilhouette.json" />
+    <None Include="Resources\Jsons\Prefabs\Prefab_PlayerThread.json" />
     <None Include="Resources\Jsons\Prefabs\Prefab_SelectMenu.json" />
     <None Include="Resources\Jsons\Prefabs\Prefab_SelectMenuCursor.json" />
     <None Include="Resources\Jsons\Prefabs\Prefab_SelectMenuText.json" />
@@ -317,6 +319,7 @@
     <ClInclude Include="Scripts\GameObjects\Objects\Player\PlayerCamera.h" />
     <ClInclude Include="Scripts\GameObjects\Objects\Player\PlayerModel.h" />
     <ClInclude Include="Scripts\GameObjects\Objects\Player\PlayerInternals.h" />
+    <ClInclude Include="Scripts\GameObjects\Objects\Player\PlayerThread.h" />
     <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerState.h" />
     <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStateFalling.h" />
     <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStateOnAir.h" />

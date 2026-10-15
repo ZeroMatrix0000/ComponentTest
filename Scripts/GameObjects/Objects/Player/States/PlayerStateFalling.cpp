@@ -121,6 +121,7 @@ void PlayerStateFalling::PositionCorrect(PlayerInternals* pInternals, float dist
 			{
 				// 地面にいる状態にする
 				SetNextState(std::make_unique<PlayerStateOnGround>());
+				pInternals->fallSpeed = 0.0f;
 				// 砂煙の再生
 				pInternals->pParticleManager->Play<LandingParticle>();
 			}

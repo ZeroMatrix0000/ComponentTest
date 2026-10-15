@@ -135,6 +135,7 @@ void PlayerStateOnAir::PositionCorrect(PlayerInternals* pInternals, float distan
 			displacement = Math::Vector3::Up / cos * distance;
 			// 地面にいる状態にする
 			SetNextState(std::make_unique<PlayerStateOnGround>());
+			pInternals->fallSpeed = 0.0f;
 		}
 		// 移動
 		pInternals->pTransform->Translate(displacement);

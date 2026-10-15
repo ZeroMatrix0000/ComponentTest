@@ -34,7 +34,7 @@ void PlayerCamera::Initalize(const nlohmann::ordered_json& json, IGameObjectFind
 
 	m_target = camera.position;
 	m_rotationYDeg.Initialize(camera.rotation.y, 0.0f, 360.0f);
-	m_rotationXDeg.Initialize(camera.rotation.x, -90.0f, 30.0f);
+	m_rotationXDeg.Initialize(camera.rotation.x, -80.0f, 30.0f);
 	m_distance = camera.distance;
 	m_maxDistance = camera.distance;
 

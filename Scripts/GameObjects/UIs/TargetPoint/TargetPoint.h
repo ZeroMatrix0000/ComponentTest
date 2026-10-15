@@ -26,7 +26,7 @@ namespace Renderings
 	class Image;
 }
 
-// 話しかける・調べる際のカーソル
+// ターゲット照準
 class TargetPoint : public Component
 {
 

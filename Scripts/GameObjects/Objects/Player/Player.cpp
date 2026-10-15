@@ -11,6 +11,7 @@
 #include "Player.h"
 
 #include "PlayerModel.h"
+#include "PlayerThread.h"
 #include "States/PlayerStates.h"
 #include "Scripts/Commons/GameObjects/GameObject.h"
 #include "Scripts/Commons/GameObjects/IGameObjectFinder.h"
@@ -32,6 +33,7 @@ Player::Player(const ComponentDesc& desc)
 	m_internals.pBoxCollider = GetPOwner()->GetNullReferences<Colliders::BoxCollider>();
 	m_internals.pParticleManager = GetPOwner()->GetNullReferences<Renderings::ParticleManager>();
 	m_internals.pModel = GetPOwner()->GetNullReferences<PlayerModel>();
+	m_internals.pThread = GetPOwner()->GetNullReferences<PlayerThread>();
 }
 
 // 初期化処理
@@ -69,12 +71,19 @@ void Player::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pI
 	// 当たり判定の更新
 	m_internals.pBoxCollider->ApplyTransform();
 
-	// モデルの取得
+	// モデルの生成
 	if (m_internals.pModel == GetPOwner()->GetNullReferences<PlayerModel>())
 	{
 		GameObject* pObj = Instantiate("Prefab_PlayerModel");
 		m_internals.pModel = pObj->GetComponent<PlayerModel>();
 		m_internals.pModel->SetParticleManager(m_internals.pParticleManager);
+	}
+
+	// 糸の生成
+	if (m_internals.pThread == GetPOwner()->GetNullReferences<PlayerThread>())
+	{
+		GameObject* pObj = Instantiate("Prefab_PlayerThread");
+		m_internals.pThread = pObj->GetComponent<PlayerThread>();
 	}
 
 	// カメラを設定
@@ -83,6 +92,7 @@ void Player::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pI
 		m_internals.pBoxCollider->AddICameraScreen(*m_internals.P_CAMERA_SCREEN);
 		m_internals.pParticleManager->AddICameraScreen(*m_internals.P_CAMERA_SCREEN);
 		m_internals.pModel->AddICameraScreen(*m_internals.P_CAMERA_SCREEN);
+		m_internals.pThread->GetPOwner()->GetComponent<Renderings::Model3D>()->AddICameraScreen(*m_internals.P_CAMERA_SCREEN);
 	}
 
 	// 現在の状態を初期化
