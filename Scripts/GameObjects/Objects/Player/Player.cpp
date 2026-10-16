@@ -1,7 +1,7 @@
 /*
  * FileName:     Player.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/15
+ * Last Updated: 2026/10/16
  * 
  *
  * プレイヤー
@@ -58,15 +58,17 @@ void Player::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pI
 	serializer.AddParameter(&m_internals.JUMP_POWER, "JumpPower");
 	serializer.AddParameter(&m_internals.CAMERA_VELOCITY_COEFFICIENT, "CameraVelocityCoefficient");
 	serializer.AddParameter(&coyoteTime, "CoyoteTime");
+	serializer.AddParameter(&m_internals.THREAD_INTERVAL, "ThreadInterval");
 	serializer.AddParameter(&m_internals.P_CAMERA_SCREEN, "CameraScreen");
 	serializer.Load(json);
 
 	m_internals.moveMaxSpeed.Initialize(0.0f, moveMaxSpeed, moveMaxSpeed * m_internals.DASH_RATIO);
 
-	m_internals.fallSpeed.Initialize(0.0f, -m_internals.JUMP_POWER * 2.0f, fallMaxSpeed);
+	m_internals.fallSpeed.Initialize(0.0f, -m_internals.JUMP_POWER * 1.5f, fallMaxSpeed);
 
 	m_internals.fallCoyoteTime.Initialize(0.0f, 0.0f, coyoteTime);
 	m_internals.jumpBufferTime.Initialize(0.0f, 0.0f, coyoteTime);
+	m_internals.threadTimer.Initialize(0.0f, 0.0f, m_internals.THREAD_INTERVAL);
 
 	// 当たり判定の更新
 	m_internals.pBoxCollider->ApplyTransform();
@@ -220,9 +222,10 @@ void Player::UpdateModel(float elapsedTime)
 }
 
 // 糸を伸ばす
-void Player::StretchThread(const Math::Vector3& targetPosition, PlayerInternals::TargetType targetType)
+void Player::ExpandThread(const Math::Vector3& targetPosition, PlayerInternals::TargetType targetType)
 {
-	SetState(std::make_unique<PlayerStateStretchThread>(targetPosition, targetType));
+	m_internals.threadTimer = m_internals.threadTimer.GetMax();
+	SetState(std::make_unique<PlayerStateExpandThread>(targetPosition, targetType));
 }
 
 // 中心座標を取得

@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerThread.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/15
+ * Last Updated: 2026/10/16
  *
  * プレイヤーの糸
  */
@@ -22,6 +22,19 @@ class PlayerThread : public Component
 public:
 
 
+	/* 列挙型 */
+
+	// 状態
+	enum class State
+	{
+		None,
+		Expand,
+		Stay,
+		Contract,
+		AirContract
+	};
+
+
 	/* メンバ関数 */
 
 	// コンストラクタ
@@ -33,8 +46,21 @@ public:
 	// 更新処理
 	void Update(float elapsedTime);
 
+	// 移動
+	void Translate(float elapsedTime);
+	// 回転
+	void Rotate(float elapsedTime);
+	// スケーリング
+	void Scaling(float elapsedTime);
+
 	// ターゲットを設定
-	void SetTarget(const Math::Vector3& playerPosition, const Math::Vector3& targetPosition, const Math::Quaternion& rotation);
+	void SetTarget(const Math::Vector3& playerPosition, const Math::Vector3& targetPosition, const Math::Quaternion& rotation, bool toAir);
+
+	// プレイヤー位置を取得
+	const Math::Vector3& GetPlayerPosition() const { return m_playerPosition; }
+
+	// 現在の状態を取得
+	State GetCurrentState() const { return m_currentState; }
 
 
 private:
@@ -43,14 +69,22 @@ private:
 	/* メンバ変数 */
 
 	// 糸の太さ
-	float m_thickness;
+	float THICKNESS;
 	// 糸が伸びる速さ
-	float m_stretchSpeed;
+	float EXPAND_SPEED;
 	// 糸が回転する速さ
-	float m_rotationSpeed;
+	float ROTATION_SPEED;
+	// 待ち時間
+	float STAY_TIME;
+	// 糸を縮める加速度
+	float CONTRACT_ACCELERATION;
+	// 糸を離す長さ
+	float MIN_LENGTH;
 
 	// 距離
 	float m_distance;
+	// 糸の長さ
+	float m_length;
 
 	// プレイヤーの位置
 	Math::Vector3 m_playerPosition;
@@ -65,6 +99,18 @@ private:
 	Math::Quaternion m_baseRotation;
 	// 糸の回転
 	Cycled m_rotationAngle;
+
+	// 待ち時間
+	float m_stayTimer;
+
+	// 縮む速さ
+	float m_contractSpeed;
+
+	// 状態
+	State m_currentState;
+
+	// 空中を指しているか
+	bool m_toAir;
 
 	// トランスフォーム
 	Components::Transform* m_pTransform;

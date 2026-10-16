@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerModel.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/15
+ * Last Updated: 2026/09/16
  *
  * プレイヤーのモデル
  */
@@ -75,7 +75,7 @@ void PlayerModel::Update(float elapsedTime, const Player& player)
 void PlayerModel::Translate(float elapsedTime, const Player& player)
 {
 	// 落下状態 or 糸伸ばし状態
-	if (player.IsState<PlayerStateFalling>() || player.IsState<PlayerStateStretchThread>())
+	if (player.IsState<PlayerStateFalling>() || player.IsState<PlayerStateExpandThread>())
 	{
 		m_bounceTime = 0.0f;
 		m_fallingHeight.SetTarget(0.0f);
@@ -111,7 +111,7 @@ void PlayerModel::Translate(float elapsedTime, const Player& player)
 void PlayerModel::Scaling(float elapsedTime, const Player& player)
 {
 	// 糸伸ばし状態
-	if (player.IsState<PlayerStateStretchThread>())
+	if (player.IsState<PlayerStateExpandThread>())
 	{
 		m_scaling.SetTarget(Math::Vector3::Zero, 250.0f, 30.0f);
 	}
@@ -133,7 +133,7 @@ void PlayerModel::Scaling(float elapsedTime, const Player& player)
 void PlayerModel::Rotate(float elapsedTime, const Player& player)
 {
 	// 糸伸ばし状態
-	if (player.IsState<PlayerStateStretchThread>())
+	if (player.IsState<PlayerStateExpandThread>())
 	{
 		m_dashAngle.SetTarget(0.0f);
 	}

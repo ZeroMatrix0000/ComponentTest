@@ -1,7 +1,7 @@
 /*
  * FileName:     TargetPoint.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/15
+ * Last Updated: 2026/10/16
  *
  * ターゲット照準
  */
@@ -26,13 +26,13 @@ TargetPoint::TargetPoint(const ComponentDesc& desc)
 	, m_rayLength{}
 	, m_brightInterval{}
 	, m_brightTimer{}
+	, m_info{}
 	, m_pTransform{ GetPOwner()->GetNullReferences<RectTransform>() }
 	, m_pImage{ GetPOwner()->GetNullReferences<Renderings::Image>() }
 	, m_pPlayer{ GetPOwner()->GetNullReferences<Colliders::BoxCollider>() }
 	, m_pICameraScreen{ GetPOwner()->GetNullReferences<Renderings::ICameraScreen>() }
 	, m_pTargetObjects{}
 	, m_pGrounds{}
-	, m_pTargetObject{}
 {
 }
 
@@ -65,20 +65,22 @@ void TargetPoint::Update(float elapsedTime)
 		m_pImage->SetColor(color);
 	}
 
-	// 画面の中心に最も近いターゲットを探す
+	m_info.position = Math::Vector3::Zero;
+	m_info.type = Type::Air;
+
+	// プレイヤーの座標
+	const Math::Vector3& playerPosition = m_pPlayer->GetWorldBox().position;
+
+	// カメラの目線の位置
+	Math::Vector3 eyePosition = m_pICameraScreen->GetEyePosition();
+	// カメラの目線の方向
+	Math::Vector3 eyeDirection = m_pICameraScreen->GetEyeDirection();
+
+	// 距離の最小
+	float distanceMin = 0.0f;
+
+	// 画面の中心に最も近いオブジェクトを探す
 	{
-		// 距離の最小
-		float distanceMin = 0.0f;
-
-		// プレイヤーの座標
-		const Math::Vector3& playerPosition = m_pPlayer->GetWorldBox().position;
-
-		// カメラの目線の位置
-		Math::Vector3 eyePosition = m_pICameraScreen->GetEyePosition();
-		// カメラの目線の方向
-		Math::Vector3 eyeDirection = m_pICameraScreen->GetEyeDirection();
-
-		m_pTargetObject = nullptr;
 
 		for (auto* pTargetObject : m_pTargetObjects)
 		{
@@ -100,60 +102,31 @@ void TargetPoint::Update(float elapsedTime)
 				if (playerDistance >= sphere.radius && playerDistance <= m_targetDistance)
 				{
 					distanceMin = distance;
-					m_pTargetObject = pTargetObject;
+					m_info.position = sphere.centerPosition;
+					m_info.type = Type::Object;
 				}
 			}
 		}
 	}
 
-	// 画像の位置を変更
-	if (m_pTargetObject)
+	// ターゲットがオブジェクトなら
+	if (m_info.type == Type::Object)
 	{
 		Math::Vector2 screenPosition = Math::Geometry::Projection
 		(
-			m_pTargetObject->GetWorldSphere().centerPosition,
+			m_info.position,
 			m_pICameraScreen->GetViewMatrix(),
 			m_pICameraScreen->GetProjectionMatrix(),
 			m_pImage->GetPCanvas()->GetSize()
 		);
 
 		m_pTransform->SetPosition(screenPosition);
-	}
-	else
-	{
-		m_pTransform->SetPosition(Math::Vector2{ -10.0f, -10.0f });
-	}
-}
-
-// ターゲットを表示
-void TargetPoint::Appear(bool isAppear)
-{
-	m_pImage->SetColor(isAppear ? DirectX::Colors::Red : DirectX::Colors::Transparent);
-}
-
-// ターゲット情報を生成
-TargetPoint::Info TargetPoint::CreateTargetInfo() const
-{
-	Info info{};
-
-	if (m_pTargetObject)
-	{
-		info.position = m_pTargetObject->GetWorldSphere().centerPosition;
-		info.type = Type::Object;
-		return info;
+		return;
 	}
 
-	// 距離の最小
-	float distanceMin = m_targetDistance;
+	distanceMin = m_targetDistance;
 
-	// プレイヤーの座標
-	const Math::Vector3& playerPosition = m_pPlayer->GetWorldBox().position;
-
-	// カメラの目線の位置
-	Math::Vector3 eyePosition = m_pICameraScreen->GetEyePosition();
-	// カメラの目線の方向
-	Math::Vector3 eyeDirection = m_pICameraScreen->GetEyeDirection();
-
+	// 地面なら探す
 	for (const auto* pGround : m_pGrounds)
 	{
 		const auto& mesh = pGround->GetWorldMesh();
@@ -176,25 +149,68 @@ TargetPoint::Info TargetPoint::CreateTargetInfo() const
 			// プレイヤーより手前側にあるなら
 			if (eyeDirection.Dot(intersect - playerPosition) > 0.0f)
 			{
-				// プレイヤーとの距離
 				float playerDistance = Math::Vector3::Distance(playerPosition, intersect);
-				if (playerDistance <= m_targetDistance)
+				if (playerDistance <= distanceMin)
 				{
 					distanceMin = playerDistance;
-					info.position = intersect;
+					m_info.position = intersect;
+					m_info.type = Type::Ground;
 				}
 			}
 		}
 	}
 
-	if (distanceMin != m_targetDistance)
+	// ターゲットが地面なら
+	if (m_info.type == Type::Ground)
 	{
-		info.type = Type::Ground;
-		return info;
+		m_pTransform->SetPosition(m_pICameraScreen->GetOutputSize() / 2.0f);
+		return;
 	}
 
 	distanceMin = Math::Geometry::AngledDistance(eyePosition, Math::Sphere{ playerPosition, m_targetDistance }, eyeDirection).second;
-	info.position = eyePosition + eyeDirection * distanceMin;
-	info.type = Type::Air;
-	return info;
+	m_info.position = eyePosition + eyeDirection * distanceMin;
+	m_pTransform->SetPosition(Math::Vector2{ -10.0f, -10.0f });
+}
+
+// ターゲットを表示
+void TargetPoint::Appear(bool isAppear)
+{
+	m_pImage->SetColor(isAppear ? DirectX::Colors::Red : DirectX::Colors::Transparent);
+}
+
+// ターゲット情報を取得
+const TargetPoint::Info& TargetPoint::GetTargetInfo()
+{
+	// プレイヤーの座標
+	const Math::Vector3& playerPosition = m_pPlayer->GetWorldBox().position;
+	// プレイヤーからターゲットを指す方向
+	Math::Vector3 direction = m_info.position - playerPosition;
+
+	// 距離
+	float distanceMin = direction.Length();
+
+	direction /= distanceMin;
+
+	for (const auto* pGround : m_pGrounds)
+	{
+		const auto& mesh = pGround->GetWorldMesh();
+
+		for (const auto& face : mesh.f)
+		{
+			// メッシュの三角形
+			Math::Triangle triangle = Math::Triangle{ mesh.v.at(face.at(0)), mesh.v.at(face.at(1)) , mesh.v.at(face.at(2)) };
+
+			// カメラの中心と三角形の方向指定最短距離
+			float distance = Math::Geometry::AngledDistance(playerPosition, triangle, direction);
+
+			if (distance > 0.0f && distance < distanceMin)
+			{
+				distanceMin = distance;
+				m_info.position = playerPosition + direction * distance;
+				m_info.type = Type::Ground;
+			}
+		}
+	}
+
+	return m_info;
 }

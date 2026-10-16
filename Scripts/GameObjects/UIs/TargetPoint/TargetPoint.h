@@ -1,7 +1,7 @@
 /*
  * FileName:     TargetPoint.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/15
+ * Last Updated: 2026/10/16
  *
  * ターゲット照準
  */
@@ -70,11 +70,8 @@ public:
 	// ターゲットを表示
 	void Appear(bool isAppear);
 
-	// ターゲットを取得
-	Colliders::SphereCollider* GetPTargetObject() const { return m_pTargetObject; }
-
-	// ターゲット情報を生成
-	Info CreateTargetInfo() const;
+	// ターゲット情報を取得
+	const Info& GetTargetInfo();
 
 
 private:
@@ -92,6 +89,9 @@ private:
 	// 点滅タイマー
 	float m_brightTimer;
 
+	// ターゲット情報
+	Info m_info;
+
 	// 画像のトランスフォーム
 	RectTransform* m_pTransform;
 	// 画像
@@ -108,8 +108,5 @@ private:
 
 	// 地面リスト
 	std::vector<Colliders::MeshCollider*> m_pGrounds;
-
-	// 照準を合わせるターゲット
-	Colliders::SphereCollider* m_pTargetObject;
 
 };

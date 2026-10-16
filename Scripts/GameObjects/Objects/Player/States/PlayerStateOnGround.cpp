@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerStateOnGround.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/15
+ * Last Updated: 2026/10/16
  *
  * プレイヤーの地面にいる状態
  */
@@ -24,6 +24,7 @@ PlayerStateOnGround::PlayerStateOnGround()
 // 開始処理
 void PlayerStateOnGround::Enter(PlayerInternals* pInternals)
 {
+	pInternals->fallSpeed = 0.0f;
 }
 
 // 更新処理
@@ -94,6 +95,9 @@ void PlayerStateOnGround::Update(PlayerInternals* pInternals, float elapsedTime)
 		// 砂煙の再生
 		pInternals->pParticleManager->Play<JumpingParticle>();
 	}
+
+	// 糸伸ばしタイマーの更新
+	pInternals->threadTimer -= elapsedTime;
 
 	// 回転の更新
 	pInternals->rotation.Tick(elapsedTime);

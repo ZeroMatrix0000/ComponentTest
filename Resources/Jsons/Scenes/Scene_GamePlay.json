@@ -283,7 +283,7 @@
 			},
 			"Image": {
 				"ImageSourceName": "Reticle",
-				"OrderInLayer": 100,
+				"OrderInLayer": 99,
 				"Canvas": "Canvas"
 			}
 		}
@@ -310,7 +310,7 @@
 					"B": 0.0,
 					"A": 1.0
 				},
-				"OrderInLayer": 99,
+				"OrderInLayer": 100,
 				"Canvas": "Canvas"
 			},
 			"TargetPoint": {

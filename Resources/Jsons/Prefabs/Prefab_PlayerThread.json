@@ -11,7 +11,10 @@
 	},
 	"PlayerThread": {
 		"Thickness": 0.2,
-		"StretchSpeed": 50.0,
-		"RotationSpeed": 1000.0
+		"ExpandSpeed": 80.0,
+		"RotationSpeed": 1000.0,
+		"StayTime": 0.2,
+		"ContractAcceleration": 200.0,
+		"MinLength": 0.6
 	}
 }

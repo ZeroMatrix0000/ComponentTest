@@ -1,7 +1,7 @@
 /*
  * FileName:     GamePlaySceneStateField.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/15
+ * Last Updated: 2026/10/16
  *
  * ゲームプレイシーンのフィールド状態
  */
@@ -49,10 +49,10 @@ void GamePlaySceneStateField::Update(GamePlaySceneInternals* pInternals, float e
 	auto* pIGameInput = pInternals->gameContext.GetPIGameInput();
 
 	// 糸伸ばし入力で糸を伸ばす
-	if (pIGameInput->GetPlayerStretchThread())
+	if (pIGameInput->GetPlayerExpandThread() && pInternals->pPlayer->CanExpandThread())
 	{
-		TargetPoint::Info info = pInternals->pTargetPoint->CreateTargetInfo();
-		pInternals->pPlayer->StretchThread(info.position, static_cast<PlayerInternals::TargetType>(info.type));
+		TargetPoint::Info info = pInternals->pTargetPoint->GetTargetInfo();
+		pInternals->pPlayer->ExpandThread(info.position, static_cast<PlayerInternals::TargetType>(info.type));
 	}
 
 	// プレイヤーの更新

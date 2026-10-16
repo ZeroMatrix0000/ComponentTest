@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerThread.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/15
+ * Last Updated: 2026/10/16
  *
  * プレイヤーの糸
  */
@@ -16,16 +16,24 @@
 // コンストラクタ
 PlayerThread::PlayerThread(const ComponentDesc& desc)
 	: Component{ desc }
-	, m_thickness{}
-	, m_stretchSpeed{}
-	, m_rotationSpeed{}
+	, THICKNESS{}
+	, EXPAND_SPEED{}
+	, ROTATION_SPEED{}
+	, STAY_TIME{}
+	, CONTRACT_ACCELERATION{}
+	, MIN_LENGTH{}
 	, m_distance{}
+	, m_length{}
 	, m_playerPosition{}
 	, m_targetPosition{}
 	, m_currentPosition{}
 	, m_direction{}
 	, m_baseRotation{}
 	, m_rotationAngle{}
+	, m_stayTimer{}
+	, m_contractSpeed{}
+	, m_currentState{}
+	, m_toAir{}
 	, m_pTransform{ GetPOwner()->GetNullReferences<Transform>() }
 {
 }
@@ -38,44 +46,125 @@ void PlayerThread::Initalize(const nlohmann::ordered_json& json, IGameObjectFind
 	m_rotationAngle.Initialize(0.0f, -180.0f, 180.0f);
 
 	Systems::JsonSerializer serializer{ pIGameObjectFinder };
-	serializer.AddParameter(&m_thickness, "Thickness");
-	serializer.AddParameter(&m_stretchSpeed, "StretchSpeed");
-	serializer.AddParameter(&m_rotationSpeed, "RotationSpeed");
+	serializer.AddParameter(&THICKNESS, "Thickness");
+	serializer.AddParameter(&EXPAND_SPEED, "ExpandSpeed");
+	serializer.AddParameter(&ROTATION_SPEED, "RotationSpeed");
+	serializer.AddParameter(&STAY_TIME, "StayTime");
+	serializer.AddParameter(&CONTRACT_ACCELERATION, "ContractAcceleration");
+	serializer.AddParameter(&MIN_LENGTH, "MinLength");
 	serializer.Load(json);
+
+	m_currentState = State::None;
 }
 
 // 更新処理
 void PlayerThread::Update(float elapsedTime)
 {
-	// 現在位置を計算
-	m_currentPosition += m_direction * m_stretchSpeed * elapsedTime;
-	// 糸の長さ
-	float length = (m_currentPosition - m_playerPosition).Length();
-	// 糸の長さが距離を超えたら
-	if (length > m_distance)
+	// 移動
+	Translate(elapsedTime);
+	// 回転
+	Rotate(elapsedTime);
+	// スケーリング
+	Scaling(elapsedTime);
+}
+
+// 移動
+void PlayerThread::Translate(float elapsedTime)
+{
+	switch (m_currentState)
 	{
-		m_currentPosition = m_targetPosition;
+	case State::Expand:
+		// 現在位置を計算
+		m_currentPosition += m_direction * EXPAND_SPEED * elapsedTime;
+		// 糸の長さ
+		m_length = (m_currentPosition - m_playerPosition).Length();
+		// 糸の長さが距離以上になったら
+		if (m_length >= m_distance)
+		{
+			m_currentPosition = m_targetPosition;
+			m_currentState = m_toAir ? State::AirContract : State::Stay;
+		}
+		break;
+	case State::Stay:
+		m_stayTimer += elapsedTime;
+		if (m_stayTimer >= STAY_TIME)
+		{
+			m_currentState = State::Contract;
+		}
+		break;
+	case State::Contract:
+		// 速度を計算
+		m_contractSpeed += CONTRACT_ACCELERATION * elapsedTime;
+		// プレイヤー座標を計算
+		m_playerPosition += m_direction * m_contractSpeed * elapsedTime;
+		// 糸の長さ
+		m_length = (m_currentPosition - m_playerPosition).Length();
+		// 糸が短くなったら
+		if (m_length <= MIN_LENGTH)
+		{
+			m_playerPosition = m_currentPosition - m_direction * MIN_LENGTH;
+			m_currentState = State::None;
+		}
+		break;
+	case State::AirContract:
+		// 現在位置を計算
+		m_currentPosition -= m_direction * EXPAND_SPEED * elapsedTime;
+		// 糸の長さ
+		m_length = (m_currentPosition - m_playerPosition).Length();
+		// 糸が短くなったら
+		if (m_length <= MIN_LENGTH)
+		{
+			m_playerPosition = m_currentPosition - m_direction * MIN_LENGTH;
+			m_currentState = State::None;
+		}
+		break;
+	default:
+		break;
 	}
 
 	// 移動
 	m_pTransform->SetPosition((m_playerPosition + m_currentPosition) / 2.0f);
+}
+
+// 回転
+void PlayerThread::Rotate(float elapsedTime)
+{
+	// 伸ばし状態なら回転させる
+	if (m_currentState == State::Expand)
+	{
+		m_rotationAngle += ROTATION_SPEED * elapsedTime;
+	}
 
 	// 回転
-	m_rotationAngle += m_rotationSpeed * elapsedTime;
 	m_pTransform->SetRotation(Math::Euler{ 0.0f, 0.0f, m_rotationAngle }.CreateQuaternion() * m_baseRotation);
+}
 
-	// スケーリング
-	m_pTransform->SetScale(Math::Vector3{ m_thickness, m_thickness, length });
+// スケーリング
+void PlayerThread::Scaling(float elapsedTime)
+{
+	if (m_currentState == State::None)
+	{
+		m_pTransform->SetScale(Math::Vector3::Zero);
+	}
+	else
+	{
+		m_pTransform->SetScale(Math::Vector3{ THICKNESS, THICKNESS, m_length });
+	}
 }
 
 // ターゲットを設定
-void PlayerThread::SetTarget(const Math::Vector3& playerPosition, const Math::Vector3& targetPosition, const Math::Quaternion& rotation)
+void PlayerThread::SetTarget(const Math::Vector3& playerPosition, const Math::Vector3& targetPosition, const Math::Quaternion& rotation, bool toAir)
 {
+	m_distance = (targetPosition - playerPosition).Length();
+	m_length = 0.0f;
 	m_playerPosition = playerPosition;
 	m_targetPosition = targetPosition;
-	m_distance = (targetPosition - playerPosition).Length();
 	m_currentPosition = m_playerPosition;
 	m_direction = targetPosition - playerPosition;
 	m_direction.Normalize();
 	m_baseRotation = rotation;
+	m_stayTimer = 0.0f;
+	m_contractSpeed = 0.0f;
+	m_currentState = State::Expand;
+	m_toAir = toAir;
 }

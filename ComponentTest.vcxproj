@@ -210,7 +210,7 @@
     <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateFalling.cpp" />
     <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateOnAir.cpp" />
     <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateOnGround.cpp" />
-    <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateStretchThread.cpp" />
+    <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateExpandThread.cpp" />
     <ClCompile Include="Scripts\GameObjects\Particles\JumpingParticle.cpp" />
     <ClCompile Include="Scripts\GameObjects\Particles\LandingParticle.cpp" />
     <ClCompile Include="Scripts\GameObjects\UIs\BlackBelt\BlackBelt.cpp" />
@@ -325,7 +325,7 @@
     <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStateOnAir.h" />
     <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStateOnGround.h" />
     <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStates.h" />
-    <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStateStretchThread.h" />
+    <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStateExpandThread.h" />
     <ClInclude Include="Scripts\GameObjects\Particles\JumpingParticle.h" />
     <ClInclude Include="Scripts\GameObjects\Particles\LandingParticle.h" />
     <ClInclude Include="Scripts\GameObjects\UIs\BlackBelt\BlackBelt.h" />

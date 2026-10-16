@@ -409,7 +409,7 @@
     <ClCompile Include="Scripts\GameObjects\UIs\TargetPoint\TargetPoint.cpp">
       <Filter>Scripts\GameObjects\UIs\TargetPoint</Filter>
     </ClCompile>
-    <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateStretchThread.cpp">
+    <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateExpandThread.cpp">
       <Filter>Scripts\GameObjects\Objects\Player\States</Filter>
     </ClCompile>
     <ClCompile Include="Scripts\GameObjects\Objects\Player\PlayerThread.cpp" />
@@ -812,7 +812,7 @@
     <ClInclude Include="Scripts\GameObjects\UIs\TargetPoint\TargetPoint.h">
       <Filter>Scripts\GameObjects\UIs\TargetPoint</Filter>
     </ClInclude>
-    <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStateStretchThread.h">
+    <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStateExpandThread.h">
       <Filter>Scripts\GameObjects\Objects\Player\States</Filter>
     </ClInclude>
     <ClInclude Include="Scripts\GameObjects\Objects\Player\PlayerThread.h">

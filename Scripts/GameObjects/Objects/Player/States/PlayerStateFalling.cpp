@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerStateFalling.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/15
+ * Last Updated: 2026/10/16
  *
  * プレイヤーの地面にいる状態
  */
@@ -82,6 +82,9 @@ void PlayerStateFalling::Update(PlayerInternals* pInternals, float elapsedTime)
 	}
 	pInternals->jumpBufferTime -= elapsedTime;
 
+	// 糸伸ばしタイマーの更新
+	pInternals->threadTimer -= elapsedTime;
+
 	// 回転の更新
 	pInternals->rotation.Tick(elapsedTime);
 
@@ -121,7 +124,6 @@ void PlayerStateFalling::PositionCorrect(PlayerInternals* pInternals, float dist
 			{
 				// 地面にいる状態にする
 				SetNextState(std::make_unique<PlayerStateOnGround>());
-				pInternals->fallSpeed = 0.0f;
 				// 砂煙の再生
 				pInternals->pParticleManager->Play<LandingParticle>();
 			}

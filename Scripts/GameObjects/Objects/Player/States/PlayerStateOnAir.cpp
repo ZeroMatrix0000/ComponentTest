@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerStateOnAir.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/15
+ * Last Updated: 2026/10/16
  *
  * プレイヤーの空中にいる状態
  */
@@ -93,6 +93,9 @@ void PlayerStateOnAir::Update(PlayerInternals* pInternals, float elapsedTime)
 		pInternals->pParticleManager->Play<JumpingParticle>();
 	}
 
+	// 糸伸ばしタイマーの更新
+	pInternals->threadTimer -= elapsedTime;
+
 	// 回転の更新
 	pInternals->rotation.Tick(elapsedTime);
 
@@ -135,7 +138,6 @@ void PlayerStateOnAir::PositionCorrect(PlayerInternals* pInternals, float distan
 			displacement = Math::Vector3::Up / cos * distance;
 			// 地面にいる状態にする
 			SetNextState(std::make_unique<PlayerStateOnGround>());
-			pInternals->fallSpeed = 0.0f;
 		}
 		// 移動
 		pInternals->pTransform->Translate(displacement);
