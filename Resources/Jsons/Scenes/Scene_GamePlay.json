@@ -163,6 +163,12 @@
 			},
 			"Model3D": {
 				"ModelSourceName": "NPC",
+				"Color": {
+					"R": 0.8,
+					"G": 0.5,
+					"B": 1.0,
+					"A": 1.0
+				},
 				"CameraScreens": [
 					"PlayerCamera"
 				]

@@ -1,7 +1,7 @@
 /*
  * FileName:     Model3D.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/07
+ * Last Updated: 2026/10/16
  *
  * 3Dモデル
  */
@@ -38,6 +38,11 @@ namespace Renderings
 		// 初期化処理
 		void Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder) override;
 
+		// 色を設定
+		void SetColor(const Math::Color& color) { m_color = color; }
+		// 色を設定
+		void SetColor(const DirectX::XMVECTORF32& color) { m_color = color; }
+
 		// モデルソースを設定
 		void SetModelSource(const std::string& modelSourceName);
 
@@ -45,6 +50,9 @@ namespace Renderings
 		void AddICameraScreen(const ICameraScreen& iCameraScreen);
 		// 映るカメラ画面を削除
 		void RemoveICameraScreen(const ICameraScreen& iCameraScreen);
+
+		// 色を取得
+		const Math::Color& GetColor() const { return m_color; }
 
 		// モデルソースを取得
 		const Model3DSource* GetPModelSource() const { return m_pModelSource; }
@@ -54,6 +62,9 @@ namespace Renderings
 
 
 		/* メンバ変数 */
+
+		// 色
+		Math::Color m_color;
 
 		// モデルソース
 		const Model3DSource* m_pModelSource;

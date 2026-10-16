@@ -1,7 +1,7 @@
 /*
  * FileName:     LandingParticle.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/09
+ * Last Updated: 2026/10/16
  *
  * 着地パーティクル
  */
@@ -10,7 +10,7 @@
 
 #include "Scripts/Commons/Renderings/Particle/Particle.h"
 
-	// 3Dモデル
+// 着地パーティクル
 class LandingParticle : public Renderings::Particle
 {
 

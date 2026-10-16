@@ -1,7 +1,7 @@
 /*
  * FileName:     Model3DRenderer.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/13
+ * Last Updated: 2026/10/16
  *
  * 3Dモデル描画
  */
@@ -44,7 +44,7 @@ void Renderings::Model3DRenderer::Initialize(ID3D11Device5* pDevice, ID3D11Devic
 
 	// バッファの詳細
 	D3D11_BUFFER_DESC desc{};
-	desc.ByteWidth = sizeof(DirectX::XMFLOAT3X4) * 65536;
+	desc.ByteWidth = sizeof(InputElement) * 65536;
 	desc.Usage = D3D11_USAGE_DYNAMIC;
 	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
@@ -127,22 +127,24 @@ void Renderings::Model3DRenderer::Render(bool isInstance)
 			}
 
 			// 行列リスト
-			std::vector<DirectX::XMFLOAT3X4> instMatrices{};
-			instMatrices.reserve(renderObjects.pModels.size() + renderObjects.pParticleElements.size());
+			std::vector<InputElement> inputElements{};
+			inputElements.reserve(renderObjects.pModels.size() + renderObjects.pParticleElements.size());
 
 			for (const auto* pModel : renderObjects.pModels)
 			{
 				// モデルの所有者のトランスフォーム
 				const Transform* pTransform = pModel->GetConstPOwner()->GetConstComponent<Transform>();
 
-				// 行列リストに追加
-				DirectX::XMStoreFloat3x4(&instMatrices.emplace_back(), pTransform->GetWorldMatrix());
+				// 入力要素リストに追加
+				InputElement& inputElement = inputElements.emplace_back();
+				DirectX::XMStoreFloat3x4(&inputElement.instMatrix, pTransform->GetWorldMatrix());
+				inputElement.color = pModel->GetColor();
 
 				// インスタンス描画じゃないなら
 				if (!isInstance)
 				{
 					// バッファを更新
-					UpdateInstanceBuffer(instMatrices);
+					UpdateInstanceBuffer(inputElements);
 
 					// パーツ番号
 					size_t partIndex = 0;
@@ -159,21 +161,23 @@ void Renderings::Model3DRenderer::Render(bool isInstance)
 						}
 					}
 
-					// マトリクスを削除
-					instMatrices.clear();
+					// 入力要素を削除
+					inputElements.clear();
 				}
 			}
 
 			for (const auto* pElement : renderObjects.pParticleElements)
 			{
-				// 行列リストに追加
-				DirectX::XMStoreFloat3x4(&instMatrices.emplace_back(), pElement->matrix);
+				// 入力要素リストに追加
+				InputElement& inputElement = inputElements.emplace_back();
+				DirectX::XMStoreFloat3x4(&inputElement.instMatrix, pElement->matrix);
+				inputElement.color = pElement->color;
 
 				// インスタンス描画じゃないなら
 				if (!isInstance)
 				{
 					// バッファを更新
-					UpdateInstanceBuffer(instMatrices);
+					UpdateInstanceBuffer(inputElements);
 
 					// パーツ番号
 					size_t partIndex = 0;
@@ -190,13 +194,13 @@ void Renderings::Model3DRenderer::Render(bool isInstance)
 						}
 					}
 
-					// マトリクスを削除
-					instMatrices.clear();
+					// 入力要素を削除
+					inputElements.clear();
 				}
 			}
 
 			// インスタンスバッファを更新
-			UpdateInstanceBuffer(instMatrices);
+			UpdateInstanceBuffer(inputElements);
 
 			// パーツ番号
 			size_t partIndex = 0;
@@ -207,7 +211,7 @@ void Renderings::Model3DRenderer::Render(bool isInstance)
 					// 定数バッファを設定
 					SetPartInfo(pModelSource->GetPartInfo(partIndex));
 					// 描画
-					DrawInstanced(pICameraScreen, part.get(), instMatrices.size());
+					DrawInstanced(pICameraScreen, part.get(), inputElements.size());
 
 					partIndex++;
 				}
@@ -489,6 +493,15 @@ void Renderings::Model3DRenderer::CreateInputLayout()
 			32,
 			D3D11_INPUT_PER_INSTANCE_DATA,
 			1
+		},
+		{
+			"Color",
+			0,
+			DXGI_FORMAT_R32G32B32A32_FLOAT,
+			1,
+			48,
+			D3D11_INPUT_PER_INSTANCE_DATA,
+			1
 		}
 	};
 
@@ -503,7 +516,7 @@ void Renderings::Model3DRenderer::CreateInputLayout()
 }
 
 // インスタンスバッファを更新
-void Renderings::Model3DRenderer::UpdateInstanceBuffer(const std::vector<DirectX::XMFLOAT3X4>& matrices)
+void Renderings::Model3DRenderer::UpdateInstanceBuffer(const std::vector<InputElement>& inputElements)
 {
 	// サブリソース
 	D3D11_MAPPED_SUBRESOURCE mapped{};
@@ -516,7 +529,7 @@ void Renderings::Model3DRenderer::UpdateInstanceBuffer(const std::vector<DirectX
 		0,
 		&mapped
 	));
-	std::memcpy(mapped.pData, matrices.data(), sizeof(DirectX::XMFLOAT3X4) * matrices.size());
+	std::memcpy(mapped.pData, inputElements.data(), sizeof(InputElement) * inputElements.size());
 	m_pContext->Unmap(m_instanceBuffer.Get(), 0);
 }
 
@@ -551,7 +564,7 @@ void Renderings::Model3DRenderer::Draw(const ICameraScreen* pICameraScreen, cons
 	UINT strides[] =
 	{
 		pPart->vertexStride,
-		sizeof(DirectX::XMFLOAT3X4)
+		sizeof(InputElement)
 	};
 	UINT offsets[] =
 	{
@@ -598,7 +611,7 @@ void Renderings::Model3DRenderer::DrawInstanced(const ICameraScreen* pICameraScr
 	UINT strides[] =
 	{
 		pPart->vertexStride,
-		sizeof(DirectX::XMFLOAT3X4)
+		sizeof(InputElement)
 	};
 	UINT offsets[] =
 	{

@@ -10,10 +10,10 @@
 #include "PlayerStates.h"
 
 #include "../PlayerThread.h"
+#include "Scripts/GameObjects/Particles/JumpingParticle.h"
 #include "Scripts/Commons/Components/Transform.h"
 #include "Scripts/Commons/Colliders/BoxCollider.h"
 #include "Scripts/Commons/Renderings/Particle/ParticleManager.h"
-#include "Scripts/GameObjects/Particles/JumpingParticle.h"
 
  // コンストラクタ
 PlayerStateExpandThread::PlayerStateExpandThread(const Math::Vector3& targetPosition, PlayerInternals::TargetType targetType)

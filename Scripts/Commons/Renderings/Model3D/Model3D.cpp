@@ -1,7 +1,7 @@
 /*
  * FileName:     Model3D.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/07
+ * Last Updated: 2026/10/16
  *
  * 3Dモデル
  */
@@ -18,6 +18,7 @@
 
 Renderings::Model3D::Model3D(const ComponentDesc& desc, IModel3DRenderer* pIModelRenderer, const Systems::IResources& iResources)
 	: Component{ desc }
+	, m_color{ DirectX::Colors::White }
 	, m_pModelSource{}
 	, m_pICameraScreens{}
 	, m_pIModelRenderer{ pIModelRenderer }
@@ -42,6 +43,7 @@ void Renderings::Model3D::Initalize(const nlohmann::ordered_json& json, IGameObj
 
 	Systems::JsonSerializer serializer{ pIGameObjectFinder };
 	serializer.AddParameter(&modelSourceName, "ModelSourceName");
+	serializer.AddParameter(&m_color, "Color");
 	serializer.AddParameter(&m_pICameraScreens, "CameraScreens");
 	serializer.Load(json);
 

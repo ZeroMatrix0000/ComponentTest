@@ -41,8 +41,6 @@ void LandingParticle::Initalize(const Transform* pTransform)
 			Random::GetFloatRange(0.0f, 360.0f),
 			Random::GetFloatRange(0.0f, 360.0f)
 		);
-		// スケールを 0.5 倍
-		pUpdateElement->scale = Math::Vector3::One * 0.25f;
 
 		// モデルを設定
 		SetModelSource("Box", pRenderElement);
@@ -67,7 +65,7 @@ void LandingParticle::Initalize(const Transform* pTransform)
 // 更新処理
 void LandingParticle::Update(float elapsedTime)
 {
-	// 1 秒経ったら消す
+	// 0.5 秒経ったら消す
 	m_isActiveTimer += elapsedTime;
 	if (m_isActiveTimer >= 0.5f)
 	{

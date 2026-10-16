@@ -14,6 +14,11 @@ namespace Components
 {
 	class Transform;
 }
+namespace Renderings
+{
+	class ParticleManager;
+	class ICameraScreen;
+}
 
 // プレイヤーの糸
 class PlayerThread : public Component
@@ -52,6 +57,9 @@ public:
 	void Rotate(float elapsedTime);
 	// スケーリング
 	void Scaling(float elapsedTime);
+
+	// 映るカメラ画面を追加
+	void AddICameraScreen(const Renderings::ICameraScreen& iCameraScreen);
 
 	// ターゲットを設定
 	void SetTarget(const Math::Vector3& playerPosition, const Math::Vector3& targetPosition, const Math::Quaternion& rotation, bool toAir);
@@ -114,5 +122,10 @@ private:
 
 	// トランスフォーム
 	Components::Transform* m_pTransform;
+
+	// パーティクル管理
+	Renderings::ParticleManager* m_pParticleManager;
+	// パーティクル管理のトランスフォーム
+	Transform* m_pParticleManagerTransform;
 
 };

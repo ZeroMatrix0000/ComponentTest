@@ -1,7 +1,7 @@
 /*
  * FileName:     Particle.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/09
+ * Last Updated: 2026/10/16
  *
  * パーティクル
  */
@@ -51,6 +51,8 @@ namespace Renderings
 		{
 			// ワールド行列
 			Math::Matrix matrix{ Math::Matrix::Identity };
+			// 色
+			Math::Color color{ DirectX::Colors::White };
 			// モデルソース
 			const Model3DSource* pModelSource{};
 		};

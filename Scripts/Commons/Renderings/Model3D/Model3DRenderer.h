@@ -1,7 +1,7 @@
 /*
  * FileName:     Model3DRenderer.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/09
+ * Last Updated: 2026/10/16
  *
  * 3Dモデル描画
  */
@@ -71,6 +71,13 @@ namespace Renderings
 			std::vector<const Particle::RenderElement*> pParticleElements{};
 		};
 
+		// 入力要素
+		struct InputElement
+		{
+			DirectX::XMFLOAT3X4 instMatrix;
+			DirectX::XMFLOAT4 color;
+		};
+
 
 		/* メンバ関数 */
 
@@ -81,7 +88,7 @@ namespace Renderings
 		void CreateInputLayout();
 
 		// インスタンスバッファを更新
-		void UpdateInstanceBuffer(const std::vector<DirectX::XMFLOAT3X4>& matrices);
+		void UpdateInstanceBuffer(const std::vector<InputElement>& inputElements);
 
 		// パーツの情報を設定
 		void SetPartInfo(const Model3DSource::PartInfo& partInfo);

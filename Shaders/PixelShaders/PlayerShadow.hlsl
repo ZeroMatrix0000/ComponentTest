@@ -1,10 +1,12 @@
 /*
  * FileName:     PlayerShadow.hlsl
  * Author:       Takao Hayata
- * Last Updated: 2026/10/11
+ * Last Updated: 2026/10/16
  *
  * プレイヤーの丸影
  */
+
+#include "../Header.hlsli"
 
 // テクスチャ
 Texture2D<float4> Texture : register(t0);
@@ -46,20 +48,6 @@ cbuffer Shadow : register(b2)
 	float ShadowRadius[100];
 }
 
-// 出力
-struct PSInput
-{
-	// 座標
-	float4 position : SV_Position;
-	// UV座標
-	float2 texCoord : TEXCOORD0;
-	
-	// ワールド座標
-	float3 worldPosition : TEXCOORD1;
-	// 法線
-	float3 normal : TEXCOORD2;
-};
-
 float Shadow(float3 worldPosition, float3 normal)
 {
 	// 影の濃さ
@@ -84,7 +72,7 @@ float4 main(PSInput input) : SV_Target
 	float4 textureColor = Texture.Sample(Sampler, input.texCoord);
 	
 	// 環境光色
-	float3 ambientColor = textureColor.rgb * AmbientColor * DiffuseColor.rgb;
+	float3 ambientColor = textureColor.rgb * AmbientColor * DiffuseColor.rgb * input.color.rgb;
 	
 	// 法線
 	float3 normal = normalize(input.normal);
@@ -93,7 +81,7 @@ float4 main(PSInput input) : SV_Target
 	// 拡散反射の強さ
 	float diffuse = saturate(dot(normal, lightDirection));
 	// 拡散反射色
-	float3 diffuseColor = textureColor.rgb * DiffuseColor * LightColor * diffuse;
+	float3 diffuseColor = textureColor.rgb * DiffuseColor * LightColor * diffuse * input.color.rgb;
 	
 	// 目線への方向
 	float3 eyeDirection = normalize(EyePosition - input.worldPosition);

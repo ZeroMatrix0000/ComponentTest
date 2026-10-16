@@ -213,6 +213,8 @@
     <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateExpandThread.cpp" />
     <ClCompile Include="Scripts\GameObjects\Particles\JumpingParticle.cpp" />
     <ClCompile Include="Scripts\GameObjects\Particles\LandingParticle.cpp" />
+    <ClCompile Include="Scripts\GameObjects\Particles\PoppingParticle.cpp" />
+    <ClCompile Include="Scripts\GameObjects\Particles\SparklingParticle.cpp" />
     <ClCompile Include="Scripts\GameObjects\UIs\BlackBelt\BlackBelt.cpp" />
     <ClCompile Include="Scripts\GameObjects\UIs\InteractCursor\InteractCursor.cpp" />
     <ClCompile Include="Scripts\GameObjects\UIs\MessageWindow\MessageWindow.cpp" />
@@ -251,6 +253,7 @@
     <None Include="Resources\Jsons\Prefabs\Prefab_PlayerModel.json" />
     <None Include="Resources\Jsons\Prefabs\Prefab_PlayerSilhouette.json" />
     <None Include="Resources\Jsons\Prefabs\Prefab_PlayerThread.json" />
+    <None Include="Resources\Jsons\Prefabs\Prefab_PlayerThreadParticleManager.json" />
     <None Include="Resources\Jsons\Prefabs\Prefab_SelectMenu.json" />
     <None Include="Resources\Jsons\Prefabs\Prefab_SelectMenuCursor.json" />
     <None Include="Resources\Jsons\Prefabs\Prefab_SelectMenuText.json" />
@@ -328,6 +331,8 @@
     <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStateExpandThread.h" />
     <ClInclude Include="Scripts\GameObjects\Particles\JumpingParticle.h" />
     <ClInclude Include="Scripts\GameObjects\Particles\LandingParticle.h" />
+    <ClInclude Include="Scripts\GameObjects\Particles\PoppingParticle.h" />
+    <ClInclude Include="Scripts\GameObjects\Particles\SparklingParticle.h" />
     <ClInclude Include="Scripts\GameObjects\UIs\BlackBelt\BlackBelt.h" />
     <ClInclude Include="Scripts\GameObjects\UIs\InteractCursor\InteractCursor.h" />
     <ClInclude Include="Scripts\GameObjects\UIs\MessageWindow\MessageWindow.h" />
@@ -350,6 +355,7 @@
     <ClInclude Include="Scripts\Scenes\GamePlayScene\States\GamePlaySceneStates.h" />
     <ClInclude Include="Scripts\Scenes\TitleScene\TitleScene.h" />
     <ClInclude Include="Scripts\GameObjects\UIs\SelectMenu\SelectMenu.h" />
+    <None Include="Shaders\Header.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Pch.h" />

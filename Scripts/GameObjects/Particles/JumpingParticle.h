@@ -1,7 +1,7 @@
 /*
  * FileName:     JumpingParticle.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/09
+ * Last Updated: 2026/10/16
  *
  * ジャンプパーティクル
  */
@@ -10,7 +10,7 @@
 
 #include "Scripts/Commons/Renderings/Particle/Particle.h"
 
- // 3Dモデル
+// ジャンプパーティクル
 class JumpingParticle : public Renderings::Particle
 {
 

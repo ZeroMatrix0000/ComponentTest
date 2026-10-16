@@ -9,8 +9,12 @@
 #include "Pch.h"
 #include "PlayerThread.h"
 
+#include "Scripts/GameObjects/Particles/PoppingParticle.h"
+#include "Scripts/GameObjects/Particles/SparklingParticle.h"
 #include "Scripts/Commons/Components/Transform.h"
 #include "Scripts/Commons/GameObjects/GameObject.h"
+#include "Scripts/Commons/Renderings/Model3D/Model3D.h"
+#include "Scripts/Commons/Renderings/Particle/ParticleManager.h"
 #include "Scripts/Commons/Systems/JsonSerializer.h"
 
 // コンストラクタ
@@ -35,6 +39,8 @@ PlayerThread::PlayerThread(const ComponentDesc& desc)
 	, m_currentState{}
 	, m_toAir{}
 	, m_pTransform{ GetPOwner()->GetNullReferences<Transform>() }
+	, m_pParticleManager{ GetPOwner()->GetNullReferences<Renderings::ParticleManager>() }
+	, m_pParticleManagerTransform{ GetPOwner()->GetNullReferences<Transform>() }
 {
 }
 
@@ -45,6 +51,8 @@ void PlayerThread::Initalize(const nlohmann::ordered_json& json, IGameObjectFind
 
 	m_rotationAngle.Initialize(0.0f, -180.0f, 180.0f);
 
+	m_currentState = State::None;
+
 	Systems::JsonSerializer serializer{ pIGameObjectFinder };
 	serializer.AddParameter(&THICKNESS, "Thickness");
 	serializer.AddParameter(&EXPAND_SPEED, "ExpandSpeed");
@@ -54,7 +62,13 @@ void PlayerThread::Initalize(const nlohmann::ordered_json& json, IGameObjectFind
 	serializer.AddParameter(&MIN_LENGTH, "MinLength");
 	serializer.Load(json);
 
-	m_currentState = State::None;
+	// パーティクル管理生成
+	if (m_pParticleManager == GetPOwner()->GetNullReferences<Renderings::ParticleManager>())
+	{
+		GameObject* pObj = Instantiate("Prefab_PlayerThreadParticleManager");
+		m_pParticleManager = pObj->GetComponent<Renderings::ParticleManager>();
+		m_pParticleManagerTransform = pObj->GetComponent<Transform>();
+	}
 }
 
 // 更新処理
@@ -66,6 +80,8 @@ void PlayerThread::Update(float elapsedTime)
 	Rotate(elapsedTime);
 	// スケーリング
 	Scaling(elapsedTime);
+
+	m_pParticleManager->Update(elapsedTime);
 }
 
 // 移動
@@ -83,6 +99,12 @@ void PlayerThread::Translate(float elapsedTime)
 		{
 			m_currentPosition = m_targetPosition;
 			m_currentState = m_toAir ? State::AirContract : State::Stay;
+			// パーティクルの再生
+			if (!m_toAir)
+			{
+				m_pParticleManagerTransform->SetPosition(m_currentPosition);
+				m_pParticleManager->Play<PoppingParticle>();
+			}
 		}
 		break;
 	case State::Stay:
@@ -104,6 +126,8 @@ void PlayerThread::Translate(float elapsedTime)
 		{
 			m_playerPosition = m_currentPosition - m_direction * MIN_LENGTH;
 			m_currentState = State::None;
+			// パーティクルの再生
+			m_pParticleManager->Play<SparklingParticle>();
 		}
 		break;
 	case State::AirContract:
@@ -150,6 +174,13 @@ void PlayerThread::Scaling(float elapsedTime)
 	{
 		m_pTransform->SetScale(Math::Vector3{ THICKNESS, THICKNESS, m_length });
 	}
+}
+
+// 映るカメラ画面を追加
+void PlayerThread::AddICameraScreen(const Renderings::ICameraScreen& iCameraScreen)
+{
+	GetPOwner()->GetComponent<Renderings::Model3D>()->AddICameraScreen(iCameraScreen);
+	m_pParticleManager->AddICameraScreen(iCameraScreen);
 }
 
 // ターゲットを設定
