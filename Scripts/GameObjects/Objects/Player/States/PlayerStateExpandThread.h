@@ -47,4 +47,7 @@ private:
 	// プレイヤーの座標
 	Math::Vector3 m_playerPosition;
 
+	// パーティクル出現タイマー
+	float m_particleTimer;
+
 };

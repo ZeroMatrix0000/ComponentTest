@@ -1,7 +1,7 @@
 /*
  * FileName:     SparklingParticle.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/16
+ * Last Updated: 2026/10/18
  *
  * 弾けパーティクル
  */
@@ -46,8 +46,5 @@ private:
 	Easing::Value<float> m_speed;
 	// 大きさ
 	Easing::Value<Math::Vector3> m_scale;
-
-	// アクティブタイマー
-	float m_isActiveTimer;
 
 };

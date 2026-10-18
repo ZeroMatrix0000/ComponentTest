@@ -1,7 +1,7 @@
 /*
  * FileName:     Particle.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/09
+ * Last Updated: 2026/10/18
  *
  * パーティクル
  */
@@ -103,9 +103,15 @@ void Renderings::Particle::RemoveICameraScreen(const ICameraScreen& iCameraScree
 // 要素を追加
 void Renderings::Particle::AddElement(UpdateElement** ppUpdateElement, RenderElement** ppRenderElement)
 {
-	*ppUpdateElement = &m_updateElements.emplace_back();
+	if (ppUpdateElement)
+	{
+		*ppUpdateElement = &m_updateElements.emplace_back();
+	}
 
 	auto& renderElement = m_renderElements.emplace_back();
 	renderElement = std::make_unique<RenderElement>();
-	*ppRenderElement = renderElement.get();
+	if (ppRenderElement)
+	{
+		*ppRenderElement = renderElement.get();
+	}
 }

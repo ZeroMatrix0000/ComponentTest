@@ -25,6 +25,7 @@ NPC::NPC(const ComponentDesc& desc)
 	, m_focusDistance{}
 	, m_baseRotation{}
 	, m_rotation{}
+	, m_spinAngle{}
 	, m_pTransform{ GetPOwner()->GetNullReferences<Transform>() }
 	, m_pBoxCollider{ GetPOwner()->GetNullReferences<Colliders::BoxCollider>() }
 	, m_pSphereCollider{ GetPOwner()->GetNullReferences<Colliders::SphereCollider>() }
@@ -42,6 +43,7 @@ void NPC::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGam
 
 	m_baseRotation = m_pTransform->GetRotation();
 	m_rotation.SetValue(m_baseRotation);
+	m_spinAngle.SetMovement(0.0f, 0.0f);
 
 	Systems::JsonSerializer serializer{ pIGameObjectFinder };
 	serializer.AddParameter(&m_name, "Name");
@@ -53,9 +55,16 @@ void NPC::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGam
 // 更新処理
 void NPC::Update(float elapsedTime)
 {
-	m_rotation.Tick(elapsedTime);
+	if (m_spinAngle.IsMoving())
+	{
+		m_spinAngle.Tick(elapsedTime);
+	}
+	else
+	{
+		m_rotation.Tick(elapsedTime);
+	}
 
-	m_pTransform->SetRotation(m_rotation.GetCurrent());
+	m_pTransform->SetRotation(m_rotation.GetCurrent() * Math::Euler{ 0.0f, m_spinAngle.GetMovement(), 0.0f }.CreateQuaternion());
 	m_pBoxCollider->ApplyTransform();
 	m_pSphereCollider->ApplyTransform();
 }
@@ -63,6 +72,7 @@ void NPC::Update(float elapsedTime)
 // 回転を設定
 void NPC::SetRotation(const Math::Quaternion* rotation)
 {
+
 	// 回転を受け取らなかったら回転を基準に戻す
 	if (!rotation)
 	{
@@ -72,6 +82,12 @@ void NPC::SetRotation(const Math::Quaternion* rotation)
 	{
 		m_rotation.SetTarget(*rotation);
 	}
+}
+
+// スピン
+void NPC::Spin(bool isClockwise)
+{
+	m_spinAngle.SetMovement(0.0f, isClockwise ? 720.0f : -720.0f, 1.0f, Easing::Type::Back, Easing::InOut::Out);
 }
 
 // 中心座標を取得

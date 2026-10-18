@@ -418,7 +418,12 @@
     <ClCompile Include="Scripts\GameObjects\Objects\Player\PlayerThread.cpp">
       <Filter>Scripts\GameObjects\Objects\Player</Filter>
     </ClCompile>
-    <ClCompile Include="Scripts\GameObjects\Particles\SparklingParticle.cpp" />
+    <ClCompile Include="Scripts\GameObjects\Particles\SparklingParticle.cpp">
+      <Filter>Scripts\GameObjects\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\GameObjects\Particles\WindCutParticle.cpp">
+      <Filter>Scripts\GameObjects\Particles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Pch.h" />
@@ -828,6 +833,9 @@
       <Filter>Scripts\GameObjects\Particles</Filter>
     </ClInclude>
     <ClInclude Include="Scripts\GameObjects\Particles\SparklingParticle.h">
+      <Filter>Scripts\GameObjects\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\GameObjects\Particles\WindCutParticle.h">
       <Filter>Scripts\GameObjects\Particles</Filter>
     </ClInclude>
   </ItemGroup>

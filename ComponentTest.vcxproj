@@ -215,6 +215,7 @@
     <ClCompile Include="Scripts\GameObjects\Particles\LandingParticle.cpp" />
     <ClCompile Include="Scripts\GameObjects\Particles\PoppingParticle.cpp" />
     <ClCompile Include="Scripts\GameObjects\Particles\SparklingParticle.cpp" />
+    <ClCompile Include="Scripts\GameObjects\Particles\WindCutParticle.cpp" />
     <ClCompile Include="Scripts\GameObjects\UIs\BlackBelt\BlackBelt.cpp" />
     <ClCompile Include="Scripts\GameObjects\UIs\InteractCursor\InteractCursor.cpp" />
     <ClCompile Include="Scripts\GameObjects\UIs\MessageWindow\MessageWindow.cpp" />
@@ -333,6 +334,7 @@
     <ClInclude Include="Scripts\GameObjects\Particles\LandingParticle.h" />
     <ClInclude Include="Scripts\GameObjects\Particles\PoppingParticle.h" />
     <ClInclude Include="Scripts\GameObjects\Particles\SparklingParticle.h" />
+    <ClInclude Include="Scripts\GameObjects\Particles\WindCutParticle.h" />
     <ClInclude Include="Scripts\GameObjects\UIs\BlackBelt\BlackBelt.h" />
     <ClInclude Include="Scripts\GameObjects\UIs\InteractCursor\InteractCursor.h" />
     <ClInclude Include="Scripts\GameObjects\UIs\MessageWindow\MessageWindow.h" />

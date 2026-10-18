@@ -118,7 +118,7 @@ void PlayerModel::Scaling(float elapsedTime, const Player& player)
 	else
 	{
 		// 落下によるスケーリングの大きさ
-		float fallScaling = Math::Clamp(-player.GetFallSpeed() * m_fallSpeedCoefficient, -0.2f, 0.2f);
+		float fallScaling = Math::Clamp(-player.GetFallSpeed() * m_fallSpeedCoefficient, -0.1f, 0.1f);
 		// 落下速度でスケールを変更
 		m_scaling.SetTarget(Math::Vector3{ -fallScaling / 2.0f, fallScaling, -fallScaling / 2.0f }, 250.0f, 30.0f);
 	}

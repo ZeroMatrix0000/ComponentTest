@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerThread.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/16
+ * Last Updated: 2026/10/18
  *
  * プレイヤーの糸
  */
@@ -66,6 +66,12 @@ public:
 
 	// プレイヤー位置を取得
 	const Math::Vector3& GetPlayerPosition() const { return m_playerPosition; }
+
+	// 縮む速さ
+	float GetContractSpeed() const { return m_contractSpeed; }
+
+	// 移動速度を取得
+	Math::Vector3 GetPlayerVelocity() const { return m_direction * m_contractSpeed; }
 
 	// 現在の状態を取得
 	State GetCurrentState() const { return m_currentState; }

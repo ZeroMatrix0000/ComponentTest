@@ -1,7 +1,7 @@
 /*
  * FileName:     NPC.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/14
+ * Last Updated: 2026/10/18
  *
  * NPC
  */
@@ -47,6 +47,9 @@ public:
 	// 回転を設定
 	void SetRotation(const Math::Quaternion* rotation = nullptr);
 
+	// スピン
+	void Spin(bool isClockwise);
+
 	// 名前を取得
 	const std::wstring& GetName() const { return m_name; }
 	// イベント名を取得
@@ -60,6 +63,9 @@ public:
 	const Math::Box& GetBox() const;
 	// 当たり判定を取得
 	const Math::Sphere& GetSphere() const;
+
+	// スピン中かどうか
+	bool IsSpinning() const { return m_spinAngle.IsMoving(); }
 
 
 private:
@@ -79,6 +85,8 @@ private:
 
 	// 回転
 	Spring<Math::Quaternion> m_rotation;
+	// スピン回転
+	Easing::Value<float> m_spinAngle;
 
 	// トランスフォーム
 	Transform* m_pTransform;

@@ -93,10 +93,11 @@ void PlayerThread::Translate(float elapsedTime)
 		// 現在位置を計算
 		m_currentPosition += m_direction * EXPAND_SPEED * elapsedTime;
 		// 糸の長さ
-		m_length = (m_currentPosition - m_playerPosition).Length();
+		m_length += EXPAND_SPEED * elapsedTime;
 		// 糸の長さが距離以上になったら
 		if (m_length >= m_distance)
 		{
+			m_length = m_distance;
 			m_currentPosition = m_targetPosition;
 			m_currentState = m_toAir ? State::AirContract : State::Stay;
 			// パーティクルの再生
@@ -120,7 +121,7 @@ void PlayerThread::Translate(float elapsedTime)
 		// プレイヤー座標を計算
 		m_playerPosition += m_direction * m_contractSpeed * elapsedTime;
 		// 糸の長さ
-		m_length = (m_currentPosition - m_playerPosition).Length();
+		m_length -= m_contractSpeed * elapsedTime;
 		// 糸が短くなったら
 		if (m_length <= MIN_LENGTH)
 		{
@@ -134,7 +135,7 @@ void PlayerThread::Translate(float elapsedTime)
 		// 現在位置を計算
 		m_currentPosition -= m_direction * EXPAND_SPEED * elapsedTime;
 		// 糸の長さ
-		m_length = (m_currentPosition - m_playerPosition).Length();
+		m_length -= EXPAND_SPEED * elapsedTime;
 		// 糸が短くなったら
 		if (m_length <= MIN_LENGTH)
 		{

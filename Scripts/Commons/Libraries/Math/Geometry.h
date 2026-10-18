@@ -57,7 +57,7 @@ namespace Libraries
 			// 直方体同士の距離
 			       float Distance(const Box& box1, const Box& box2, Vector3* pDirection);
 			// 三角形と直方体の距離
-			       float Distance(const Triangle& triangle, const Box& box, Vector3* pDirection);
+			       float Distance(const Triangle& triangle, const Box& box, Vector3* pDirection, bool enableNormal);
 
 			// 点から球への方向指定最短距離
 			std::pair<float, float> AngledDistance(const Vector3& from, const Sphere& to, const Vector3& direction);

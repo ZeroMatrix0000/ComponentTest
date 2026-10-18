@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerStateExpandThread.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/16
+ * Last Updated: 2026/10/18
  *
  * プレイヤーの地面にいる状態
  */
@@ -10,7 +10,7 @@
 #include "PlayerStates.h"
 
 #include "../PlayerThread.h"
-#include "Scripts/GameObjects/Particles/JumpingParticle.h"
+#include "Scripts/GameObjects/Particles/WindCutParticle.h"
 #include "Scripts/Commons/Components/Transform.h"
 #include "Scripts/Commons/Colliders/BoxCollider.h"
 #include "Scripts/Commons/Renderings/Particle/ParticleManager.h"
@@ -20,6 +20,7 @@ PlayerStateExpandThread::PlayerStateExpandThread(const Math::Vector3& targetPosi
 	: m_targetPosition{ targetPosition }
 	, m_targetType{ targetType }
 	, m_playerPosition{}
+	, m_particleTimer{}
 {
 }
 
@@ -103,6 +104,17 @@ void PlayerStateExpandThread::Update(PlayerInternals* pInternals, float elapsedT
 			break;
 		default:
 			break;
+		}
+	}
+
+	// パーティクルを出現
+	if (pInternals->pThread->GetContractSpeed() > 32.0f)
+	{
+		m_particleTimer += elapsedTime;
+		if (m_particleTimer >= WindCutParticle::INTERVAL)
+		{
+			m_particleTimer -= WindCutParticle::INTERVAL;
+			pInternals->pParticleManager->Play<WindCutParticle>();
 		}
 	}
 }

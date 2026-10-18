@@ -11,6 +11,7 @@
 
 #include "NPC.h"
 #include "../Player/Player.h"
+#include "../Player/States/PlayerStates.h"
 #include "Scripts/Commons/Components/RectTransform.h"
 #include "Scripts/Commons/Renderings/ICameraScreen.h"
 #include "Scripts/Commons/Renderings/Canvas.h"
@@ -72,6 +73,12 @@ void NPCManager::SetRotation(const Math::Vector3& playerPosition)
 
 	for (auto* pNPC : m_pNPCList)
 	{
+		// スピン中ならスキップ
+		if (pNPC->IsSpinning())
+		{
+			continue;
+		}
+
 		// プレイヤーとの距離
 		float distance = Math::Geometry::Distance(playerPosition, pNPC->GetSphere());
 		// 距離がある程度近かったら
@@ -126,7 +133,7 @@ void NPCManager::PlayerCollide(Player* pPlayer)
 	// 直方体
 	const Math::Box& playerBox = pPlayer->GetBox();
 
-	for (const auto* pNPC : m_pNPCList)
+	for (auto* pNPC : m_pNPCList)
 	{
 		const Math::Box& nPCBox = pNPC->GetBox();
 
@@ -141,8 +148,17 @@ void NPCManager::PlayerCollide(Player* pPlayer)
 		// 距離
 		float distance = Math::Geometry::Distance(playerBox, nPCBox, &direction);
 
-		// 座標補正
-		pPlayer->PositionCorrect(distance, direction);
+		if (distance < 0.0f)
+		{
+			// 座標補正
+			pPlayer->PositionCorrect(distance, direction);
+			// プレイヤーが糸伸ばし中かつ移動中ならスピン
+			if (pPlayer->IsState<PlayerStateExpandThread>() && pPlayer->GetMoveVelocity() != Math::Vector3::Zero)
+			{
+				// 左側に当たったら時計回り
+				pNPC->Spin(Math::Vector3::Up.Dot(pPlayer->GetMoveVelocity().Cross(nPCBox.position - playerBox.position)) > 0.0f);
+			}
+		}
 	}
 }
 

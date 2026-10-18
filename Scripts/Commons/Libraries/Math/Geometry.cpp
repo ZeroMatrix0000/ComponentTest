@@ -340,7 +340,7 @@ float Libraries::Math::Geometry::Distance(const Box& box1, const Box& box2, Vect
 }
 
 // 三角形と直方体の距離
-float Libraries::Math::Geometry::Distance(const Triangle& triangle, const Box& box, Vector3* pDirection)
+float Libraries::Math::Geometry::Distance(const Triangle& triangle, const Box& box, Vector3* pDirection, bool enableNormal)
 {
 	//SAT法
 	
@@ -404,10 +404,20 @@ float Libraries::Math::Geometry::Distance(const Triangle& triangle, const Box& b
 		}
 	}
 
-	if (maxAxis.Dot(box.position - triangle.GetCenter()) >= 0.0f)
+	// 法線情報が有効で、めり込んでいて、押出方向が面と垂直で、面の反対側のとき
+	if (enableNormal && distanceMax < 0.0f && maxAxis.Cross(axes[0]).LengthSquared() < Math::EPSILON && maxAxis.Dot(triangle.GetNormal()) < 0.0f)
 	{
+		float size2 =
+		(
+			Math::Abs(maxAxis.Dot(axes[1]) * box.size.x) +
+			Math::Abs(maxAxis.Dot(axes[2]) * box.size.y) +
+			Math::Abs(maxAxis.Dot(axes[3]) * box.size.z)
+		);
+		distanceMax = -size2 - distanceMax;
 		maxAxis *= -1.0f;
 	}
+
+	maxAxis *= -1.0f;
 
 	*pDirection = maxAxis;
 	return distanceMax;

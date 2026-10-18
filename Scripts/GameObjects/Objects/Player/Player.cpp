@@ -173,7 +173,7 @@ void Player::MeshCorrect(const Mesh& mesh)
 	{
 		Math::Vector3 newDirection{};
 
-		float newDistance = Math::Geometry::Distance(wall, box, &newDirection);
+		float newDistance = Math::Geometry::Distance(wall, box, &newDirection, true);
 
 		// 最短距離を更新
 		if (newDistance < distance)
@@ -193,7 +193,7 @@ void Player::MeshCorrect(const Mesh& mesh)
 	{
 		Math::Vector3 newDirection{};
 
-		float newDistance = Math::Geometry::Distance(floor, box, &newDirection);
+		float newDistance = Math::Geometry::Distance(floor, box, &newDirection, false);
 
 		// 最短距離を更新
 		if (newDistance < distance)
@@ -244,6 +244,16 @@ const Math::Box& Player::GetBox() const
 float Player::GetMoveVelocityRatio() const
 {
 	return m_internals.moveVelocity.Length() / m_internals.moveMaxSpeed.GetMin();
+}
+
+// 移動速度を取得
+Math::Vector3 Player::GetMoveVelocity() const
+{
+	if (IsState<PlayerStateExpandThread>())
+	{
+		return m_internals.pThread->GetPlayerVelocity();
+	}
+	return m_internals.moveVelocity;
 }
 
 // カメラの目標座標を取得

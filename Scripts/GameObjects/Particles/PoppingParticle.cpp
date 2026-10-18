@@ -1,7 +1,7 @@
 /*
  * FileName:     PoppingParticle.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/09
+ * Last Updated: 2026/10/18
  *
  * 着地パーティクル
  */
@@ -17,7 +17,6 @@ PoppingParticle::PoppingParticle(Renderings::IModel3DRenderer* pIModelRenderer, 
 	, m_directions{}
 	, m_speed{}
 	, m_scale{}
-	, m_isActiveTimer{}
 {
 }
 
@@ -35,12 +34,14 @@ void PoppingParticle::Initalize(const Transform* pTransform)
 		// 管理者の位置に移動
 		pUpdateElement->position = pTransform->GetPosition();
 		// ランダムに回転
-		pUpdateElement->rotation = Math::Quaternion::CreateFromYawPitchRoll
-		(
+		pUpdateElement->rotation = Math::Euler
+		{
 			Random::GetFloatRange(0.0f, 360.0f),
 			Random::GetFloatRange(0.0f, 360.0f),
 			Random::GetFloatRange(0.0f, 360.0f)
-		);
+		}.CreateQuaternion();
+		// 拡大
+		pUpdateElement->scale = Math::Vector3::One * 0.2f;
 
 		// モデルを設定
 		SetModelSource("Box", pRenderElement);
@@ -73,9 +74,8 @@ void PoppingParticle::Initalize(const Transform* pTransform)
 // 更新処理
 void PoppingParticle::Update(float elapsedTime)
 {
-	// 0.5 秒経ったら消す
-	m_isActiveTimer += elapsedTime;
-	if (m_isActiveTimer >= 0.5f)
+	// 移動が終わったら消す
+	if (!m_speed.IsMoving())
 	{
 		Destroy();
 		return;

@@ -1,7 +1,7 @@
 /*
  * FileName:     Player.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/15
+ * Last Updated: 2026/09/18
  *
  * プレイヤー
  */
@@ -54,6 +54,9 @@ public:
 
 	// 落下速度
 	float GetFallSpeed() const { return m_internals.fallSpeed; }
+
+	// 移動速度を取得
+	Math::Vector3 GetMoveVelocity() const;
 
 	// 状態が一致しているか
 	template<typename T> requires IsDerived<T, PlayerState>

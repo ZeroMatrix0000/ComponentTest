@@ -99,7 +99,7 @@ void TargetPoint::Update(float elapsedTime)
 			{
 				// プレイヤーとの距離
 				float playerDistance = Math::Vector3::Distance(playerPosition, sphere.centerPosition);
-				if (playerDistance >= sphere.radius && playerDistance <= m_targetDistance)
+				if (playerDistance <= m_targetDistance)
 				{
 					distanceMin = distance;
 					m_info.position = sphere.centerPosition;
@@ -163,7 +163,7 @@ void TargetPoint::Update(float elapsedTime)
 	// ターゲットが地面なら
 	if (m_info.type == Type::Ground)
 	{
-		m_pTransform->SetPosition(m_pICameraScreen->GetOutputSize() / 2.0f);
+		m_pTransform->SetPosition(m_pImage->GetPCanvas()->GetSize() / 2.0f);
 		return;
 	}
 

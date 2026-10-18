@@ -40,11 +40,6 @@ void GamePlaySceneStateField::Enter(GamePlaySceneInternals* pInternals)
 // 更新処理
 void GamePlaySceneStateField::Update(GamePlaySceneInternals* pInternals, float elapsedTime)
 {
-	// NPCの更新
-	pInternals->pNPCManager->SetRotation(pInternals->pPlayer->GetPosition());
-	pInternals->pNPCManager->Update(elapsedTime);
-	pInternals->pNPCManager->SetCursor(*pInternals->pCameraScreen);
-
 	// ゲーム入力
 	auto* pIGameInput = pInternals->gameContext.GetPIGameInput();
 
@@ -54,6 +49,11 @@ void GamePlaySceneStateField::Update(GamePlaySceneInternals* pInternals, float e
 		TargetPoint::Info info = pInternals->pTargetPoint->GetTargetInfo();
 		pInternals->pPlayer->ExpandThread(info.position, static_cast<PlayerInternals::TargetType>(info.type));
 	}
+
+	// NPCの更新
+	pInternals->pNPCManager->SetRotation(pInternals->pPlayer->GetPosition());
+	pInternals->pNPCManager->Update(elapsedTime);
+	pInternals->pNPCManager->SetCursor(*pInternals->pCameraScreen);
 
 	// プレイヤーの更新
 	pInternals->pPlayer->Update(elapsedTime, pIGameInput->GetPlayerMove(), pIGameInput->GetPlayerDash(), pIGameInput->GetPlayerJump());
@@ -68,24 +68,29 @@ void GamePlaySceneStateField::Update(GamePlaySceneInternals* pInternals, float e
 	pInternals->pPlayerCamera->Update(elapsedTime);
 	pInternals->pCameraScreen->UpdateViewMatrix();
 
+	// プレイヤーが話せる状態か
+	bool canSpeak = pInternals->pPlayer->IsState<PlayerStateOnGround>();
+
+	// 糸伸ばし中ならカーソルを非表示
+	pInternals->pNPCManager->HideCursor(!canSpeak);
+
 	// はなすの更新
 	pInternals->pZ2Talk->SetPosition(pInternals->pPlayer->GetBox(), *pInternals->pCameraScreen);
-	pInternals->pZ2Talk->Update(elapsedTime, pInternals->pNPCManager->GetPFocusedNPC() != nullptr);
+	pInternals->pZ2Talk->Update(elapsedTime, pInternals->pNPCManager->GetPFocusedNPC() != nullptr && canSpeak);
 
 	// 上下の黒帯の更新
 	pInternals->pBlackBelt->Update(elapsedTime);
 
 	// 話しかけられるNPC
 	const NPC* pFocusedNPC = pInternals->pNPCManager->GetPFocusedNPC();
+	// 糸を伸ばしていないかつ
 	// NPCに話しかけられる状態かつ
-	// プレイヤーが地面についているかつ
-	// 移動入力がされていないかつ
+	// プレイヤーが話せる状態かつ
 	// インタラクト入力がされたならイベント状態へ
 	if
 	(
 		pFocusedNPC &&
-		pInternals->pPlayer->IsState<PlayerStateOnGround>() &&
-		pIGameInput->GetPlayerMove() == Math::Vector3::Zero &&
+		canSpeak &&
 		pIGameInput->GetFieldInteract()
 	)
 	{
