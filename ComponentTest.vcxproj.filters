@@ -424,7 +424,9 @@
     <ClCompile Include="Scripts\GameObjects\Particles\WindCutParticle.cpp">
       <Filter>Scripts\GameObjects\Particles</Filter>
     </ClCompile>
-    <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateStick.cpp" />
+    <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateStick.cpp">
+      <Filter>Scripts\GameObjects\Objects\Player\States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Pch.h" />
@@ -916,6 +918,15 @@
     </None>
     <None Include="Shaders\Header.hlsli">
       <Filter>Shaders</Filter>
+    </None>
+    <None Include="Resources\Jsons\Events\Event_TalkHowTo.json">
+      <Filter>Jsons\Events</Filter>
+    </None>
+    <None Include="Resources\Jsons\Events\Event_TalkAboutThread.json">
+      <Filter>Jsons\Events</Filter>
+    </None>
+    <None Include="Resources\Jsons\Events\Event_TalkAboutText.json">
+      <Filter>Jsons\Events</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

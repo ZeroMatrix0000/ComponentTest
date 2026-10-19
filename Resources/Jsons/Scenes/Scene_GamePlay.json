@@ -38,7 +38,7 @@
 		}
 	},
 	{
-		"Name": "NPCテスト",
+		"Name": "NPC操作方法",
 		"Prefab": "Prefab_NPC",
 		"Components": {
 			"Transform": {
@@ -55,6 +55,12 @@
 			},
 			"Model3D": {
 				"ModelSourceName": "NPC",
+				"Color": {
+					"R": 0.5,
+					"G": 1.0,
+					"B": 0.7,
+					"A": 1.0
+				},
 				"CameraScreens": [
 					"PlayerCamera"
 				]
@@ -86,13 +92,13 @@
 				]
 			},
 			"NPC": {
-				"Name": "テスト",
-				"EventName": "Event_TalkTest1"
+				"Name": "<ruby=そうさほうほう>操作方法</ruby>",
+				"EventName": "Event_TalkHowTo"
 			}
 		}
 	},
 	{
-		"Name": "NPCTest",
+		"Name": "NPC糸について",
 		"Prefab": "Prefab_NPC",
 		"Components": {
 			"Transform": {
@@ -109,6 +115,12 @@
 			},
 			"Model3D": {
 				"ModelSourceName": "NPC",
+				"Color": {
+					"R": 1.0,
+					"G": 0.6,
+					"B": 0.5,
+					"A": 1.0
+				},
 				"CameraScreens": [
 					"PlayerCamera"
 				]
@@ -140,13 +152,13 @@
 				]
 			},
 			"NPC": {
-				"Name": "Test",
-				"EventName": "Event_TalkTest2"
+				"Name": "<ruby=いと>糸</ruby>について",
+				"EventName": "Event_TalkAboutThread"
 			}
 		}
 	},
 	{
-		"Name": "NPC色付けテスト",
+		"Name": "NPCテキストについて",
 		"Prefab": "Prefab_NPC",
 		"Components": {
 			"Transform": {
@@ -200,8 +212,8 @@
 				]
 			},
 			"NPC": {
-				"Name": "<ruby=いろづ>色付</ruby>けテスト",
-				"EventName": "Event_TalkTestColor"
+				"Name": "テキストについて",
+				"EventName": "Event_TalkAboutText"
 			}
 		}
 	},
@@ -210,9 +222,9 @@
 		"Components": {
 			"NPCManager": {
 				"NPCList": [
-					"NPCテスト",
-					"NPCTest",
-					"NPC色付けテスト"
+					"NPC操作方法",
+					"NPC糸について",
+					"NPCテキストについて"
 				],
 				"Canvas": "Canvas"
 			}
@@ -326,9 +338,9 @@
 				"Player": "Player",
 				"CameraScreen": "PlayerCamera",
 				"TargetObjects": [
-					"NPCテスト",
-					"NPCTest",
-					"NPC色付けテスト"
+					"NPC操作方法",
+					"NPC糸について",
+					"NPCテキストについて"
 				],
 				"Grounds": [
 					"Ground"

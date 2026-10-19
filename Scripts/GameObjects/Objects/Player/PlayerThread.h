@@ -64,6 +64,9 @@ public:
 	// ターゲットを設定
 	void SetTarget(const Math::Vector3& playerPosition, const Math::Vector3& targetPosition, const Math::Quaternion& rotation, bool toAir);
 
+	// プレイヤーの座標を設定
+	void SetPlayerPosition(const Math::Vector3& playerPosition);
+
 	// 非表示
 	void UnDisplay() { m_isDisplay = false; }
 

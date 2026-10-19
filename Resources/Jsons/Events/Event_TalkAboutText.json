@@ -1,0 +1,39 @@
+[
+	{
+		"ActionType": "OpenMessageWindow",
+		"Params": {
+			"IsWait": true
+		}
+	},
+	{
+		"ActionType": "SetMessageWindowText",
+		"Params": {
+			"Text": "このテキストは、 <color=#00BBFF>DirectWrite</color> というものを<ruby=もち>用</ruby>いて\n<ruby=びょうが>描画</ruby>しているらしいです。",
+			"Character": "<ruby=もじ>文字</ruby>さん"
+		}
+	},
+	{
+		"ActionType": "SetMessageWindowText",
+		"Params": {
+			"Text": "<ruby=べんり>便利</ruby>な<ruby=きのう>機能</ruby>を<ruby=じぶん>自分</ruby>で<ruby=いろいろじっそう>色々実装</ruby>したんですって。"
+		}
+	},
+	{
+		"ActionType": "SetMessageWindowText",
+		"Params": {
+			"Text": "<color=#FF00DD>テキスト</color>の<color=#FFEE00><ruby=とちゅう>途中</ruby></color>で<color=#00BB44><ruby=いろ>色</ruby></color>を<color=#8844FF><ruby=か>変</ruby>える</color>ことができるし、"
+		}
+	},
+	{
+		"ActionType": "SetMessageWindowText",
+		"Params": {
+			"Text": "<color=#00BBFF><ruby=振仮名>ふりがな</ruby></color>をふることもできちゃうみたいです。"
+		}
+	},
+	{
+		"ActionType": "CloseMessageWindow",
+		"Params": {
+			"IsWait": true
+		}
+	}
+]

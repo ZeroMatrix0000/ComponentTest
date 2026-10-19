@@ -1,7 +1,7 @@
 /*
  * FileName:     MessageWindow.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/28
+ * Last Updated: 2026/10/19
  *
  * メッセージウィンドウ
  */
@@ -53,7 +53,7 @@ public:
 	void DisplayAllText();
 
 	// 話者を設定
-	void SetCharacter(const std::wstring& text = L"");
+	void SetCharacter(const std::wstring& text = L" ");
 
 	// 動いているかどうか
 	bool IsMoving() const { return m_moveRate.IsMoving(); }

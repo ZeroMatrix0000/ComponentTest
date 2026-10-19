@@ -1,0 +1,45 @@
+[
+	{
+		"ActionType": "OpenMessageWindow",
+		"Params": {
+			"IsWait": true
+		}
+	},
+	{
+		"ActionType": "SetMessageWindowText",
+		"Params": {
+			"Text": "<ruby=いま>今</ruby>から<ruby=そうさほうほう>操作方法</ruby>を<ruby=せつめい>説明</ruby>します。",
+			"Character": "<ruby=そうさほうほう>操作方法</ruby>を<ruby=せつめい>説明</ruby>するために<ruby=う>生</ruby>まれてきた<ruby=ひと>人</ruby>"
+		}
+	},
+	{
+		"ActionType": "SetMessageWindowText",
+		"Params": {
+			"Text": "[WASD / <ruby=やじるし>矢印</ruby>]: <ruby=いどう>移動</ruby>\n[Space]: ジャンプ\n[LShift]: ダッシュ"
+		}
+	},
+	{
+		"ActionType": "SetMessageWindowText",
+		"Params": {
+			"Text": "[Z]: <ruby=ボクら>NPC</ruby> とはなす\n<ruby=かいわちゅう>会話中</ruby>に[Z / X]: テキストを<ruby=おく>送</ruby>る\n[LClick]: <ruby=いと>糸</ruby>を<ruby=の>伸</ruby>ばす"
+		}
+	},
+	{
+		"ActionType": "SetMessageWindowText",
+		"Params": {
+			"Text": "[F3]: デバッグ<ruby=ひょうじき>表示切</ruby>り<ruby=か>替</ruby>え\n[F4]: フルスクリーン<ruby=き>切</ruby>り<ruby=か>替</ruby>え\n[F5]: リセット"
+		}
+	},
+	{
+		"ActionType": "SetMessageWindowText",
+		"Params": {
+			"Text": "...わかった？"
+		}
+	},
+	{
+		"ActionType": "CloseMessageWindow",
+		"Params": {
+			"IsWait": true
+		}
+	}
+]

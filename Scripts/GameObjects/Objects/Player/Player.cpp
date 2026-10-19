@@ -171,7 +171,7 @@ void Player::MeshCorrect(const Mesh& mesh)
 	{
 		Math::Vector3 newDirection{};
 
-		float newDistance = Math::Geometry::Distance(wall, box, &newDirection, true);
+		float newDistance = Math::Geometry::Distance(wall, box, &newDirection, false);
 
 		// 最短距離を更新
 		if (newDistance < distance)

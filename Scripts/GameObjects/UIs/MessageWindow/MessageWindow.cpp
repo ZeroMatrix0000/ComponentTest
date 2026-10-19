@@ -1,7 +1,7 @@
 /*
  * FileName:     MessageWindow.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/29
+ * Last Updated: 2026/10/19
  *
  * メッセージウィンドウ
  */
@@ -218,5 +218,9 @@ void MessageWindow::DisplayAllText()
 // 話者を設定
 void MessageWindow::SetCharacter(const std::wstring& text)
 {
-	m_pCharacter->SetStr(text);
+	// 空文字でなければ
+	if (!text.empty())
+	{
+		m_pCharacter->SetStr(text);
+	}
 }

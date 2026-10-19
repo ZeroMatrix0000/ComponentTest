@@ -216,3 +216,18 @@ void PlayerThread::SetTarget(const Math::Vector3& playerPosition, const Math::Ve
 	m_toAir = toAir;
 	m_isDisplay = true;
 }
+
+// プレイヤーの座標を設定
+void PlayerThread::SetPlayerPosition(const Math::Vector3& playerPosition)
+{
+	m_playerPosition = playerPosition;
+
+	m_direction = m_targetPosition - m_playerPosition;
+	m_length = m_direction.Length();
+	m_direction /= m_length;
+
+	m_baseRotation = Math::Quaternion::CreateFromRotationMatrix
+	(
+		Math::Matrix::CreateWorld(Math::Vector3::Zero, -m_direction, Math::Vector3::Up)
+	);
+}

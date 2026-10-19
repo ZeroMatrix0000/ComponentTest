@@ -1,0 +1,63 @@
+[
+	{
+		"ActionType": "OpenMessageWindow",
+		"Params": {
+			"IsWait": true
+		}
+	},
+	{
+		"ActionType": "SetMessageWindowText",
+		"Params": {
+			"Text": "マウスの<ruby=ひだり>左</ruby>クリックを<ruby=お>押</ruby>すことで、\n<ruby=がめんちゅうおう>画面中央</ruby>に<ruby=む>向</ruby>かって<color=#00BBFF><ruby=いと>糸</ruby>を<ruby=の>伸</ruby>ばす</color>ことができるよ。",
+			"Character": "<ruby=いと>糸</ruby>マニア"
+		}
+	},
+	{
+		"ActionType": "SetMessageWindowText",
+		"Params": {
+			"Text": "<ruby=いと>糸</ruby>を<ruby=の>伸</ruby>ばしてくっつけた<ruby=ばしょ>場所</ruby>に<ruby=む>向</ruby>かって\n<ruby=こうそくいどう>高速移動</ruby>できるんだ。"
+		}
+	},
+	{
+		"ActionType": "SetMessageWindowText",
+		"Params": {
+			"Text": "<ruby=かべ>壁</ruby>に<ruby=む>向</ruby>かって<ruby=の>伸</ruby>ばすと、<ruby=かべ>壁</ruby>に<ruby=は>張</ruby>り<ruby=つ>付</ruby>くことができるよ。\nその<ruby=あと>後</ruby>はジャンプしたら<ruby=はな>離</ruby>れられるよ。"
+		}
+	},
+	{
+		"ActionType": "SetMessageWindowText",
+		"Params": {
+			"Text": "ちなみに、<ruby=いと>糸</ruby>を<ruby=の>伸</ruby>ばしたあとは<ruby=いっかいじめん>一回地面</ruby>に<ruby=あし>足</ruby>をつけないと、\n<color=#00BBFF><ruby=つぎ>次</ruby>の<ruby=いと>糸</ruby>を<ruby=の>伸</ruby>ばすことはできない</color>から、<ruby=き>気</ruby>をつけてね。"
+		}
+	},
+	{
+		"ActionType": "SetMessageWindowText",
+		"Params": {
+			"Text": "<ruby=ボクら>NPC</ruby> の<ruby=ちか>近</ruby>くを<ruby=さ>指</ruby>しているときは、\nその<ruby=ひと>人</ruby>に<ruby=む>向</ruby>かって<ruby=いと>糸</ruby>を<ruby=の>伸</ruby>ばすよ。"
+		}
+	},
+	{
+		"ActionType": "SetMessageWindowText",
+		"Params": {
+			"Text": "その<ruby=ひと>人</ruby>にぶつかったら、<ruby=まうえ>真上</ruby>に<ruby=たか>高</ruby>くジャンプするよ。"
+		}
+	},
+	{
+		"ActionType": "SetMessageWindowText",
+		"Params": {
+			"Text": "<ruby=いた>痛</ruby>いからやめてね。"
+		}
+	},
+	{
+		"ActionType": "SetMessageWindowText",
+		"Params": {
+			"Text": "あと、ステージの<ruby=そと>外</ruby>に<ruby=お>落</ruby>ちちゃったら<ruby=もど>戻</ruby>れないから、\nF5 キーで<color=#00BBFF>リセット</color>してね。"
+		}
+	},
+	{
+		"ActionType": "CloseMessageWindow",
+		"Params": {
+			"IsWait": true
+		}
+	}
+]

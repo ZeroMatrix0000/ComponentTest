@@ -15,8 +15,7 @@
 	{
 		"ActionType": "SetMessageWindowText",
 		"Params": {
-			"Text": "<ruby=ふりがな>振仮名</ruby>をつけることができるようになりました。",
-			"Character": "<ruby=いろづ>色付</ruby>けテスト"
+			"Text": "<ruby=ふりがな>振仮名</ruby>をつけることができるようになりました。"
 		}
 	},
 	{

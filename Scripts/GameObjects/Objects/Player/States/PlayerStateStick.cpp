@@ -116,5 +116,7 @@ void PlayerStateStick::PositionCorrect(PlayerInternals* pInternals, float distan
 		pInternals->pTransform->Translate(displacement);
 		// トランスフォームを適用
 		pInternals->pBoxCollider->ApplyTransform();
+
+		pInternals->pThread->SetPlayerPosition(pInternals->pBoxCollider->GetWorldBox().position);
 	}
 }
