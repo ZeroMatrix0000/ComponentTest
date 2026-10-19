@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerThread.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/16
+ * Last Updated: 2026/10/19
  *
  * プレイヤーの糸
  */
@@ -11,6 +11,7 @@
 
 #include "Scripts/GameObjects/Particles/PoppingParticle.h"
 #include "Scripts/GameObjects/Particles/SparklingParticle.h"
+#include "Scripts/GameObjects/Particles/WindCutParticle.h"
 #include "Scripts/Commons/Components/Transform.h"
 #include "Scripts/Commons/GameObjects/GameObject.h"
 #include "Scripts/Commons/Renderings/Model3D/Model3D.h"
@@ -38,6 +39,8 @@ PlayerThread::PlayerThread(const ComponentDesc& desc)
 	, m_contractSpeed{}
 	, m_currentState{}
 	, m_toAir{}
+	, m_particleTimer{}
+	, m_isDisplay{}
 	, m_pTransform{ GetPOwner()->GetNullReferences<Transform>() }
 	, m_pParticleManager{ GetPOwner()->GetNullReferences<Renderings::ParticleManager>() }
 	, m_pParticleManagerTransform{ GetPOwner()->GetNullReferences<Transform>() }
@@ -130,6 +133,17 @@ void PlayerThread::Translate(float elapsedTime)
 			// パーティクルの再生
 			m_pParticleManager->Play<SparklingParticle>();
 		}
+		// パーティクルを出現
+		if (m_contractSpeed > 32.0f)
+		{
+			m_particleTimer += elapsedTime;
+			if (m_particleTimer >= WindCutParticle::INTERVAL)
+			{
+				m_particleTimer -= WindCutParticle::INTERVAL;
+				m_pParticleManagerTransform->SetPosition(m_playerPosition);
+				m_pParticleManager->Play<WindCutParticle>();
+			}
+		}
 		break;
 	case State::AirContract:
 		// 現在位置を計算
@@ -162,12 +176,13 @@ void PlayerThread::Rotate(float elapsedTime)
 
 	// 回転
 	m_pTransform->SetRotation(Math::Euler{ 0.0f, 0.0f, m_rotationAngle }.CreateQuaternion() * m_baseRotation);
+	m_pParticleManagerTransform->SetRotation(Math::Euler{ 0.0f, 0.0f, m_rotationAngle }.CreateQuaternion() * m_baseRotation);
 }
 
 // スケーリング
 void PlayerThread::Scaling(float elapsedTime)
 {
-	if (m_currentState == State::None)
+	if (m_currentState == State::None && !m_isDisplay)
 	{
 		m_pTransform->SetScale(Math::Vector3::Zero);
 	}
@@ -199,4 +214,5 @@ void PlayerThread::SetTarget(const Math::Vector3& playerPosition, const Math::Ve
 	m_contractSpeed = 0.0f;
 	m_currentState = State::Expand;
 	m_toAir = toAir;
+	m_isDisplay = true;
 }

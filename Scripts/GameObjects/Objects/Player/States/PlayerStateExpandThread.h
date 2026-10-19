@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerStateExpandThread.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/16
+ * Last Updated: 2026/10/19
  *
  * プレイヤーの糸を伸ばす状態
  */
@@ -46,8 +46,5 @@ private:
 
 	// プレイヤーの座標
 	Math::Vector3 m_playerPosition;
-
-	// パーティクル出現タイマー
-	float m_particleTimer;
 
 };

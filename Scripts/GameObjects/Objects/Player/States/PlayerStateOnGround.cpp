@@ -26,6 +26,7 @@ PlayerStateOnGround::PlayerStateOnGround()
 void PlayerStateOnGround::Enter(PlayerInternals* pInternals)
 {
 	pInternals->fallSpeed = 0.0f;
+	pInternals->canExpandThread = true;
 }
 
 // 更新処理
@@ -96,9 +97,6 @@ void PlayerStateOnGround::Update(PlayerInternals* pInternals, float elapsedTime)
 		// 砂煙の再生
 		pInternals->pParticleManager->Play<JumpingParticle>();
 	}
-
-	// 糸伸ばしタイマーの更新
-	pInternals->threadTimer -= elapsedTime;
 
 	// 糸の更新
 	pInternals->pThread->Update(elapsedTime);

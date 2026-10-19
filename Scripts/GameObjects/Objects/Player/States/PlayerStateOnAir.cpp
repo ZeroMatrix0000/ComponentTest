@@ -94,9 +94,6 @@ void PlayerStateOnAir::Update(PlayerInternals* pInternals, float elapsedTime)
 		pInternals->pParticleManager->Play<JumpingParticle>();
 	}
 
-	// 糸伸ばしタイマーの更新
-	pInternals->threadTimer -= elapsedTime;
-
 	// 糸の更新
 	pInternals->pThread->Update(elapsedTime);
 

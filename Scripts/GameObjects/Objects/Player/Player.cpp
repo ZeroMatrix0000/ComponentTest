@@ -58,7 +58,6 @@ void Player::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pI
 	serializer.AddParameter(&m_internals.JUMP_POWER, "JumpPower");
 	serializer.AddParameter(&m_internals.CAMERA_VELOCITY_COEFFICIENT, "CameraVelocityCoefficient");
 	serializer.AddParameter(&coyoteTime, "CoyoteTime");
-	serializer.AddParameter(&m_internals.THREAD_INTERVAL, "ThreadInterval");
 	serializer.AddParameter(&m_internals.P_CAMERA_SCREEN, "CameraScreen");
 	serializer.Load(json);
 
@@ -68,7 +67,6 @@ void Player::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pI
 
 	m_internals.fallCoyoteTime.Initialize(0.0f, 0.0f, coyoteTime);
 	m_internals.jumpBufferTime.Initialize(0.0f, 0.0f, coyoteTime);
-	m_internals.threadTimer.Initialize(0.0f, 0.0f, m_internals.THREAD_INTERVAL);
 
 	// 当たり判定の更新
 	m_internals.pBoxCollider->ApplyTransform();
@@ -224,7 +222,7 @@ void Player::UpdateModel(float elapsedTime)
 // 糸を伸ばす
 void Player::ExpandThread(const Math::Vector3& targetPosition, PlayerInternals::TargetType targetType)
 {
-	m_internals.threadTimer = m_internals.threadTimer.GetMax();
+	m_internals.canExpandThread = false;
 	SetState(std::make_unique<PlayerStateExpandThread>(targetPosition, targetType));
 }
 

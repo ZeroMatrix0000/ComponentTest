@@ -424,6 +424,7 @@
     <ClCompile Include="Scripts\GameObjects\Particles\WindCutParticle.cpp">
       <Filter>Scripts\GameObjects\Particles</Filter>
     </ClCompile>
+    <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateStick.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Pch.h" />
@@ -837,6 +838,9 @@
     </ClInclude>
     <ClInclude Include="Scripts\GameObjects\Particles\WindCutParticle.h">
       <Filter>Scripts\GameObjects\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStateStick.h">
+      <Filter>Scripts\GameObjects\Objects\Player\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

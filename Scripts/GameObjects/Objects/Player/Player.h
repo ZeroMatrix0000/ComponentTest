@@ -66,7 +66,7 @@ public:
 	Math::Vector3 GetCameraTarget() const;
 
 	// 糸を伸ばすことができるかどうか
-	bool CanExpandThread() const { return m_internals.threadTimer.IsMin(); }
+	bool CanExpandThread() const { return m_internals.canExpandThread; }
 
 
 private:

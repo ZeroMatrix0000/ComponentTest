@@ -1,16 +1,16 @@
 /*
  * FileName:     SparklingParticle.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/18
+ * Last Updated: 2026/10/19
  *
- * 弾けパーティクル
+ * 火花パーティクル
  */
 
 #pragma once
 
 #include "Scripts/Commons/Renderings/Particle/Particle.h"
 
- // 弾けパーティクル
+ // 火花パーティクル
 class SparklingParticle : public Renderings::Particle
 {
 

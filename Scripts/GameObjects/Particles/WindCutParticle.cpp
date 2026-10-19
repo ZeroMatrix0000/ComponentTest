@@ -1,9 +1,9 @@
 /*
  * FileName:     WindCutParticle.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/18
+ * Last Updated: 2026/10/19
  *
- * 着地パーティクル
+ * 風切りパーティクル
  */
 
 #include "Pch.h"

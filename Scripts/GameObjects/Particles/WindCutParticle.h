@@ -1,16 +1,16 @@
 /*
  * FileName:     WindCutParticle.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/18
+ * Last Updated: 2026/10/19
  *
- * 弾けパーティクル
+ * 風切りパーティクル
  */
 
 #pragma once
 
 #include "Scripts/Commons/Renderings/Particle/Particle.h"
 
- // 弾けパーティクル
+ // 風切りパーティクル
 class WindCutParticle : public Renderings::Particle
 {
 

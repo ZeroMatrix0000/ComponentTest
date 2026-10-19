@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerThread.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/18
+ * Last Updated: 2026/10/19
  *
  * プレイヤーの糸
  */
@@ -64,11 +64,11 @@ public:
 	// ターゲットを設定
 	void SetTarget(const Math::Vector3& playerPosition, const Math::Vector3& targetPosition, const Math::Quaternion& rotation, bool toAir);
 
+	// 非表示
+	void UnDisplay() { m_isDisplay = false; }
+
 	// プレイヤー位置を取得
 	const Math::Vector3& GetPlayerPosition() const { return m_playerPosition; }
-
-	// 縮む速さ
-	float GetContractSpeed() const { return m_contractSpeed; }
 
 	// 移動速度を取得
 	Math::Vector3 GetPlayerVelocity() const { return m_direction * m_contractSpeed; }
@@ -125,6 +125,12 @@ private:
 
 	// 空中を指しているか
 	bool m_toAir;
+
+	// パーティクル出現タイマー
+	float m_particleTimer;
+
+	// 表示するかどうか
+	bool m_isDisplay;
 
 	// トランスフォーム
 	Components::Transform* m_pTransform;

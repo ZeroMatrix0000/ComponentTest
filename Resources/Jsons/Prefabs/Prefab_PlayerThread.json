@@ -15,6 +15,6 @@
 		"RotationSpeed": 1000.0,
 		"StayTime": 0.2,
 		"ContractAcceleration": 200.0,
-		"MinLength": 1.0
+		"MinLength": 0.75
 	}
 }

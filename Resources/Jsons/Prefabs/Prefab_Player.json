@@ -26,8 +26,7 @@
 		"FallAcceleration": 48.0,
 		"JumpPower": 16.0,
 		"CameraVelocityCoefficient": 0.2,
-		"CoyoteTime": 0.1,
-		"ThreadInterval": 1.0
+		"CoyoteTime": 0.1
 	},
 	"ParticleManager": {}
 }

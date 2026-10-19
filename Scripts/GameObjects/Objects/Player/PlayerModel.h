@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerModel.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/15
+ * Last Updated: 2026/10/19
  *
  * プレイヤーのモデル
  */
@@ -52,6 +52,9 @@ public:
 	// トランスフォームを設定
 	void SetTransform(const Transform& transform);
 
+	// 糸伸ばし時の角度を設定
+	void SetThreadAngle(float angle) { m_threadAngle.SetTarget(angle); }
+
 	// パーティクル管理を設定
 	void SetParticleManager(Renderings::ParticleManager* pParticleManager) { m_pParticleManager = pParticleManager; }
 
@@ -79,6 +82,8 @@ private:
 	Spring<Math::Vector3> m_scaling;
 	// ダッシュ時の傾き
 	Spring<float> m_dashAngle;
+	// 糸伸ばし時の傾き
+	Spring<float> m_threadAngle;
 
 	// 自身のトランスフォーム
 	Transform* m_pTransform;

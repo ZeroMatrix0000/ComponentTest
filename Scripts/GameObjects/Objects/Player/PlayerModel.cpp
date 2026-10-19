@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerModel.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/16
+ * Last Updated: 2026/09/19
  *
  * プレイヤーのモデル
  */
@@ -29,6 +29,7 @@ PlayerModel::PlayerModel(const ComponentDesc& desc)
 	, m_fallingHeight{}
 	, m_scaling{}
 	, m_dashAngle{}
+	, m_threadAngle{}
 	, m_pTransform{ GetPOwner()->GetNullReferences<Transform>() }
 	, m_pSilhouette{ GetPOwner()->GetNullReferences<Transform>() }
 	, m_pParticleManager{}
@@ -75,13 +76,32 @@ void PlayerModel::Update(float elapsedTime, const Player& player)
 void PlayerModel::Translate(float elapsedTime, const Player& player)
 {
 	// 落下状態 or 糸伸ばし状態
-	if (player.IsState<PlayerStateFalling>() || player.IsState<PlayerStateExpandThread>())
+	if (player.IsState<PlayerStateFalling>())
 	{
 		m_bounceTime = 0.0f;
 		m_fallingHeight.SetTarget(0.0f);
 		m_fallingHeight.Tick(elapsedTime);
 
-		Math::Vector3 position = m_pTransform->GetPosition() + Math::Vector3::Up * m_fallingHeight.GetCurrent();
+		Math::Vector3 position = player.GetBox().position + Math::Vector3::Up * m_fallingHeight.GetCurrent() + Math::Vector3::Transform
+		(
+			Math::Vector3::Down * player.GetBox().size.y / 2.0f,
+			Math::Euler{ m_threadAngle.GetCurrent(), 0.0f, 0.0f }.CreateQuaternion() * m_pTransform->GetRotation()
+		);
+		m_pTransform->SetPosition(position);
+		m_pSilhouette->SetPosition(position);
+	}
+	// 糸伸ばし状態
+	else if (player.IsState<PlayerStateExpandThread>())
+	{
+		m_bounceTime = 0.0f;
+		m_fallingHeight.SetTarget(0.0f);
+		m_fallingHeight.Tick(elapsedTime);
+
+		Math::Vector3 position = player.GetBox().position + Math::Vector3::Up * m_fallingHeight.GetCurrent() + Math::Vector3::Transform
+		(
+			Math::Vector3::Down * player.GetBox().size.y / 2.0f,
+			Math::Euler{m_threadAngle.GetCurrent(), 0.0f, 0.0f }.CreateQuaternion() * m_pTransform->GetRotation()
+		);
 		m_pTransform->SetPosition(position);
 		m_pSilhouette->SetPosition(position);
 	}
@@ -101,10 +121,37 @@ void PlayerModel::Translate(float elapsedTime, const Player& player)
 		float height = m_bounceHeight * Math::Sin(m_bounceTime.GetRatio() * Math::PI) * player.GetMoveVelocityRatio();
 		m_fallingHeight.SetValue(height);
 		// 座標
-		Math::Vector3 position = m_pTransform->GetPosition() + Math::Vector3::Up * height;
+		Math::Vector3 position = player.GetBox().position + Math::Vector3::Up * height + Math::Vector3::Transform
+		(
+			Math::Vector3::Down * player.GetBox().size.y / 2.0f,
+			Math::Euler{ m_threadAngle.GetCurrent(), 0.0f, 0.0f }.CreateQuaternion() * m_pTransform->GetRotation()
+		);
 		m_pTransform->SetPosition(position);
 		m_pSilhouette->SetPosition(position);
 	}
+}
+
+// 回転
+void PlayerModel::Rotate(float elapsedTime, const Player& player)
+{
+	// 糸伸ばし状態
+	if (player.IsState<PlayerStateExpandThread>())
+	{
+		m_dashAngle.SetTarget(0.0f);
+	}
+	else
+	{
+		// 移動速度で回転
+		m_dashAngle.SetTarget(Math::Clamp(player.GetMoveVelocityRatio() - 1.0f, 0.0f, 1.0f) * m_dashAngleMax, 200.0f, 25.0f);
+		m_threadAngle.SetTarget(0.0f);
+	}
+
+	m_dashAngle.Tick(elapsedTime);
+	m_threadAngle.Tick(elapsedTime);
+
+	float rotationX = m_dashAngle.GetCurrent() + m_threadAngle.GetCurrent();
+	m_pTransform->SetRotation(Math::Euler{ rotationX, 0.0f, 0.0f }.CreateQuaternion() * m_pTransform->GetRotation());
+	m_pSilhouette->SetRotation(Math::Euler{ rotationX, 0.0f, 0.0f }.CreateQuaternion() * m_pSilhouette->GetRotation());
 }
 
 // スケーリング
@@ -127,25 +174,6 @@ void PlayerModel::Scaling(float elapsedTime, const Player& player)
 	Math::Vector3 scale = m_pTransform->GetScale() + m_scaling.GetCurrent();
 	m_pTransform->SetScale(scale);
 	m_pSilhouette->SetScale(scale);
-}
-
-// 回転
-void PlayerModel::Rotate(float elapsedTime, const Player& player)
-{
-	// 糸伸ばし状態
-	if (player.IsState<PlayerStateExpandThread>())
-	{
-		m_dashAngle.SetTarget(0.0f);
-	}
-	else
-	{
-		// 移動速度で回転
-		m_dashAngle.SetTarget(Math::Clamp(player.GetMoveVelocityRatio() - 1.0f, 0.0f, 1.0f) * m_dashAngleMax);
-	}
-
-	m_dashAngle.Tick(elapsedTime);
-	m_pTransform->SetRotation(Math::Euler{ m_dashAngle.GetCurrent(), 0.0f, 0.0f }.CreateQuaternion() * m_pTransform->GetRotation());
-	m_pSilhouette->SetRotation(Math::Euler{ m_dashAngle.GetCurrent(), 0.0f, 0.0f }.CreateQuaternion() * m_pSilhouette->GetRotation());
 }
 
 // 映るカメラ画面を追加

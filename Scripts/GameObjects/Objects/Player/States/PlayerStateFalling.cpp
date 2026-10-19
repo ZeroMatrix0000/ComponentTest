@@ -83,9 +83,6 @@ void PlayerStateFalling::Update(PlayerInternals* pInternals, float elapsedTime)
 	}
 	pInternals->jumpBufferTime -= elapsedTime;
 
-	// 糸伸ばしタイマーの更新
-	pInternals->threadTimer -= elapsedTime;
-
 	// 糸の更新
 	pInternals->pThread->Update(elapsedTime);
 

@@ -67,9 +67,6 @@ struct PlayerInternals
 	// カメラの速度の参照量
 	float CAMERA_VELOCITY_COEFFICIENT{};
 
-	// 糸を伸ばしたときのインターバル
-	float THREAD_INTERVAL{};
-
 	// カメラ画面のポインタ
 	const Renderings::CameraScreen<Camera::EulerTargetCamera>* P_CAMERA_SCREEN{};
 
@@ -94,8 +91,9 @@ struct PlayerInternals
 	Limited fallCoyoteTime{};
 	// ジャンプの先行入力猶予
 	Limited jumpBufferTime{};
-	// 糸伸ばしタイマー
-	Limited threadTimer{};
+
+	// 糸を伸ばせるかどうか
+	bool canExpandThread{};
 
 	// トランスフォーム
 	Transform* pTransform{};

@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerStateExpandThread.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/18
+ * Last Updated: 2026/10/19
  *
  * プレイヤーの地面にいる状態
  */
@@ -10,7 +10,7 @@
 #include "PlayerStates.h"
 
 #include "../PlayerThread.h"
-#include "Scripts/GameObjects/Particles/WindCutParticle.h"
+#include "../PlayerModel.h"
 #include "Scripts/Commons/Components/Transform.h"
 #include "Scripts/Commons/Colliders/BoxCollider.h"
 #include "Scripts/Commons/Renderings/Particle/ParticleManager.h"
@@ -20,7 +20,6 @@ PlayerStateExpandThread::PlayerStateExpandThread(const Math::Vector3& targetPosi
 	: m_targetPosition{ targetPosition }
 	, m_targetType{ targetType }
 	, m_playerPosition{}
-	, m_particleTimer{}
 {
 }
 
@@ -36,6 +35,16 @@ void PlayerStateExpandThread::Enter(PlayerInternals* pInternals)
 	// 向き
 	Math::Vector3 direction = m_targetPosition - m_playerPosition;
 	direction.Normalize();
+
+	// モデルを回転
+	pInternals->pModel->SetThreadAngle(Math::Rad2Deg(Math::Arcsin(-direction.y / direction.Length())));
+
+	Math::Quaternion threadRotation = Math::Quaternion::CreateFromRotationMatrix
+	(
+		Math::Matrix::CreateWorld(Math::Vector3::Zero, -direction, Math::Vector3::Up)
+	);
+	direction.y = 0;
+
 	// ターゲットの方向へ回転
 	pInternals->rotation.SetTarget
 	(
@@ -49,7 +58,7 @@ void PlayerStateExpandThread::Enter(PlayerInternals* pInternals)
 	(
 		pInternals->pBoxCollider->GetWorldBox().position,
 		m_targetPosition,
-		pInternals->rotation.GetTarget(),
+		threadRotation,
 		m_targetType == PlayerInternals::TargetType::Air
 	);
 }
@@ -57,9 +66,6 @@ void PlayerStateExpandThread::Enter(PlayerInternals* pInternals)
 // 更新処理
 void PlayerStateExpandThread::Update(PlayerInternals* pInternals, float elapsedTime)
 {
-	// 糸伸ばしタイマーの更新
-	pInternals->threadTimer -= elapsedTime;
-
 	// 糸の更新
 	pInternals->pThread->Update(elapsedTime);
 
@@ -68,14 +74,7 @@ void PlayerStateExpandThread::Update(PlayerInternals* pInternals, float elapsedT
 
 	// 座標を調整
 	m_playerPosition = pInternals->pThread->GetPlayerPosition();
-	pInternals->pTransform->SetPosition
-	(
-		m_playerPosition + Math::Vector3::Transform
-		(
-			Math::Vector3::Down * pInternals->pBoxCollider->GetWorldBox().size.y / 2.0f,
-			pInternals->rotation.GetCurrent()
-		)
-	);
+	pInternals->pTransform->SetPosition(m_playerPosition + Math::Vector3::Down * pInternals->pBoxCollider->GetWorldBox().size.y / 2.0f);
 
 	// 回転させる
 	pInternals->pTransform->SetRotation(pInternals->rotation.GetCurrent());
@@ -94,27 +93,18 @@ void PlayerStateExpandThread::Update(PlayerInternals* pInternals, float elapsedT
 		case PlayerInternals::TargetType::Object:
 			SetNextState(std::make_unique<PlayerStateFalling>());
 			pInternals->fallSpeed = pInternals->fallSpeed.GetMin();
+			pInternals->canExpandThread = true;
+			pInternals->pThread->UnDisplay();
 			break;
 		case PlayerInternals::TargetType::Ground:
-			SetNextState(std::make_unique<PlayerStateFalling>());
-			pInternals->fallSpeed = pInternals->fallSpeed.GetMin();
+			SetNextState(std::make_unique<PlayerStateStick>());
 			break;
 		case PlayerInternals::TargetType::Air:
 			SetNextState(std::make_unique<PlayerStateFalling>());
+			pInternals->pThread->UnDisplay();
 			break;
 		default:
 			break;
-		}
-	}
-
-	// パーティクルを出現
-	if (pInternals->pThread->GetContractSpeed() > 32.0f)
-	{
-		m_particleTimer += elapsedTime;
-		if (m_particleTimer >= WindCutParticle::INTERVAL)
-		{
-			m_particleTimer -= WindCutParticle::INTERVAL;
-			pInternals->pParticleManager->Play<WindCutParticle>();
 		}
 	}
 }
@@ -122,16 +112,6 @@ void PlayerStateExpandThread::Update(PlayerInternals* pInternals, float elapsedT
 // 終了処理
 void PlayerStateExpandThread::Exit(PlayerInternals* pInternals)
 {
-	// 向き
-	Math::Vector3 direction = m_targetPosition - m_playerPosition;
-	direction.y = 0;
-	// 回転
-	pInternals->rotation.SetTarget
-	(
-		Math::Quaternion::CreateFromRotationMatrix(Math::Matrix::CreateWorld(Math::Vector3::Zero, -direction, Math::Vector3::Up)),
-		200.0f,
-		25.0f
-	);
 }
 
 // 座標補正
