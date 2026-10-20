@@ -33,7 +33,7 @@ public:
 	// プレイヤーのジャンプ入力を取得
 	virtual bool          GetPlayerJump()         const = 0;
 	// プレイヤーの糸伸ばし入力を取得
-	virtual bool          GetPlayerExpandThread() const = 0;
+	virtual bool          GetPlayerExpandWire() const = 0;
 
 	// フィールド上のオブジェクトのインタラクト入力を取得
 	virtual bool GetFieldInteract() const = 0;

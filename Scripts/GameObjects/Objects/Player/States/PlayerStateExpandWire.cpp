@@ -1,5 +1,5 @@
 /*
- * FileName:     PlayerStateExpandThread.cpp
+ * FileName:     PlayerStateExpandWire.cpp
  * Author:       Takao Hayata
  * Last Updated: 2026/10/19
  *
@@ -9,14 +9,14 @@
 #include "Pch.h"
 #include "PlayerStates.h"
 
-#include "../PlayerThread.h"
+#include "../PlayerWire.h"
 #include "../PlayerModel.h"
 #include "Scripts/Commons/Components/Transform.h"
 #include "Scripts/Commons/Colliders/BoxCollider.h"
 #include "Scripts/Commons/Renderings/Particle/ParticleManager.h"
 
  // コンストラクタ
-PlayerStateExpandThread::PlayerStateExpandThread(const Math::Vector3& targetPosition, PlayerInternals::TargetType targetType)
+PlayerStateExpandWire::PlayerStateExpandWire(const Math::Vector3& targetPosition, PlayerInternals::TargetType targetType)
 	: m_targetPosition{ targetPosition }
 	, m_targetType{ targetType }
 	, m_playerPosition{}
@@ -24,7 +24,7 @@ PlayerStateExpandThread::PlayerStateExpandThread(const Math::Vector3& targetPosi
 }
 
 // 開始処理
-void PlayerStateExpandThread::Enter(PlayerInternals* pInternals)
+void PlayerStateExpandWire::Enter(PlayerInternals* pInternals)
 {
 	m_playerPosition = pInternals->pBoxCollider->GetWorldBox().position;
 
@@ -37,9 +37,9 @@ void PlayerStateExpandThread::Enter(PlayerInternals* pInternals)
 	direction.Normalize();
 
 	// モデルを回転
-	pInternals->pModel->SetThreadAngle(Math::Rad2Deg(Math::Arcsin(-direction.y / direction.Length())));
+	pInternals->pModel->SetWireAngle(Math::Rad2Deg(Math::Arcsin(-direction.y / direction.Length())));
 
-	Math::Quaternion threadRotation = Math::Quaternion::CreateFromRotationMatrix
+	Math::Quaternion wireRotation = Math::Quaternion::CreateFromRotationMatrix
 	(
 		Math::Matrix::CreateWorld(Math::Vector3::Zero, -direction, Math::Vector3::Up)
 	);
@@ -54,26 +54,26 @@ void PlayerStateExpandThread::Enter(PlayerInternals* pInternals)
 	);
 
 	// ターゲットを設定
-	pInternals->pThread->SetTarget
+	pInternals->pWire->SetTarget
 	(
 		pInternals->pBoxCollider->GetWorldBox().position,
 		m_targetPosition,
-		threadRotation,
+		wireRotation,
 		m_targetType == PlayerInternals::TargetType::Air
 	);
 }
 
 // 更新処理
-void PlayerStateExpandThread::Update(PlayerInternals* pInternals, float elapsedTime)
+void PlayerStateExpandWire::Update(PlayerInternals* pInternals, float elapsedTime)
 {
 	// 糸の更新
-	pInternals->pThread->Update(elapsedTime);
+	pInternals->pWire->Update(elapsedTime);
 
 	// 回転の更新
 	pInternals->rotation.Tick(elapsedTime);
 
 	// 座標を調整
-	m_playerPosition = pInternals->pThread->GetPlayerPosition();
+	m_playerPosition = pInternals->pWire->GetPlayerPosition();
 	pInternals->pTransform->SetPosition(m_playerPosition + Math::Vector3::Down * pInternals->pBoxCollider->GetWorldBox().size.y / 2.0f);
 
 	// 回転させる
@@ -86,22 +86,22 @@ void PlayerStateExpandThread::Update(PlayerInternals* pInternals, float elapsedT
 	pInternals->pParticleManager->Update(elapsedTime);
 
 	// 落下状態に戻す
-	if (pInternals->pThread->GetCurrentState() == PlayerThread::State::None)
+	if (pInternals->pWire->GetCurrentState() == PlayerWire::State::None)
 	{
 		switch (m_targetType)
 		{
 		case PlayerInternals::TargetType::Object:
 			SetNextState(std::make_unique<PlayerStateFalling>());
 			pInternals->fallSpeed = pInternals->fallSpeed.GetMin();
-			pInternals->canExpandThread = true;
-			pInternals->pThread->UnDisplay();
+			pInternals->canExpandWire = true;
+			pInternals->pWire->UnDisplay();
 			break;
 		case PlayerInternals::TargetType::Ground:
 			SetNextState(std::make_unique<PlayerStateStick>());
 			break;
 		case PlayerInternals::TargetType::Air:
 			SetNextState(std::make_unique<PlayerStateFalling>());
-			pInternals->pThread->UnDisplay();
+			pInternals->pWire->UnDisplay();
 			break;
 		default:
 			break;
@@ -110,11 +110,11 @@ void PlayerStateExpandThread::Update(PlayerInternals* pInternals, float elapsedT
 }
 
 // 終了処理
-void PlayerStateExpandThread::Exit(PlayerInternals* pInternals)
+void PlayerStateExpandWire::Exit(PlayerInternals* pInternals)
 {
 }
 
 // 座標補正
-void PlayerStateExpandThread::PositionCorrect(PlayerInternals* pInternals, float distance, const Math::Vector3& direction)
+void PlayerStateExpandWire::PositionCorrect(PlayerInternals* pInternals, float distance, const Math::Vector3& direction)
 {
 }

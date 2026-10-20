@@ -25,8 +25,8 @@
 		"Name": "Title",
 		"Components": {
 			"Image": {
-				"ImageSourceName": "Title",
-				"PixelShaderName": "Test2",
+				"ImageSourceName": "TitleLogo",
+				"PixelShaderName": "TitleLogo2",
 				"Canvas": "Canvas"
 			},
 			"RectTransform": {
@@ -35,8 +35,8 @@
 					"Y": -100.0
 				},
 				"Size": {
-					"X": 922.0,
-					"Y": 283.5
+					"X": 1326,
+					"Y": 517.5
 				},
 				"Anchor": "MiddleCenter"
 			}

@@ -206,11 +206,11 @@
     <ClCompile Include="Scripts\GameObjects\Objects\Player\Player.cpp" />
     <ClCompile Include="Scripts\GameObjects\Objects\Player\PlayerCamera.cpp" />
     <ClCompile Include="Scripts\GameObjects\Objects\Player\PlayerModel.cpp" />
-    <ClCompile Include="Scripts\GameObjects\Objects\Player\PlayerThread.cpp" />
+    <ClCompile Include="Scripts\GameObjects\Objects\Player\PlayerWire.cpp" />
     <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateFalling.cpp" />
     <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateOnAir.cpp" />
     <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateOnGround.cpp" />
-    <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateExpandThread.cpp" />
+    <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateExpandWire.cpp" />
     <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateStick.cpp" />
     <ClCompile Include="Scripts\GameObjects\Particles\JumpingParticle.cpp" />
     <ClCompile Include="Scripts\GameObjects\Particles\LandingParticle.cpp" />
@@ -243,7 +243,7 @@
     <ClCompile Include="Scripts\Scenes\TitleScene\TitleScene.cpp" />
     <ClCompile Include="Scripts\GameObjects\UIs\SelectMenu\SelectMenu.cpp" />
     <None Include="Resources\Jsons\Events\Event_TalkAboutText.json" />
-    <None Include="Resources\Jsons\Events\Event_TalkAboutThread.json" />
+    <None Include="Resources\Jsons\Events\Event_TalkAboutWire.json" />
     <None Include="Resources\Jsons\Events\Event_TalkHowTo.json" />
     <None Include="Resources\Jsons\Events\Event_TalkTestColor.json" />
     <None Include="Resources\Jsons\Prefabs\Prefab_BlackBeltImage.json" />
@@ -257,8 +257,8 @@
     <None Include="Resources\Jsons\Prefabs\Prefab_Player.json" />
     <None Include="Resources\Jsons\Prefabs\Prefab_PlayerModel.json" />
     <None Include="Resources\Jsons\Prefabs\Prefab_PlayerSilhouette.json" />
-    <None Include="Resources\Jsons\Prefabs\Prefab_PlayerThread.json" />
-    <None Include="Resources\Jsons\Prefabs\Prefab_PlayerThreadParticleManager.json" />
+    <None Include="Resources\Jsons\Prefabs\Prefab_PlayerWire.json" />
+    <None Include="Resources\Jsons\Prefabs\Prefab_PlayerWireParticleManager.json" />
     <None Include="Resources\Jsons\Prefabs\Prefab_SelectMenu.json" />
     <None Include="Resources\Jsons\Prefabs\Prefab_SelectMenuCursor.json" />
     <None Include="Resources\Jsons\Prefabs\Prefab_SelectMenuText.json" />
@@ -327,13 +327,13 @@
     <ClInclude Include="Scripts\GameObjects\Objects\Player\PlayerCamera.h" />
     <ClInclude Include="Scripts\GameObjects\Objects\Player\PlayerModel.h" />
     <ClInclude Include="Scripts\GameObjects\Objects\Player\PlayerInternals.h" />
-    <ClInclude Include="Scripts\GameObjects\Objects\Player\PlayerThread.h" />
+    <ClInclude Include="Scripts\GameObjects\Objects\Player\PlayerWire.h" />
     <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerState.h" />
     <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStateFalling.h" />
     <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStateOnAir.h" />
     <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStateOnGround.h" />
     <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStates.h" />
-    <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStateExpandThread.h" />
+    <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStateExpandWire.h" />
     <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStateStick.h" />
     <ClInclude Include="Scripts\GameObjects\Particles\JumpingParticle.h" />
     <ClInclude Include="Scripts\GameObjects\Particles\LandingParticle.h" />
@@ -465,6 +465,26 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(cso)PixelShaders/%(Filename).cso</ObjectFileOutput>
     </FxCompile>
     <FxCompile Include="Shaders\PixelShaders\TextOutline.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(cso)PixelShaders/%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(cso)PixelShaders/%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(cso)PixelShaders/%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(cso)PixelShaders/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="Shaders\PixelShaders\TitleLogo.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(cso)PixelShaders/%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(cso)PixelShaders/%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(cso)PixelShaders/%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(cso)PixelShaders/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="Shaders\PixelShaders\TitleLogo2.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

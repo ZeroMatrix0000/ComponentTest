@@ -152,6 +152,16 @@ void Renderings::DecorationString::CalcTag(const std::wstring& tag)
 			m_rubyDescList.at(m_rubyDescCount).length = m_str.size() - m_rubyDescList.at(m_rubyDescCount).beginIndex;
 			m_rubyDescCount++;
 		}
+		// <
+		else if (tag == L"lt")
+		{
+			m_str.append(L"<");
+		}
+		// >
+		else if (tag == L"gt")
+		{
+			m_str.append(L">");
+		}
 		else
 		{
 			// エラーメッセージを追加

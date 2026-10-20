@@ -9,7 +9,7 @@
 	"Model3D": {
 		"ModelSourceName": "Box"
 	},
-	"PlayerThread": {
+	"PlayerWire": {
 		"Thickness": 0.2,
 		"ExpandSpeed": 80.0,
 		"RotationSpeed": 1000.0,

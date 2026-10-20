@@ -1,7 +1,7 @@
 /*
  * FileName:     InstancingTest.hlsl
  * Author:       Takao Hayata
- * Last Updated: 2026/10/16
+ * Last Updated: 2026/10/20
  *
  * インスタンシング描画テスト頂点シェーダ
  */
@@ -31,7 +31,7 @@ VSOutput main(VSInput input)
 	
 	output.texCoord = input.texCoord;
 	output.worldPosition = worldPosition;
-	output.normal = mul(input.normal, float3x3(input.world._11_12_13, input.world._21_22_23, input.world._31_32_33));
+	output.normal = mul(input.normal, (float3x3) input.world);
 	
 	output.color = input.color;
 	

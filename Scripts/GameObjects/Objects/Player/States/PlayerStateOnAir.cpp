@@ -10,7 +10,7 @@
 #include "PlayerStates.h"
 
 #include "../PlayerInternals.h"
-#include "../PlayerThread.h"
+#include "../PlayerWire.h"
 #include "Scripts/Commons/Components/Transform.h"
 #include "Scripts/Commons/Colliders/BoxCollider.h"
 #include "Scripts/Commons/Renderings/Particle/ParticleManager.h"
@@ -95,7 +95,7 @@ void PlayerStateOnAir::Update(PlayerInternals* pInternals, float elapsedTime)
 	}
 
 	// 糸の更新
-	pInternals->pThread->Update(elapsedTime);
+	pInternals->pWire->Update(elapsedTime);
 
 	// 回転の更新
 	pInternals->rotation.Tick(elapsedTime);

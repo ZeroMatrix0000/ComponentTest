@@ -31,7 +31,7 @@ public:
 	// プレイヤーのジャンプ入力を取得
 	bool          GetPlayerJump()         const override;
 	// プレイヤーの糸伸ばし入力を取得
-	bool          GetPlayerExpandThread() const override;
+	bool          GetPlayerExpandWire() const override;
 
 	// フィールド上のオブジェクトのインタラクト入力を取得
 	bool GetFieldInteract() const override;

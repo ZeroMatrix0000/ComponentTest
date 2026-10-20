@@ -1,5 +1,5 @@
 /*
- * FileName:     PlayerThread.cpp
+ * FileName:     PlayerWire.cpp
  * Author:       Takao Hayata
  * Last Updated: 2026/10/19
  *
@@ -7,7 +7,7 @@
  */
 
 #include "Pch.h"
-#include "PlayerThread.h"
+#include "PlayerWire.h"
 
 #include "Scripts/GameObjects/Particles/PoppingParticle.h"
 #include "Scripts/GameObjects/Particles/SparklingParticle.h"
@@ -19,7 +19,7 @@
 #include "Scripts/Commons/Systems/JsonSerializer.h"
 
 // コンストラクタ
-PlayerThread::PlayerThread(const ComponentDesc& desc)
+PlayerWire::PlayerWire(const ComponentDesc& desc)
 	: Component{ desc }
 	, THICKNESS{}
 	, EXPAND_SPEED{}
@@ -48,7 +48,7 @@ PlayerThread::PlayerThread(const ComponentDesc& desc)
 }
 
 // 初期化処理
-void PlayerThread::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+void PlayerWire::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
 {
 	m_pTransform = GetPOwner()->GetComponent<Transform>();
 
@@ -68,14 +68,14 @@ void PlayerThread::Initalize(const nlohmann::ordered_json& json, IGameObjectFind
 	// パーティクル管理生成
 	if (m_pParticleManager == GetPOwner()->GetNullReferences<Renderings::ParticleManager>())
 	{
-		GameObject* pObj = Instantiate("Prefab_PlayerThreadParticleManager");
+		GameObject* pObj = Instantiate("Prefab_PlayerWireParticleManager");
 		m_pParticleManager = pObj->GetComponent<Renderings::ParticleManager>();
 		m_pParticleManagerTransform = pObj->GetComponent<Transform>();
 	}
 }
 
 // 更新処理
-void PlayerThread::Update(float elapsedTime)
+void PlayerWire::Update(float elapsedTime)
 {
 	// 移動
 	Translate(elapsedTime);
@@ -88,7 +88,7 @@ void PlayerThread::Update(float elapsedTime)
 }
 
 // 移動
-void PlayerThread::Translate(float elapsedTime)
+void PlayerWire::Translate(float elapsedTime)
 {
 	switch (m_currentState)
 	{
@@ -166,7 +166,7 @@ void PlayerThread::Translate(float elapsedTime)
 }
 
 // 回転
-void PlayerThread::Rotate(float elapsedTime)
+void PlayerWire::Rotate(float elapsedTime)
 {
 	// 伸ばし状態なら回転させる
 	if (m_currentState == State::Expand)
@@ -180,7 +180,7 @@ void PlayerThread::Rotate(float elapsedTime)
 }
 
 // スケーリング
-void PlayerThread::Scaling(float elapsedTime)
+void PlayerWire::Scaling(float elapsedTime)
 {
 	if (m_currentState == State::None && !m_isDisplay)
 	{
@@ -193,14 +193,14 @@ void PlayerThread::Scaling(float elapsedTime)
 }
 
 // 映るカメラ画面を追加
-void PlayerThread::AddICameraScreen(const Renderings::ICameraScreen& iCameraScreen)
+void PlayerWire::AddICameraScreen(const Renderings::ICameraScreen& iCameraScreen)
 {
 	GetPOwner()->GetComponent<Renderings::Model3D>()->AddICameraScreen(iCameraScreen);
 	m_pParticleManager->AddICameraScreen(iCameraScreen);
 }
 
 // ターゲットを設定
-void PlayerThread::SetTarget(const Math::Vector3& playerPosition, const Math::Vector3& targetPosition, const Math::Quaternion& rotation, bool toAir)
+void PlayerWire::SetTarget(const Math::Vector3& playerPosition, const Math::Vector3& targetPosition, const Math::Quaternion& rotation, bool toAir)
 {
 	m_distance = (targetPosition - playerPosition).Length();
 	m_length = 0.0f;
@@ -218,7 +218,7 @@ void PlayerThread::SetTarget(const Math::Vector3& playerPosition, const Math::Ve
 }
 
 // プレイヤーの座標を設定
-void PlayerThread::SetPlayerPosition(const Math::Vector3& playerPosition)
+void PlayerWire::SetPlayerPosition(const Math::Vector3& playerPosition)
 {
 	m_playerPosition = playerPosition;
 

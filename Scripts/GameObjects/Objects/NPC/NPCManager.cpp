@@ -153,7 +153,7 @@ void NPCManager::PlayerCollide(Player* pPlayer)
 			// 座標補正
 			pPlayer->PositionCorrect(distance, direction);
 			// プレイヤーが糸伸ばし中かつ移動中ならスピン
-			if (pPlayer->IsState<PlayerStateExpandThread>() && pPlayer->GetMoveVelocity() != Math::Vector3::Zero)
+			if (pPlayer->IsState<PlayerStateExpandWire>() && pPlayer->GetMoveVelocity() != Math::Vector3::Zero)
 			{
 				// 左側に当たったら時計回り
 				pNPC->Spin(Math::Vector3::Up.Dot(pPlayer->GetMoveVelocity().Cross(nPCBox.position - playerBox.position)) > 0.0f);

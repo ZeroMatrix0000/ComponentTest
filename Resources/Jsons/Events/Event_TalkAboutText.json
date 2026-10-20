@@ -31,6 +31,12 @@
 		}
 	},
 	{
+		"ActionType": "SetMessageWindowText",
+		"Params": {
+			"Text": "ちなみに、<lt>color=#00BBFF<gt>テキストデータ<lt>/color<gt>は\nこんな<lt>ruby=かん<gt>感<lt>/ruby<gt>じになってます。\n<color=#44FFFFFF><ruby=よ>読</ruby>むの<ruby=つか>疲</ruby>れるわ...</color>"
+		}
+	},
+	{
 		"ActionType": "CloseMessageWindow",
 		"Params": {
 			"IsWait": true

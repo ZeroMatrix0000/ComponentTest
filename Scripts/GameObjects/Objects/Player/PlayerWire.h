@@ -1,5 +1,5 @@
 /*
- * FileName:     PlayerThread.h
+ * FileName:     PlayerWire.h
  * Author:       Takao Hayata
  * Last Updated: 2026/10/19
  *
@@ -21,7 +21,7 @@ namespace Renderings
 }
 
 // プレイヤーの糸
-class PlayerThread : public Component
+class PlayerWire : public Component
 {
 
 public:
@@ -43,7 +43,7 @@ public:
 	/* メンバ関数 */
 
 	// コンストラクタ
-	PlayerThread(const ComponentDesc& desc);
+	PlayerWire(const ComponentDesc& desc);
 
 	// 初期化処理
 	void Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder) override;

@@ -8,14 +8,14 @@
 	{
 		"ActionType": "SetMessageWindowText",
 		"Params": {
-			"Text": "マウスの<ruby=ひだり>左</ruby>クリックを<ruby=お>押</ruby>すことで、\n<ruby=がめんちゅうおう>画面中央</ruby>に<ruby=む>向</ruby>かって<color=#00BBFF><ruby=いと>糸</ruby>を<ruby=の>伸</ruby>ばす</color>ことができるよ。",
-			"Character": "<ruby=いと>糸</ruby>マニア"
+			"Text": "マウスの<ruby=ひだり>左</ruby>クリックを<ruby=お>押</ruby>すことで、\n<ruby=がめんちゅうおう>画面中央</ruby>に<ruby=む>向</ruby>かって<color=#00BBFF>ワイヤーを<ruby=の>伸</ruby>ばす</color>ことができるよ。",
+			"Character": "ワイヤーマニア"
 		}
 	},
 	{
 		"ActionType": "SetMessageWindowText",
 		"Params": {
-			"Text": "<ruby=いと>糸</ruby>を<ruby=の>伸</ruby>ばしてくっつけた<ruby=ばしょ>場所</ruby>に<ruby=む>向</ruby>かって\n<ruby=こうそくいどう>高速移動</ruby>できるんだ。"
+			"Text": "ワイヤーを<ruby=の>伸</ruby>ばしてくっつけた<ruby=ばしょ>場所</ruby>に<ruby=む>向</ruby>かって\n<ruby=こうそくいどう>高速移動</ruby>できるんだ。"
 		}
 	},
 	{
@@ -27,13 +27,13 @@
 	{
 		"ActionType": "SetMessageWindowText",
 		"Params": {
-			"Text": "ちなみに、<ruby=いと>糸</ruby>を<ruby=の>伸</ruby>ばしたあとは<ruby=いっかいじめん>一回地面</ruby>に<ruby=あし>足</ruby>をつけないと、\n<color=#00BBFF><ruby=つぎ>次</ruby>の<ruby=いと>糸</ruby>を<ruby=の>伸</ruby>ばすことはできない</color>から、<ruby=き>気</ruby>をつけてね。"
+			"Text": "ちなみに、ワイヤーを<ruby=の>伸</ruby>ばしたあとは\n<ruby=いっかいじめん>一回地面</ruby>に<ruby=あし>足</ruby>をつけないと、\n<color=#00BBFF><ruby=つぎ>次</ruby>のワイヤーを<ruby=の>伸</ruby>ばすことはできない</color>から、<ruby=き>気</ruby>をつけてね。"
 		}
 	},
 	{
 		"ActionType": "SetMessageWindowText",
 		"Params": {
-			"Text": "<ruby=ボクら>NPC</ruby> の<ruby=ちか>近</ruby>くを<ruby=さ>指</ruby>しているときは、\nその<ruby=ひと>人</ruby>に<ruby=む>向</ruby>かって<ruby=いと>糸</ruby>を<ruby=の>伸</ruby>ばすよ。"
+			"Text": "<ruby=ボクら>NPC</ruby> の<ruby=ちか>近</ruby>くを<ruby=さ>指</ruby>しているときは、\nその<ruby=ひと>人</ruby>に<ruby=む>向</ruby>かってワイヤーを<ruby=の>伸</ruby>ばすよ。"
 		}
 	},
 	{

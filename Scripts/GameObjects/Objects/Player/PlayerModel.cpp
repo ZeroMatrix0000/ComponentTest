@@ -29,7 +29,7 @@ PlayerModel::PlayerModel(const ComponentDesc& desc)
 	, m_fallingHeight{}
 	, m_scaling{}
 	, m_dashAngle{}
-	, m_threadAngle{}
+	, m_wireAngle{}
 	, m_pTransform{ GetPOwner()->GetNullReferences<Transform>() }
 	, m_pSilhouette{ GetPOwner()->GetNullReferences<Transform>() }
 	, m_pParticleManager{}
@@ -85,13 +85,13 @@ void PlayerModel::Translate(float elapsedTime, const Player& player)
 		Math::Vector3 position = player.GetBox().position + Math::Vector3::Up * m_fallingHeight.GetCurrent() + Math::Vector3::Transform
 		(
 			Math::Vector3::Down * player.GetBox().size.y / 2.0f,
-			Math::Euler{ m_threadAngle.GetCurrent(), 0.0f, 0.0f }.CreateQuaternion() * m_pTransform->GetRotation()
+			Math::Euler{ m_wireAngle.GetCurrent(), 0.0f, 0.0f }.CreateQuaternion() * m_pTransform->GetRotation()
 		);
 		m_pTransform->SetPosition(position);
 		m_pSilhouette->SetPosition(position);
 	}
 	// 糸伸ばし状態
-	else if (player.IsState<PlayerStateExpandThread>())
+	else if (player.IsState<PlayerStateExpandWire>())
 	{
 		m_bounceTime = 0.0f;
 		m_fallingHeight.SetTarget(0.0f);
@@ -100,7 +100,7 @@ void PlayerModel::Translate(float elapsedTime, const Player& player)
 		Math::Vector3 position = player.GetBox().position + Math::Vector3::Up * m_fallingHeight.GetCurrent() + Math::Vector3::Transform
 		(
 			Math::Vector3::Down * player.GetBox().size.y / 2.0f,
-			Math::Euler{m_threadAngle.GetCurrent(), 0.0f, 0.0f }.CreateQuaternion() * m_pTransform->GetRotation()
+			Math::Euler{m_wireAngle.GetCurrent(), 0.0f, 0.0f }.CreateQuaternion() * m_pTransform->GetRotation()
 		);
 		m_pTransform->SetPosition(position);
 		m_pSilhouette->SetPosition(position);
@@ -124,7 +124,7 @@ void PlayerModel::Translate(float elapsedTime, const Player& player)
 		Math::Vector3 position = player.GetBox().position + Math::Vector3::Up * height + Math::Vector3::Transform
 		(
 			Math::Vector3::Down * player.GetBox().size.y / 2.0f,
-			Math::Euler{ m_threadAngle.GetCurrent(), 0.0f, 0.0f }.CreateQuaternion() * m_pTransform->GetRotation()
+			Math::Euler{ m_wireAngle.GetCurrent(), 0.0f, 0.0f }.CreateQuaternion() * m_pTransform->GetRotation()
 		);
 		m_pTransform->SetPosition(position);
 		m_pSilhouette->SetPosition(position);
@@ -135,7 +135,7 @@ void PlayerModel::Translate(float elapsedTime, const Player& player)
 void PlayerModel::Rotate(float elapsedTime, const Player& player)
 {
 	// 糸伸ばし状態
-	if (player.IsState<PlayerStateExpandThread>())
+	if (player.IsState<PlayerStateExpandWire>())
 	{
 		m_dashAngle.SetTarget(0.0f);
 	}
@@ -143,13 +143,13 @@ void PlayerModel::Rotate(float elapsedTime, const Player& player)
 	{
 		// 移動速度で回転
 		m_dashAngle.SetTarget(Math::Clamp(player.GetMoveVelocityRatio() - 1.0f, 0.0f, 1.0f) * m_dashAngleMax, 200.0f, 25.0f);
-		m_threadAngle.SetTarget(0.0f);
+		m_wireAngle.SetTarget(0.0f);
 	}
 
 	m_dashAngle.Tick(elapsedTime);
-	m_threadAngle.Tick(elapsedTime);
+	m_wireAngle.Tick(elapsedTime);
 
-	float rotationX = m_dashAngle.GetCurrent() + m_threadAngle.GetCurrent();
+	float rotationX = m_dashAngle.GetCurrent() + m_wireAngle.GetCurrent();
 	m_pTransform->SetRotation(Math::Euler{ rotationX, 0.0f, 0.0f }.CreateQuaternion() * m_pTransform->GetRotation());
 	m_pSilhouette->SetRotation(Math::Euler{ rotationX, 0.0f, 0.0f }.CreateQuaternion() * m_pSilhouette->GetRotation());
 }
@@ -158,7 +158,7 @@ void PlayerModel::Rotate(float elapsedTime, const Player& player)
 void PlayerModel::Scaling(float elapsedTime, const Player& player)
 {
 	// 糸伸ばし状態
-	if (player.IsState<PlayerStateExpandThread>())
+	if (player.IsState<PlayerStateExpandWire>())
 	{
 		m_scaling.SetTarget(Math::Vector3::Zero, 250.0f, 30.0f);
 	}

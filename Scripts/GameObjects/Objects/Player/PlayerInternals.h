@@ -24,7 +24,7 @@ namespace Renderings
 }
 
 class PlayerModel;
-class PlayerThread;
+class PlayerWire;
 
 struct PlayerInternals
 {
@@ -93,7 +93,7 @@ struct PlayerInternals
 	Limited jumpBufferTime{};
 
 	// 糸を伸ばせるかどうか
-	bool canExpandThread{};
+	bool canExpandWire{};
 
 	// トランスフォーム
 	Transform* pTransform{};
@@ -106,6 +106,6 @@ struct PlayerInternals
 	PlayerModel* pModel{};
 
 	// プレイヤーの糸
-	PlayerThread* pThread{};
+	PlayerWire* pWire{};
 
 };

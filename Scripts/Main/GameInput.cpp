@@ -75,7 +75,7 @@ bool GameInput::GetPlayerJump() const
 }
 
 // プレイヤーの糸伸ばし入力を取得
-bool GameInput::GetPlayerExpandThread() const
+bool GameInput::GetPlayerExpandWire() const
 {
 	return m_input.GetMouseButtonDown(MouseButtonName::Left);
 }

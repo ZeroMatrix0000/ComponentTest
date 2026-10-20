@@ -21,7 +21,7 @@
 	{
 		"ActionType": "SetMessageWindowText",
 		"Params": {
-			"Text": "[Z]: <ruby=ボクら>NPC</ruby> とはなす\n<ruby=かいわちゅう>会話中</ruby>に[Z / X]: テキストを<ruby=おく>送</ruby>る\n[LClick]: <ruby=いと>糸</ruby>を<ruby=の>伸</ruby>ばす"
+			"Text": "[Z]: <ruby=ボクら>NPC</ruby> とはなす\n<ruby=かいわちゅう>会話中</ruby>に[Z / X]: テキストを<ruby=おく>送</ruby>る\n[LClick]: ワイヤーを<ruby=の>伸</ruby>ばす"
 		}
 	},
 	{

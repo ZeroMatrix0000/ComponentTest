@@ -1,5 +1,5 @@
 /*
- * FileName:     PlayerStateExpandThread.h
+ * FileName:     PlayerStateExpandWire.h
  * Author:       Takao Hayata
  * Last Updated: 2026/10/19
  *
@@ -12,7 +12,7 @@
 #include "../PlayerInternals.h"
 
  // プレイヤーの糸を伸ばす状態
-class PlayerStateExpandThread : public PlayerState
+class PlayerStateExpandWire : public PlayerState
 {
 
 public:
@@ -21,7 +21,7 @@ public:
 	/* メンバ関数 */
 
 	// コンストラクタ
-	PlayerStateExpandThread(const Math::Vector3& targetPosition, PlayerInternals::TargetType targetType);
+	PlayerStateExpandWire(const Math::Vector3& targetPosition, PlayerInternals::TargetType targetType);
 
 	// 開始処理
 	void Enter(PlayerInternals* pInternals) override;

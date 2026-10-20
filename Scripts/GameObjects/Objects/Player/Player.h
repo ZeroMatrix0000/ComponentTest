@@ -39,7 +39,7 @@ public:
 	void UpdateModel(float elapsedTime = 0.0f);
 
 	// 糸を伸ばす
-	void ExpandThread(const Math::Vector3& targetPosition, PlayerInternals::TargetType targetType);
+	void ExpandWire(const Math::Vector3& targetPosition, PlayerInternals::TargetType targetType);
 
 	// 回転を設定
 	void SetRotation(const Math::Quaternion& rotation) { m_internals.rotation.SetTarget(rotation); }
@@ -66,7 +66,7 @@ public:
 	Math::Vector3 GetCameraTarget() const;
 
 	// 糸を伸ばすことができるかどうか
-	bool CanExpandThread() const { return m_internals.canExpandThread; }
+	bool CanExpandWire() const { return m_internals.canExpandWire; }
 
 
 private:

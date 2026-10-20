@@ -10,7 +10,7 @@
 #include "PlayerStateStick.h"
 
 #include "PlayerStates.h"
-#include "../PlayerThread.h"
+#include "../PlayerWire.h"
 #include "../PlayerInternals.h"
 #include "Scripts/GameObjects/Particles/LandingParticle.h"
 #include "Scripts/GameObjects/Particles/JumpingParticle.h"
@@ -68,7 +68,7 @@ void PlayerStateStick::Update(PlayerInternals* pInternals, float elapsedTime)
 	}
 
 	// 糸の更新
-	pInternals->pThread->Update(elapsedTime);
+	pInternals->pWire->Update(elapsedTime);
 
 	// 回転の更新
 	pInternals->rotation.Tick(elapsedTime);
@@ -86,7 +86,7 @@ void PlayerStateStick::Update(PlayerInternals* pInternals, float elapsedTime)
 // 終了処理
 void PlayerStateStick::Exit(PlayerInternals* pInternals)
 {
-	pInternals->pThread->UnDisplay();
+	pInternals->pWire->UnDisplay();
 }
 
 // 座標補正
@@ -117,6 +117,6 @@ void PlayerStateStick::PositionCorrect(PlayerInternals* pInternals, float distan
 		// トランスフォームを適用
 		pInternals->pBoxCollider->ApplyTransform();
 
-		pInternals->pThread->SetPlayerPosition(pInternals->pBoxCollider->GetWorldBox().position);
+		pInternals->pWire->SetPlayerPosition(pInternals->pBoxCollider->GetWorldBox().position);
 	}
 }

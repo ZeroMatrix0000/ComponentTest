@@ -11,7 +11,7 @@
 #include "Player.h"
 
 #include "PlayerModel.h"
-#include "PlayerThread.h"
+#include "PlayerWire.h"
 #include "States/PlayerStates.h"
 #include "Scripts/Commons/GameObjects/GameObject.h"
 #include "Scripts/Commons/GameObjects/IGameObjectFinder.h"
@@ -33,7 +33,7 @@ Player::Player(const ComponentDesc& desc)
 	m_internals.pBoxCollider = GetPOwner()->GetNullReferences<Colliders::BoxCollider>();
 	m_internals.pParticleManager = GetPOwner()->GetNullReferences<Renderings::ParticleManager>();
 	m_internals.pModel = GetPOwner()->GetNullReferences<PlayerModel>();
-	m_internals.pThread = GetPOwner()->GetNullReferences<PlayerThread>();
+	m_internals.pWire = GetPOwner()->GetNullReferences<PlayerWire>();
 }
 
 // 初期化処理
@@ -80,10 +80,10 @@ void Player::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pI
 	}
 
 	// 糸の生成
-	if (m_internals.pThread == GetPOwner()->GetNullReferences<PlayerThread>())
+	if (m_internals.pWire == GetPOwner()->GetNullReferences<PlayerWire>())
 	{
-		GameObject* pObj = Instantiate("Prefab_PlayerThread");
-		m_internals.pThread = pObj->GetComponent<PlayerThread>();
+		GameObject* pObj = Instantiate("Prefab_PlayerWire");
+		m_internals.pWire = pObj->GetComponent<PlayerWire>();
 	}
 
 	// カメラを設定
@@ -92,7 +92,7 @@ void Player::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pI
 		m_internals.pBoxCollider->AddICameraScreen(*m_internals.P_CAMERA_SCREEN);
 		m_internals.pParticleManager->AddICameraScreen(*m_internals.P_CAMERA_SCREEN);
 		m_internals.pModel->AddICameraScreen(*m_internals.P_CAMERA_SCREEN);
-		m_internals.pThread->AddICameraScreen(*m_internals.P_CAMERA_SCREEN);
+		m_internals.pWire->AddICameraScreen(*m_internals.P_CAMERA_SCREEN);
 	}
 
 	// 現在の状態を初期化
@@ -220,10 +220,10 @@ void Player::UpdateModel(float elapsedTime)
 }
 
 // 糸を伸ばす
-void Player::ExpandThread(const Math::Vector3& targetPosition, PlayerInternals::TargetType targetType)
+void Player::ExpandWire(const Math::Vector3& targetPosition, PlayerInternals::TargetType targetType)
 {
-	m_internals.canExpandThread = false;
-	SetState(std::make_unique<PlayerStateExpandThread>(targetPosition, targetType));
+	m_internals.canExpandWire = false;
+	SetState(std::make_unique<PlayerStateExpandWire>(targetPosition, targetType));
 }
 
 // 中心座標を取得
@@ -247,9 +247,9 @@ float Player::GetMoveVelocityRatio() const
 // 移動速度を取得
 Math::Vector3 Player::GetMoveVelocity() const
 {
-	if (IsState<PlayerStateExpandThread>())
+	if (IsState<PlayerStateExpandWire>())
 	{
-		return m_internals.pThread->GetPlayerVelocity();
+		return m_internals.pWire->GetPlayerVelocity();
 	}
 	return m_internals.moveVelocity;
 }

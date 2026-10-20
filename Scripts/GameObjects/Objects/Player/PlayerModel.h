@@ -53,7 +53,7 @@ public:
 	void SetTransform(const Transform& transform);
 
 	// 糸伸ばし時の角度を設定
-	void SetThreadAngle(float angle) { m_threadAngle.SetTarget(angle); }
+	void SetWireAngle(float angle) { m_wireAngle.SetTarget(angle); }
 
 	// パーティクル管理を設定
 	void SetParticleManager(Renderings::ParticleManager* pParticleManager) { m_pParticleManager = pParticleManager; }
@@ -83,7 +83,7 @@ private:
 	// ダッシュ時の傾き
 	Spring<float> m_dashAngle;
 	// 糸伸ばし時の傾き
-	Spring<float> m_threadAngle;
+	Spring<float> m_wireAngle;
 
 	// 自身のトランスフォーム
 	Transform* m_pTransform;

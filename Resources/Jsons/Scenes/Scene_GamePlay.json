@@ -98,7 +98,7 @@
 		}
 	},
 	{
-		"Name": "NPC糸について",
+		"Name": "NPCワイヤーについて",
 		"Prefab": "Prefab_NPC",
 		"Components": {
 			"Transform": {
@@ -152,8 +152,8 @@
 				]
 			},
 			"NPC": {
-				"Name": "<ruby=いと>糸</ruby>について",
-				"EventName": "Event_TalkAboutThread"
+				"Name": "ワイヤーについて",
+				"EventName": "Event_TalkAboutWire"
 			}
 		}
 	},
@@ -223,7 +223,7 @@
 			"NPCManager": {
 				"NPCList": [
 					"NPC操作方法",
-					"NPC糸について",
+					"NPCワイヤーについて",
 					"NPCテキストについて"
 				],
 				"Canvas": "Canvas"
@@ -339,7 +339,7 @@
 				"CameraScreen": "PlayerCamera",
 				"TargetObjects": [
 					"NPC操作方法",
-					"NPC糸について",
+					"NPCワイヤーについて",
 					"NPCテキストについて"
 				],
 				"Grounds": [

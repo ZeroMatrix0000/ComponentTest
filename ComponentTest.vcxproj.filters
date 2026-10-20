@@ -409,13 +409,13 @@
     <ClCompile Include="Scripts\GameObjects\UIs\TargetPoint\TargetPoint.cpp">
       <Filter>Scripts\GameObjects\UIs\TargetPoint</Filter>
     </ClCompile>
-    <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateExpandThread.cpp">
+    <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateExpandWire.cpp">
       <Filter>Scripts\GameObjects\Objects\Player\States</Filter>
     </ClCompile>
     <ClCompile Include="Scripts\GameObjects\Particles\PoppingParticle.cpp">
       <Filter>Scripts\GameObjects\Particles</Filter>
     </ClCompile>
-    <ClCompile Include="Scripts\GameObjects\Objects\Player\PlayerThread.cpp">
+    <ClCompile Include="Scripts\GameObjects\Objects\Player\PlayerWire.cpp">
       <Filter>Scripts\GameObjects\Objects\Player</Filter>
     </ClCompile>
     <ClCompile Include="Scripts\GameObjects\Particles\SparklingParticle.cpp">
@@ -826,10 +826,10 @@
     <ClInclude Include="Scripts\GameObjects\UIs\TargetPoint\TargetPoint.h">
       <Filter>Scripts\GameObjects\UIs\TargetPoint</Filter>
     </ClInclude>
-    <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStateExpandThread.h">
+    <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStateExpandWire.h">
       <Filter>Scripts\GameObjects\Objects\Player\States</Filter>
     </ClInclude>
-    <ClInclude Include="Scripts\GameObjects\Objects\Player\PlayerThread.h">
+    <ClInclude Include="Scripts\GameObjects\Objects\Player\PlayerWire.h">
       <Filter>Scripts\GameObjects\Objects\Player</Filter>
     </ClInclude>
     <ClInclude Include="Scripts\GameObjects\Particles\PoppingParticle.h">
@@ -910,10 +910,10 @@
     <None Include="Resources\Jsons\Prefabs\Prefab_PlayerSilhouette.json">
       <Filter>Jsons\Prefabs</Filter>
     </None>
-    <None Include="Resources\Jsons\Prefabs\Prefab_PlayerThread.json">
+    <None Include="Resources\Jsons\Prefabs\Prefab_PlayerWire.json">
       <Filter>Jsons\Prefabs</Filter>
     </None>
-    <None Include="Resources\Jsons\Prefabs\Prefab_PlayerThreadParticleManager.json">
+    <None Include="Resources\Jsons\Prefabs\Prefab_PlayerWireParticleManager.json">
       <Filter>Jsons\Prefabs</Filter>
     </None>
     <None Include="Shaders\Header.hlsli">
@@ -922,7 +922,7 @@
     <None Include="Resources\Jsons\Events\Event_TalkHowTo.json">
       <Filter>Jsons\Events</Filter>
     </None>
-    <None Include="Resources\Jsons\Events\Event_TalkAboutThread.json">
+    <None Include="Resources\Jsons\Events\Event_TalkAboutWire.json">
       <Filter>Jsons\Events</Filter>
     </None>
     <None Include="Resources\Jsons\Events\Event_TalkAboutText.json">
@@ -949,6 +949,12 @@
       <Filter>Shaders\PixelShaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\PixelShaders\PlayerSilhouette.hlsl">
+      <Filter>Shaders\PixelShaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PixelShaders\TitleLogo.hlsl">
+      <Filter>Shaders\PixelShaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PixelShaders\TitleLogo2.hlsl">
       <Filter>Shaders\PixelShaders</Filter>
     </FxCompile>
   </ItemGroup>

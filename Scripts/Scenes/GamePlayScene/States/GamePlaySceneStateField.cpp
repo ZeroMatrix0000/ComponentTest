@@ -44,10 +44,10 @@ void GamePlaySceneStateField::Update(GamePlaySceneInternals* pInternals, float e
 	auto* pIGameInput = pInternals->gameContext.GetPIGameInput();
 
 	// 糸伸ばし入力で糸を伸ばす
-	if (pIGameInput->GetPlayerExpandThread() && pInternals->pPlayer->CanExpandThread())
+	if (pIGameInput->GetPlayerExpandWire() && pInternals->pPlayer->CanExpandWire())
 	{
 		TargetPoint::Info info = pInternals->pTargetPoint->GetTargetInfo();
-		pInternals->pPlayer->ExpandThread(info.position, static_cast<PlayerInternals::TargetType>(info.type));
+		pInternals->pPlayer->ExpandWire(info.position, static_cast<PlayerInternals::TargetType>(info.type));
 	}
 
 	// NPCの更新
