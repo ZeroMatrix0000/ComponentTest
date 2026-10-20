@@ -1,7 +1,7 @@
 /*
  * FileName:     WinMain.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/09
+ * Last Updated: 2026/10/20
  *
  * メイン
  */
@@ -18,9 +18,9 @@ LRESULT CALLBACK WndProcW(HWND, UINT, WPARAM, LPARAM);
 /* 定数 */
 
 // ウィンドウクラス名
-static constexpr LPCWSTR WINDOW_CLASS_NAME = L"ComponentTestWindowClass";
+static constexpr LPCWSTR WINDOW_CLASS_NAME = L"GRAPPLINGER_WindowClass";
 // ウィンドウ名
-static constexpr LPCWSTR WINDOW_NAME       = L"ComponentTest";
+static constexpr LPCWSTR WINDOW_NAME       = L"GRAPPLINGER";
 // 出力幅
 static constexpr int     OUTPUT_WIDTH      = 1600;
 // 出力高さ
