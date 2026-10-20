@@ -60,7 +60,7 @@ float Shadow(float3 worldPosition, float3 normal)
 		// 縦に伸ばす
 		delta *= float3(1.0f, 0.1f, 1.0f);
 		
-		shadow = max(shadow, step(length(delta), ShadowRadius[i]) * step(0.1, dot(normal, float3(0.0f, 1.0f, 0.0f))) * 0.4f);
+		shadow = max(shadow, step(length(delta), ShadowRadius[i]) * step(0.1f, dot(normal, float3(0.0f, 1.0f, 0.0f))) * step(delta.y, ShadowRadius[i] * 0.2f) * 0.4f);
 	}
 
 	return shadow;
