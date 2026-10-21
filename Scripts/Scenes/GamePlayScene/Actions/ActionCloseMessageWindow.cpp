@@ -1,7 +1,7 @@
 /*
  * FileName:     ActionCloseMessageWindow.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/10
+ * Last Updated: 2026/10/21
  *
  * メッセージウィンドウ閉アクション
  */
@@ -16,7 +16,7 @@
 ActionCloseMessageWindow::ActionCloseMessageWindow(const ComponentDesc& desc)
 	: Action{ desc }
 	, m_isWait{}
-	, m_pMessageWindow{ GetPOwner()->GetNullReferences<MessageWindow>() }
+	, m_refMessageWindow{ GetOwner().GetNullReferences<MessageWindow>() }
 {
 }
 
@@ -24,7 +24,7 @@ ActionCloseMessageWindow::ActionCloseMessageWindow(const ComponentDesc& desc)
 void ActionCloseMessageWindow::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
 {
 	Systems::JsonSerializer serializer{ pIGameObjectFinder };
-	serializer.AddParameter(&m_pMessageWindow, "MessageWindow");
+	serializer.AddParameter(&m_refMessageWindow, "MessageWindow");
 	serializer.Load(json);
 }
 
@@ -40,14 +40,14 @@ void ActionCloseMessageWindow::SetParams(const nlohmann::ordered_json& json, IGa
 void ActionCloseMessageWindow::Enter()
 {
 	// ダイアログボックスを出現
-	m_pMessageWindow->Appear(false);
+	m_refMessageWindow->Appear(false);
 }
 
 // 更新処理
 void ActionCloseMessageWindow::Update(float elapsedTime, const IGameInput& iGameInput)
 {
 	// 開き終わるまで待たないか、開き終わったなら次のアクションへ移動
-	if (!m_isWait || !m_pMessageWindow->IsMoving())
+	if (!m_isWait || !m_refMessageWindow->IsMoving())
 	{
 		GoNext();
 	}

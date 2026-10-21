@@ -1,7 +1,7 @@
 /*
  * FileName:     BoxCollider.h
  * Author:       Takao Hayata
- * Last Updated: 2026/08/22
+ * Last Updated: 2026/10/21
  *
  * 長方形の当たり判定
  */
@@ -79,8 +79,8 @@ namespace Colliders
 		// 色
 		Math::Color m_color;
 
-		// トランスフォーム
-		Transform* m_pTransform;
+		// トランスフォームの参照
+		Ref<Transform> m_refTransform;
 
 		// 映るカメラ画面のポインタリスト
 		std::vector<const Renderings::ICameraScreen*> m_pICameraScreens;

@@ -1,7 +1,7 @@
 /*
  * FileName:     SphereCollider.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/07
+ * Last Updated: 2026/10/21
  *
  * 球の当たり判定
  */
@@ -22,7 +22,7 @@ Colliders::SphereCollider::SphereCollider(const ComponentDesc& desc, Renderings:
 	, m_sphere{}
 	, m_worldSphere{}
 	, m_color{ DirectX::Colors::LightGreen }
-	, m_pTransform{ GetPOwner()->GetNullReferences<Transform>() }
+	, m_refTransform{ GetOwner().GetNullReferences<Transform>() }
 	, m_pICameraScreens{}
 	, m_pIColliderRenderer{ pIColliderRenderer }
 {
@@ -40,7 +40,7 @@ Colliders::SphereCollider::~SphereCollider()
 // 初期化処理
 void Colliders::SphereCollider::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
 {
-	m_pTransform = GetPOwner()->GetComponent<Transform>();
+	m_refTransform = GetOwner().GetComponent<Transform>();
 
 	Systems::JsonSerializer serializer{ pIGameObjectFinder };
 	serializer.AddParameter(&m_sphere.centerPosition, "Position");
@@ -73,16 +73,16 @@ void Colliders::SphereCollider::RemoveICameraScreen(const Renderings::ICameraScr
 void Colliders::SphereCollider::ApplyTransform()
 {
 	// 取得できなければ何もしない
-	if (m_pTransform == GetPOwner()->GetNullReferences<Transform>())
+	if (m_refTransform == GetOwner().GetNullReferences<Transform>())
 	{
 		m_worldSphere = m_sphere;
 		return;
 	}
 
 	// ワールド行列
-	Math::Matrix world = m_pTransform->GetWorldMatrix();
+	Math::Matrix world = m_refTransform->GetWorldMatrix();
 	// 拡大
-	Math::Vector3 scale = m_pTransform->GetScale();
+	Math::Vector3 scale = m_refTransform->GetScale();
 
 	m_worldSphere.centerPosition = Math::Vector3::Transform(m_sphere.centerPosition, world);
 	m_worldSphere.radius = m_sphere.radius * Math::Max(scale.x, scale.y, scale.z);

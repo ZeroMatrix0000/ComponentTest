@@ -319,6 +319,7 @@
     <ClInclude Include="Scripts\Commons\Systems\ITimer.h" />
     <ClInclude Include="Scripts\Commons\Systems\IWindowController.h" />
     <ClInclude Include="Scripts\Commons\Systems\JsonSerializer.h" />
+    <ClInclude Include="Scripts\Commons\Libraries\Ref.h" />
     <ClInclude Include="Scripts\Commons\Systems\Resources.h" />
     <ClInclude Include="Scripts\Commons\GameObjects\GameObjectManager.h" />
     <ClInclude Include="Scripts\GameObjects\Objects\NPC\NPC.h" />

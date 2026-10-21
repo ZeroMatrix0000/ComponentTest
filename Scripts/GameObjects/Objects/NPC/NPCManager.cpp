@@ -1,7 +1,7 @@
 /*
  * FileName:     NPCManager.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/14
+ * Last Updated: 2026/10/21
  *
  * NPC管理
  */
@@ -43,12 +43,12 @@ void NPCManager::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder
 	// NPC の数だけテキストを追加
 	for (int i = 0; i < m_pNPCList.size(); i++)
 	{
-		InteractCursor* pInteractCursor = Instantiate("Prefab_InteractCursor")->GetComponent<InteractCursor>();
-		m_pInteractCursorList.push_back(pInteractCursor);
-		pInteractCursor->SetName(m_pNPCList.at(i)->GetName());
+		InteractCursor& interactCursor = Instantiate("Prefab_InteractCursor").GetComponent<InteractCursor>();
+		m_pInteractCursorList.push_back(interactCursor);
+		interactCursor.SetName(m_pNPCList.at(i)->GetName());
 		if (pCanvas)
 		{
-			pInteractCursor->SetCanvas(*pCanvas);
+			interactCursor.SetCanvas(*pCanvas);
 		}
 	}
 }

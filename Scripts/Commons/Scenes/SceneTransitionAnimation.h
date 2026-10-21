@@ -1,7 +1,7 @@
 /*
  * FileName:     SceneTransitionAnimation.h
  * Author:       Takao Hayata
- * Last Updated: 2026/07/24
+ * Last Updated: 2026/10/21
  *
  * シーン遷移時のアニメーション
  */
@@ -68,10 +68,10 @@ namespace Scenes
 		// 切り替え率
 		Easing::Value<float> m_changingRate;
 
-		// 画像の2D用トランスフォーム
+		// 画像の2D用トランスフォームのポインタ
 		RectTransform* m_pImageRectTransform;
 
-		// キャンバス
+		// キャンバスのポインタ
 		Renderings::Canvas* m_pCanvas;
 
 	};

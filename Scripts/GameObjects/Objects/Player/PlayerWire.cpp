@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerWire.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/19
+ * Last Updated: 2026/10/21
  *
  * プレイヤーの糸
  */
@@ -41,16 +41,16 @@ PlayerWire::PlayerWire(const ComponentDesc& desc)
 	, m_toAir{}
 	, m_particleTimer{}
 	, m_isDisplay{}
-	, m_pTransform{ GetPOwner()->GetNullReferences<Transform>() }
-	, m_pParticleManager{ GetPOwner()->GetNullReferences<Renderings::ParticleManager>() }
-	, m_pParticleManagerTransform{ GetPOwner()->GetNullReferences<Transform>() }
+	, m_refTransform{ GetOwner().GetNullReferences<Transform>() }
+	, m_refParticleManager{ GetOwner().GetNullReferences<Renderings::ParticleManager>() }
+	, m_refParticleManagerTransform{ GetOwner().GetNullReferences<Transform>() }
 {
 }
 
 // 初期化処理
 void PlayerWire::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
 {
-	m_pTransform = GetPOwner()->GetComponent<Transform>();
+	m_refTransform = GetOwner().GetComponent<Transform>();
 
 	m_rotationAngle.Initialize(0.0f, -180.0f, 180.0f);
 
@@ -66,11 +66,11 @@ void PlayerWire::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder
 	serializer.Load(json);
 
 	// パーティクル管理生成
-	if (m_pParticleManager == GetPOwner()->GetNullReferences<Renderings::ParticleManager>())
+	if (m_refParticleManager == GetOwner().GetNullReferences<Renderings::ParticleManager>())
 	{
-		GameObject* pObj = Instantiate("Prefab_PlayerWireParticleManager");
-		m_pParticleManager = pObj->GetComponent<Renderings::ParticleManager>();
-		m_pParticleManagerTransform = pObj->GetComponent<Transform>();
+		GameObject& obj = Instantiate("Prefab_PlayerWireParticleManager");
+		m_refParticleManager = obj.GetComponent<Renderings::ParticleManager>();
+		m_refParticleManagerTransform = obj.GetComponent<Transform>();
 	}
 }
 
@@ -84,7 +84,7 @@ void PlayerWire::Update(float elapsedTime)
 	// スケーリング
 	Scaling(elapsedTime);
 
-	m_pParticleManager->Update(elapsedTime);
+	m_refParticleManager->Update(elapsedTime);
 }
 
 // 移動
@@ -106,8 +106,8 @@ void PlayerWire::Translate(float elapsedTime)
 			// パーティクルの再生
 			if (!m_toAir)
 			{
-				m_pParticleManagerTransform->SetPosition(m_currentPosition);
-				m_pParticleManager->Play<PoppingParticle>();
+				m_refParticleManagerTransform->SetPosition(m_currentPosition);
+				m_refParticleManager->Play<PoppingParticle>();
 			}
 		}
 		break;
@@ -131,7 +131,7 @@ void PlayerWire::Translate(float elapsedTime)
 			m_playerPosition = m_currentPosition - m_direction * MIN_LENGTH;
 			m_currentState = State::None;
 			// パーティクルの再生
-			m_pParticleManager->Play<SparklingParticle>();
+			m_refParticleManager->Play<SparklingParticle>();
 		}
 		// パーティクルを出現
 		if (m_contractSpeed > 32.0f)
@@ -140,8 +140,8 @@ void PlayerWire::Translate(float elapsedTime)
 			if (m_particleTimer >= WindCutParticle::INTERVAL)
 			{
 				m_particleTimer -= WindCutParticle::INTERVAL;
-				m_pParticleManagerTransform->SetPosition(m_playerPosition);
-				m_pParticleManager->Play<WindCutParticle>();
+				m_refParticleManagerTransform->SetPosition(m_playerPosition);
+				m_refParticleManager->Play<WindCutParticle>();
 			}
 		}
 		break;
@@ -162,7 +162,7 @@ void PlayerWire::Translate(float elapsedTime)
 	}
 
 	// 移動
-	m_pTransform->SetPosition((m_playerPosition + m_currentPosition) / 2.0f);
+	m_refTransform->SetPosition((m_playerPosition + m_currentPosition) / 2.0f);
 }
 
 // 回転
@@ -175,8 +175,8 @@ void PlayerWire::Rotate(float elapsedTime)
 	}
 
 	// 回転
-	m_pTransform->SetRotation(Math::Euler{ 0.0f, 0.0f, m_rotationAngle }.CreateQuaternion() * m_baseRotation);
-	m_pParticleManagerTransform->SetRotation(Math::Euler{ 0.0f, 0.0f, m_rotationAngle }.CreateQuaternion() * m_baseRotation);
+	m_refTransform->SetRotation(Math::Euler{ 0.0f, 0.0f, m_rotationAngle }.CreateQuaternion() * m_baseRotation);
+	m_refParticleManagerTransform->SetRotation(Math::Euler{ 0.0f, 0.0f, m_rotationAngle }.CreateQuaternion() * m_baseRotation);
 }
 
 // スケーリング
@@ -184,19 +184,19 @@ void PlayerWire::Scaling(float elapsedTime)
 {
 	if (m_currentState == State::None && !m_isDisplay)
 	{
-		m_pTransform->SetScale(Math::Vector3::Zero);
+		m_refTransform->SetScale(Math::Vector3::Zero);
 	}
 	else
 	{
-		m_pTransform->SetScale(Math::Vector3{ THICKNESS, THICKNESS, m_length });
+		m_refTransform->SetScale(Math::Vector3{ THICKNESS, THICKNESS, m_length });
 	}
 }
 
 // 映るカメラ画面を追加
 void PlayerWire::AddICameraScreen(const Renderings::ICameraScreen& iCameraScreen)
 {
-	GetPOwner()->GetComponent<Renderings::Model3D>()->AddICameraScreen(iCameraScreen);
-	m_pParticleManager->AddICameraScreen(iCameraScreen);
+	GetOwner().GetComponent<Renderings::Model3D>().AddICameraScreen(iCameraScreen);
+	m_refParticleManager->AddICameraScreen(iCameraScreen);
 }
 
 // ターゲットを設定

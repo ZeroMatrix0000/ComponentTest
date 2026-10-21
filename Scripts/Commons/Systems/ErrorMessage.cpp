@@ -1,7 +1,7 @@
 /*
  * FileName:     ErrorMessage.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/28
+ * Last Updated: 2026/10/21
  *
  * エラーメッセージ
  */
@@ -19,7 +19,7 @@
 Systems::ErrorMessage::ErrorMessage()
 	: IErrorMessage{}
 	, m_messages{}
-	, m_textComponent{}
+	, m_pText{}
 	, m_displayTime{}
 	, m_displayMax{}
 	, m_isActive{}
@@ -65,13 +65,13 @@ void Systems::ErrorMessage::Update(float elapsedTime)
 void Systems::ErrorMessage::CreateObjects(IGameObjectInstantiator* pIGameObjectInstantiator)
 {
 	// テキストの設定
-	m_textComponent = pIGameObjectInstantiator->Instantiate("Prefab_ErrorMessage", true)->GetComponent<Renderings::Text>();
+	m_pText = &pIGameObjectInstantiator->Instantiate("Prefab_ErrorMessage", true).GetComponent<Renderings::Text>();
 	// キャンバスの設定
-	auto* pCanvas = pIGameObjectInstantiator->Instantiate("Prefab_Canvas", true)->GetComponent<Renderings::Canvas>();
-	pCanvas->Initialize(Renderings::Canvas::FixedSize::None, Math::Vector2{ 1600.0f, 900.0f });
+	auto& canvas = pIGameObjectInstantiator->Instantiate("Prefab_Canvas", true).GetComponent<Renderings::Canvas>();
+	canvas.Initialize(Renderings::Canvas::FixedSize::None, Math::Vector2{ 1600.0f, 900.0f });
 
 	// キャンバスに画像を映す
-	m_textComponent->SetCanvas(*pCanvas);
+	m_pText->SetCanvas(canvas);
 }
 
 // メッセージを追加
@@ -104,5 +104,5 @@ void Systems::ErrorMessage::ApplyDisplayText()
 		str += message.text + L"\n";
 	}
 
-	m_textComponent->SetStr(str);
+	m_pText->SetStr(str);
 }

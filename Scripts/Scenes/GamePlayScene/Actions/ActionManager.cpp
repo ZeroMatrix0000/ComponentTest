@@ -1,7 +1,7 @@
 /*
  * FileName:     ActionManager.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/10
+ * Last Updated: 2026/10/21
  *
  * アクション管理
  */
@@ -83,25 +83,25 @@ void ActionManager::InitializeCurrentAction()
 	auto it = eventList.find("ActionType");
 	if (it == eventList.end())
 	{
-		m_pCurrentAction = GetPOwner()->GetComponent<Action>();
+		m_pCurrentAction = &GetOwner().GetComponent<Action>();
 	}
 	else
 	{
 		if (it.value() == "OpenMessageWindow")
 		{
-			m_pCurrentAction = GetPOwner()->GetComponent<ActionOpenMessageWindow>();
+			m_pCurrentAction = &GetOwner().GetComponent<ActionOpenMessageWindow>();
 		}
 		else if (it.value() == "CloseMessageWindow")
 		{
-			m_pCurrentAction = GetPOwner()->GetComponent<ActionCloseMessageWindow>();
+			m_pCurrentAction = &GetOwner().GetComponent<ActionCloseMessageWindow>();
 		}
 		else if (it.value() == "SetMessageWindowText")
 		{
-			m_pCurrentAction = GetPOwner()->GetComponent<ActionSetMessageWindowText>();
+			m_pCurrentAction = &GetOwner().GetComponent<ActionSetMessageWindowText>();
 		}
 		else
 		{
-			m_pCurrentAction = GetPOwner()->GetComponent<Action>();
+			m_pCurrentAction = &GetOwner().GetComponent<Action>();
 		}
 	}
 

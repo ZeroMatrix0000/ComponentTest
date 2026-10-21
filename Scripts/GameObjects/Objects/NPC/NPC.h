@@ -1,7 +1,7 @@
 /*
  * FileName:     NPC.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/18
+ * Last Updated: 2026/10/21
  *
  * NPC
  */
@@ -88,11 +88,11 @@ private:
 	// スピン回転
 	Easing::Value<float> m_spinAngle;
 
-	// トランスフォーム
-	Transform* m_pTransform;
-	// 長方形の当たり判定
-	Colliders::BoxCollider* m_pBoxCollider;
-	// 球の当たり判定
-	Colliders::SphereCollider* m_pSphereCollider;
+	// トランスフォームの参照
+	Ref<Transform> m_refTransform;
+	// 長方形の当たり判定の参照
+	Ref<Colliders::BoxCollider> m_refBoxCollider;
+	// 球の当たり判定の参照
+	Ref<Colliders::SphereCollider> m_refSphereCollider;
 
 };

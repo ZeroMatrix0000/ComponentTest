@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerWire.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/19
+ * Last Updated: 2026/10/21
  *
  * プレイヤーの糸
  */
@@ -135,12 +135,12 @@ private:
 	// 表示するかどうか
 	bool m_isDisplay;
 
-	// トランスフォーム
-	Components::Transform* m_pTransform;
+	// トランスフォームのポインタ
+	Ref<Transform> m_refTransform;
 
-	// パーティクル管理
-	Renderings::ParticleManager* m_pParticleManager;
-	// パーティクル管理のトランスフォーム
-	Transform* m_pParticleManagerTransform;
+	// パーティクル管理のポインタ
+	Ref<Renderings::ParticleManager> m_refParticleManager;
+	// パーティクル管理のトランスフォームのポインタ
+	Ref<Transform> m_refParticleManagerTransform;
 
 };

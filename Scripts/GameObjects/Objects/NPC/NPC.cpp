@@ -1,7 +1,7 @@
 /*
  * FileName:     NPC.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/14
+ * Last Updated: 2026/10/21
  *
  * NPC
  */
@@ -26,22 +26,22 @@ NPC::NPC(const ComponentDesc& desc)
 	, m_baseRotation{}
 	, m_rotation{}
 	, m_spinAngle{}
-	, m_pTransform{ GetPOwner()->GetNullReferences<Transform>() }
-	, m_pBoxCollider{ GetPOwner()->GetNullReferences<Colliders::BoxCollider>() }
-	, m_pSphereCollider{ GetPOwner()->GetNullReferences<Colliders::SphereCollider>() }
+	, m_refTransform{ GetOwner().GetNullReferences<Transform>() }
+	, m_refBoxCollider{ GetOwner().GetNullReferences<Colliders::BoxCollider>() }
+	, m_refSphereCollider{ GetOwner().GetNullReferences<Colliders::SphereCollider>() }
 {
 }
 
 // 初期化処理
 void NPC::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
 {
-	m_pTransform = GetPOwner()->GetComponent<Transform>();
-	m_pBoxCollider = GetPOwner()->GetComponent<Colliders::BoxCollider>();
-	m_pBoxCollider->ApplyTransform();
-	m_pSphereCollider = GetPOwner()->GetComponent<Colliders::SphereCollider>();
-	m_pSphereCollider->ApplyTransform();
+	m_refTransform = GetOwner().GetComponent<Transform>();
+	m_refBoxCollider = GetOwner().GetComponent<Colliders::BoxCollider>();
+	m_refBoxCollider->ApplyTransform();
+	m_refSphereCollider = GetOwner().GetComponent<Colliders::SphereCollider>();
+	m_refSphereCollider->ApplyTransform();
 
-	m_baseRotation = m_pTransform->GetRotation();
+	m_baseRotation = m_refTransform->GetRotation();
 	m_rotation.SetValue(m_baseRotation);
 	m_spinAngle.SetMovement(0.0f, 0.0f);
 
@@ -64,9 +64,9 @@ void NPC::Update(float elapsedTime)
 		m_rotation.Tick(elapsedTime);
 	}
 
-	m_pTransform->SetRotation(m_rotation.GetCurrent() * Math::Euler{ 0.0f, m_spinAngle.GetMovement(), 0.0f }.CreateQuaternion());
-	m_pBoxCollider->ApplyTransform();
-	m_pSphereCollider->ApplyTransform();
+	m_refTransform->SetRotation(m_rotation.GetCurrent() * Math::Euler{ 0.0f, m_spinAngle.GetMovement(), 0.0f }.CreateQuaternion());
+	m_refBoxCollider->ApplyTransform();
+	m_refSphereCollider->ApplyTransform();
 }
 
 // 回転を設定
@@ -93,17 +93,17 @@ void NPC::Spin(bool isClockwise)
 // 中心座標を取得
 const Math::Vector3& NPC::GetPosition() const
 {
-	return m_pBoxCollider->GetWorldBox().position;
+	return m_refBoxCollider->GetWorldBox().position;
 }
 
 // 当たり判定を取得
 const Math::Box& NPC::GetBox() const
 {
-	return m_pBoxCollider->GetWorldBox();
+	return m_refBoxCollider->GetWorldBox();
 }
 
 // 当たり判定を取得
 const Math::Sphere& NPC::GetSphere() const
 {
-	return m_pSphereCollider->GetWorldSphere();
+	return m_refSphereCollider->GetWorldSphere();
 }

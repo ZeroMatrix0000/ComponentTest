@@ -118,7 +118,7 @@ void GameObjects::GameObjectManager::Load(const std::string& jsonName)
 }
 
 // ゲームオブジェクトを名前で検索
-GameObject* GameObjects::GameObjectManager::Find(const std::string& name) const
+GameObject& GameObjects::GameObjectManager::Find(const std::string& name) const
 {
 	auto it = std::ranges::find_if(*m_pGameObjects, [&](const std::unique_ptr<GameObject>& gameObject) {return gameObject->GetName() == name; });
 	if (it == m_pGameObjects->end())
@@ -129,16 +129,16 @@ GameObject* GameObjects::GameObjectManager::Find(const std::string& name) const
 			L"ゲームオブジェクトが見つかりません。 | name: %s",
 			Utility::string2wstring(name).c_str()
 		));
-		return m_nullReference.get();
+		return *m_nullReference;
 	}
 	else
 	{
-		return it->get();
+		return *it->get();
 	}
 }
 
 // ゲームオブジェクトを生成
-GameObject* GameObjects::GameObjectManager::Instantiate(const std::string& jsonName, bool dontDestroyOnLoad)
+GameObject& GameObjects::GameObjectManager::Instantiate(const std::string& jsonName, bool dontDestroyOnLoad)
 {
 	// Json
 	const auto* json = m_pIResources->GetJson(jsonName);
@@ -162,7 +162,7 @@ GameObject* GameObjects::GameObjectManager::Instantiate(const std::string& jsonN
 		m_pGameObjects->push_back(std::move(gameObject));
 	}
 
-	return pGameObject;
+	return *pGameObject;
 }
 
 // コンポーネントを追加

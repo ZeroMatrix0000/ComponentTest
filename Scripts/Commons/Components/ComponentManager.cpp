@@ -1,7 +1,7 @@
 /*
  * FileName:     ComponentManager.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/08/04
+ * Last Updated: 2026/10/21
  *
  * コンポーネント管理
  */
@@ -48,7 +48,7 @@ void Components::ComponentManager::RegisterCreate
 }
 
 // 未参照コンポーネントを取得
-Component* Components::ComponentManager::GetNullReferences(const std::type_index& index, bool addErrorMessage)
+Component& Components::ComponentManager::GetNullReferences(const std::type_index& index, bool addErrorMessage)
 {
 	if (addErrorMessage)
 	{
@@ -65,10 +65,10 @@ Component* Components::ComponentManager::GetNullReferences(const std::type_index
 	{
 		// コンポーネントを追加
 		m_nullReferences.emplace(index, (m_CreateComponentList.at(index)(ComponentDesc{ nullptr, m_pIGameObjectInstantiator, m_permit })));
-		return m_nullReferences.at(index).get();
+		return *m_nullReferences.at(index);
 	}
 	else
 	{
-		return it->second.get();
+		return *it->second;
 	}
 }

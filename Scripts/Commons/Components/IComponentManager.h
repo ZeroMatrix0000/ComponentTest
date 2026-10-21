@@ -1,7 +1,7 @@
 /*
  * FileName:     IComponentManager.h
  * Author:       Takao Hayata
- * Last Updated: 2026/08/04
+ * Last Updated: 2026/10/21
  *
  * コンポーネント管理のインタフェース
  */
@@ -51,7 +51,7 @@ namespace Components
 
 		// 未参照コンポーネントを取得
 		template<typename TComponent> requires IsDerived<TComponent, Component>
-		TComponent* GetNullReferences(bool addErrorMessage = false)
+		TComponent& GetNullReferences(bool addErrorMessage = false)
 		{
 			// コンポーネントのコンストラクタがDescのみなら作成関数を追加
 			if constexpr (std::constructible_from<TComponent, const ComponentDesc&>)
@@ -65,7 +65,7 @@ namespace Components
 					}
 				);
 			}
-			return static_cast<TComponent*>(GetNullReferences(typeid(TComponent), addErrorMessage));
+			return static_cast<TComponent&>(GetNullReferences(typeid(TComponent), addErrorMessage));
 		};
 
 
@@ -85,7 +85,7 @@ namespace Components
 		) = 0;
 
 		// 未参照コンポーネントを取得
-		virtual Component* GetNullReferences(const std::type_index& index, bool addErrorMessage) = 0;
+		virtual Component& GetNullReferences(const std::type_index& index, bool addErrorMessage) = 0;
 
 
 	};

@@ -1,7 +1,7 @@
 /*
  * FileName:     ComponentManager.h
  * Author:       Takao Hayata
- * Last Updated: 2026/08/04
+ * Last Updated: 2026/10/21
  *
  * コンポーネント管理
  */
@@ -59,7 +59,7 @@ namespace Components
 		);
 
 		// 未参照コンポーネントを取得
-		Component* GetNullReferences(const std::type_index& index, bool addErrorMessage) override;
+		Component& GetNullReferences(const std::type_index& index, bool addErrorMessage) override;
 
 
 		/* メンバ変数 */

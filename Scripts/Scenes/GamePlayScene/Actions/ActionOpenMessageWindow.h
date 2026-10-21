@@ -1,7 +1,7 @@
 /*
  * FileName:     ActionOpenMessageWindow.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/10
+ * Last Updated: 2026/10/21
  *
  * メッセージウィンドウ開アクション
  */
@@ -44,7 +44,7 @@ private:
 	// 開き終わるまで待つか
 	bool m_isWait;
 
-	// メッセージウィンドウ
-	MessageWindow* m_pMessageWindow;
+	// メッセージウィンドウの参照
+	Ref<MessageWindow> m_refMessageWindow;
 
 };

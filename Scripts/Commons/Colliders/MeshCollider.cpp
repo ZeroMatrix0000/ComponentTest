@@ -23,7 +23,7 @@ Colliders::MeshCollider::MeshCollider(const ComponentDesc& desc, Renderings::ICo
 	, m_color{ DirectX::Colors::LightGreen }
 	, m_worldMesh{}
 	, m_pMesh{}
-	, m_pTransform{ GetPOwner()->GetNullReferences<Transform>() }
+	, m_refTransform{ GetOwner().GetNullReferences<Transform>() }
 	, m_pICameraScreens{}
 	, m_pIColliderRenderer{ pIColliderRenderer }
 	, m_pIResources{ pIResources }
@@ -42,7 +42,7 @@ Colliders::MeshCollider::~MeshCollider()
 // 初期化処理
 void Colliders::MeshCollider::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
 {
-	m_pTransform = GetPOwner()->GetComponent<Transform>();
+	m_refTransform = GetOwner().GetComponent<Transform>();
 
 	std::string meshName{};
 
@@ -92,5 +92,5 @@ void Colliders::MeshCollider::ApplyTransform()
 	}
 
 	m_worldMesh = *m_pMesh;
-	m_worldMesh.ApplyMatrix(m_pTransform->GetWorldMatrix());
+	m_worldMesh.ApplyMatrix(m_refTransform->GetWorldMatrix());
 }

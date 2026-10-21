@@ -1,7 +1,7 @@
 /*
  * FileName:     ActionSetMessageWindowText.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/10
+ * Last Updated: 2026/09/21
  *
  * メッセージウィンドウ開アクション
  */
@@ -18,7 +18,7 @@ ActionSetMessageWindowText::ActionSetMessageWindowText(const ComponentDesc& desc
 	: Action{ desc }
 	, m_text{}
 	, m_character{}
-	, m_pMessageWindow{ GetPOwner()->GetNullReferences<MessageWindow>() }
+	, m_refMessageWindow{ GetOwner().GetNullReferences<MessageWindow>() }
 {
 }
 
@@ -26,7 +26,7 @@ ActionSetMessageWindowText::ActionSetMessageWindowText(const ComponentDesc& desc
 void ActionSetMessageWindowText::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
 {
 	Systems::JsonSerializer serializer{ pIGameObjectFinder };
-	serializer.AddParameter(&m_pMessageWindow, "MessageWindow");
+	serializer.AddParameter(&m_refMessageWindow, "MessageWindow");
 	serializer.Load(json);
 }
 
@@ -43,8 +43,8 @@ void ActionSetMessageWindowText::SetParams(const nlohmann::ordered_json& json, I
 void ActionSetMessageWindowText::Enter()
 {
 	// テキストを設定
-	m_pMessageWindow->SetText(m_text);
-	m_pMessageWindow->SetCharacter(m_character);
+	m_refMessageWindow->SetText(m_text);
+	m_refMessageWindow->SetCharacter(m_character);
 }
 
 // 更新処理
@@ -54,13 +54,13 @@ void ActionSetMessageWindowText::Update(float elapsedTime, const IGameInput& iGa
 	if (iGameInput.GetTextScroll())
 	{
 		// 全て表示されていたら次のアクションへ移動、でなければ全て表示
-		if (m_pMessageWindow->IsDisplayAllText())
+		if (m_refMessageWindow->IsDisplayAllText())
 		{
 			GoNext();
 		}
 		else
 		{
-			m_pMessageWindow->DisplayAllText();
+			m_refMessageWindow->DisplayAllText();
 		}
 	}
 }

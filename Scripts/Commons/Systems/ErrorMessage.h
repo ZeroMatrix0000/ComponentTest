@@ -1,7 +1,7 @@
 /*
  * FileName:     ErrorMessage.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/25
+ * Last Updated: 2026/10/21
  *
  * エラーメッセージ
  */
@@ -72,7 +72,7 @@ namespace Systems
 		std::vector<MessageData> m_messages;
 
 		// 表示するテキストコンポーネント
-		Renderings::Text* m_textComponent;
+		Renderings::Text* m_pText;
 
 		// 表示する秒数
 		float  m_displayTime;

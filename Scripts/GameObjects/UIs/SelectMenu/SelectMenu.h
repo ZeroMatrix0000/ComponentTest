@@ -1,7 +1,7 @@
 /*
  * FileName:     SelectMenu.h
  * Author:       Takao Hayata
- * Last Updated: 2026/07/24
+ * Last Updated: 2026/10/21
  *
  * 選択メニュー
  */
@@ -67,15 +67,15 @@ private:
 	Cycled m_cursorSwayTimer;
 
 	// 選択肢のテキストのポインタ
-	std::vector<Renderings::Text*> m_pTexts;
+	std::vector<Ref<Renderings::Text>> m_pTexts;
 	// 選択肢の処理
 	std::vector<std::function<void()>> m_Processes;
 	// 選択肢の表示サイズ
 	std::vector<Easing::Value<float>> m_fontSizes;
 
-	// カーソル画像
-	Renderings::Image* m_pCursorImage;
-	// カーソルの2D用トランスフォーム
-	RectTransform* m_pCursorRectTransform;
+	// カーソル画像の参照
+	Ref<Renderings::Image> m_refCursorImage;
+	// カーソルの2D用トランスフォームの参照
+	Ref<RectTransform> m_refCursorRectTransform;
 
 };

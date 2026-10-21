@@ -21,7 +21,7 @@ LandingParticle::LandingParticle(Renderings::IModel3DRenderer* pIModelRenderer, 
 }
 
 // 初期化処理
-void LandingParticle::Initalize(const Transform* pTransform)
+void LandingParticle::Initalize(const Transform& transform)
 {
 	for (int i = 0; i < ELEMENT_COUNT; i++)
 	{
@@ -32,7 +32,7 @@ void LandingParticle::Initalize(const Transform* pTransform)
 		AddElement(&pUpdateElement, &pRenderElement);
 
 		// 管理者の位置に移動
-		pUpdateElement->position = pTransform->GetPosition() + Math::Vector3{ 0.0f, 0.1f, 0.0f };
+		pUpdateElement->position = transform.GetPosition() + Math::Vector3{ 0.0f, 0.1f, 0.0f };
 		// ランダムに回転
 		pUpdateElement->rotation = Math::Euler
 		{

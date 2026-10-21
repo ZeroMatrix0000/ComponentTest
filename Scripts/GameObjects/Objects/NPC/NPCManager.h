@@ -1,7 +1,7 @@
 /*
  * FileName:     NPCManager.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/06
+ * Last Updated: 2026/10/21
  *
  * NPC管理
  */
@@ -70,7 +70,7 @@ private:
 	// NPCリスト
 	std::vector<NPC*> m_pNPCList;
 	// カーソルリスト
-	std::vector<InteractCursor*> m_pInteractCursorList;
+	std::vector<Ref<InteractCursor>> m_pInteractCursorList;
 
 	// カーソルが合っているMPC
 	NPC* m_pFocusedNPC;

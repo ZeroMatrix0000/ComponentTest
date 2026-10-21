@@ -1,7 +1,7 @@
 /*
  * FileName:     BlackBelt.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/11
+ * Last Updated: 2026/10/21
  *
  * 上下の黒帯
  */
@@ -59,12 +59,12 @@ private:
 	Easing::Value<float> m_moveRate;
 
 	// 上の画像のトランスフォーム
-	RectTransform* m_pTopImageTransform;
+	Ref<RectTransform> m_refTopImageTransform;
 	// 上の画像
-	Renderings::Image* m_pTopImage;
+	Ref<Renderings::Image> m_refTopImage;
 	// 下の画像のトランスフォーム
-	RectTransform* m_pBottomImageTransform;
+	Ref<RectTransform> m_refBottomImageTransform;
 	// 下の画像
-	Renderings::Image* m_pBottomImage;
+	Ref<Renderings::Image> m_refBottomImage;
 
 };

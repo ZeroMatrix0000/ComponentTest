@@ -21,7 +21,7 @@ SparklingParticle::SparklingParticle(Renderings::IModel3DRenderer* pIModelRender
 }
 
 // 初期化処理
-void SparklingParticle::Initalize(const Transform* pTransform)
+void SparklingParticle::Initalize(const Transform& transform)
 {
 	for (int i = 0; i < ELEMENT_COUNT; i++)
 	{
@@ -32,7 +32,7 @@ void SparklingParticle::Initalize(const Transform* pTransform)
 		AddElement(&pUpdateElement, &pRenderElement);
 
 		// 管理者の位置に移動
-		pUpdateElement->position = pTransform->GetPosition();
+		pUpdateElement->position = transform.GetPosition();
 		// ランダムに回転
 		pUpdateElement->rotation = Math::Euler
 		{

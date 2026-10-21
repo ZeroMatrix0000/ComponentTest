@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerCamera.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/08/04
+ * Last Updated: 2026/10/21
  *
  * プレイヤーカメラ
  */
@@ -20,7 +20,7 @@ PlayerCamera::PlayerCamera(const ComponentDesc& desc)
 	, m_distance{}
 	, m_maxDistance{}
 	, m_camera{}
-	, m_pCameraScreen{ GetPOwner()->GetNullReferences<Renderings::CameraScreen<Camera::EulerTargetCamera>>() }
+	, m_refCameraScreen{ GetOwner().GetNullReferences<Renderings::CameraScreen<Camera::EulerTargetCamera>>() }
 {
 }
 
@@ -28,9 +28,9 @@ PlayerCamera::PlayerCamera(const ComponentDesc& desc)
 void PlayerCamera::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
 {
 	// カメラ画面を取得
-	m_pCameraScreen = GetPOwner()->GetComponent<Renderings::CameraScreen<Camera::EulerTargetCamera>>();
+	m_refCameraScreen = GetOwner().GetComponent<Renderings::CameraScreen<Camera::EulerTargetCamera>>();
 	// カメラ
-	const auto& camera = m_pCameraScreen->GetCamera();
+	const auto& camera = m_refCameraScreen->GetCamera();
 
 	m_target = camera.position;
 	m_rotationYDeg.Initialize(camera.rotation.y, 0.0f, 360.0f);
@@ -44,17 +44,11 @@ void PlayerCamera::Initalize(const nlohmann::ordered_json& json, IGameObjectFind
 // 更新処理
 void PlayerCamera::Update(float elapsedTime)
 {
-	// カメラ画面が見つからなければ何もしない
-	if (!m_pCameraScreen)
-	{
-		return;
-	}
-
 	// カメラを更新
 	//m_camera.SetValue(Camera::EulerTargetCamera{ m_target, Math::Euler{ m_rotationXDeg, m_rotationYDeg, 0.0f }, m_distance });
 	m_camera.SetTarget(Camera::EulerTargetCamera{ m_target, Math::Euler{ m_rotationXDeg, m_rotationYDeg, 0.0f }, m_distance }, 250.0f, 30.0f);
 	m_camera.Tick(elapsedTime);
-	m_pCameraScreen->SetCamera(m_camera.GetCurrent());
+	m_refCameraScreen->SetCamera(m_camera.GetCurrent());
 }
 
 // 回転
@@ -113,5 +107,5 @@ void PlayerCamera::SetPosition(const Math::Vector3& position)
 	camera.position = position;
 	m_camera.SetValue(camera);
 
-	m_pCameraScreen->SetCamera(m_camera.GetCurrent());
+	m_refCameraScreen->SetCamera(m_camera.GetCurrent());
 }

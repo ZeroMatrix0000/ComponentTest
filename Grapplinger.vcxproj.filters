@@ -844,6 +844,9 @@
     <ClInclude Include="Scripts\GameObjects\Objects\Player\States\PlayerStateStick.h">
       <Filter>Scripts\GameObjects\Objects\Player\States</Filter>
     </ClInclude>
+    <ClInclude Include="Scripts\Commons\Libraries\Ref.h">
+      <Filter>Scripts\Commons\Libraries</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -92,7 +92,8 @@ concept IsDerived = std::derived_from<T, U> && !std::same_as<T, U>;
 template<typename T, typename... Args>
 concept IsSame = (std::same_as<T, Args> || ...);
 
-
+// 参照
+#include "Scripts/Commons/Libraries/Ref.h"
 // 便利関数群
 #include "Scripts/Commons/Libraries/Utility.h"
 // 乱数

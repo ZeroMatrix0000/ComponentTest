@@ -1,7 +1,7 @@
 /*
  * FileName:     BlackBelt.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/28
+ * Last Updated: 2026/10/21
  *
  * 上下の黒帯
  */
@@ -20,10 +20,10 @@ BlackBelt::BlackBelt(const ComponentDesc& desc)
 	, m_moveTime{}
 	, m_height{}
 	, m_moveRate{}
-	, m_pTopImageTransform{ GetPOwner()->GetNullReferences<RectTransform>() }
-	, m_pTopImage{ GetPOwner()->GetNullReferences<Renderings::Image>() }
-	, m_pBottomImageTransform{ GetPOwner()->GetNullReferences<RectTransform>() }
-	, m_pBottomImage{ GetPOwner()->GetNullReferences<Renderings::Image>() }
+	, m_refTopImageTransform{ GetOwner().GetNullReferences<RectTransform>() }
+	, m_refTopImage{ GetOwner().GetNullReferences<Renderings::Image>() }
+	, m_refBottomImageTransform{ GetOwner().GetNullReferences<RectTransform>() }
+	, m_refBottomImage{ GetOwner().GetNullReferences<Renderings::Image>() }
 {
 }
 
@@ -40,26 +40,26 @@ void BlackBelt::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder*
 	serializer.Load(json);
 
 	// 画像を生成
-	if (m_pTopImageTransform == GetPOwner()->GetNullReferences<RectTransform>())
+	if (m_refTopImageTransform == GetOwner().GetNullReferences<RectTransform>())
 	{
-		GameObject* pObj = Instantiate("Prefab_BlackBeltImage");
-		m_pTopImageTransform = pObj->GetComponent<RectTransform>();
-		m_pTopImage = pObj->GetComponent<Renderings::Image>();
-		m_pTopImageTransform->SetAnchor(Utility::AlignmentPoint::TopCenter);
-		pObj = Instantiate("Prefab_BlackBeltImage");
-		m_pBottomImageTransform = pObj->GetComponent<RectTransform>();
-		m_pBottomImage = pObj->GetComponent<Renderings::Image>();
-		m_pBottomImageTransform->SetAnchor(Utility::AlignmentPoint::BottomCenter);
+		Ref<GameObject> refObj = Instantiate("Prefab_BlackBeltImage");
+		m_refTopImageTransform = refObj->GetComponent<RectTransform>();
+		m_refTopImage = refObj->GetComponent<Renderings::Image>();
+		m_refTopImageTransform->SetAnchor(Utility::AlignmentPoint::TopCenter);
+		refObj = Instantiate("Prefab_BlackBeltImage");
+		m_refBottomImageTransform = refObj->GetComponent<RectTransform>();
+		m_refBottomImage = refObj->GetComponent<Renderings::Image>();
+		m_refBottomImageTransform->SetAnchor(Utility::AlignmentPoint::BottomCenter);
 		
 		// 高さを取得
-		m_height = m_pTopImageTransform->GetRect().size.y;
+		m_height = m_refTopImageTransform->GetRect().size.y;
 	}
 
 	// キャンバスを設定
 	if (pCanvas)
 	{
-		m_pTopImage->SetCanvas(*pCanvas);
-		m_pBottomImage->SetCanvas(*pCanvas);
+		m_refTopImage->SetCanvas(*pCanvas);
+		m_refBottomImage->SetCanvas(*pCanvas);
 	}
 }
 
@@ -72,10 +72,10 @@ void BlackBelt::Update(float elapsedTime)
 	float moveRate = m_moveRate.GetMovement();
 
 	// 透明度を変更
-	Math::Color color = m_pTopImage->GetColor();
+	Math::Color color = m_refTopImage->GetColor();
 	color.w = moveRate;
-	m_pTopImage->SetColor(color);
-	m_pBottomImage->SetColor(color);
+	m_refTopImage->SetColor(color);
+	m_refBottomImage->SetColor(color);
 
 	// 移動率が 0 なら以降何もしない
 	if (m_moveRate.GetMovement() == 0.0f)
@@ -84,10 +84,10 @@ void BlackBelt::Update(float elapsedTime)
 	}
 
 	// サイズを変更
-	Math::Vector2 size = m_pTopImageTransform->GetRect().size;
+	Math::Vector2 size = m_refTopImageTransform->GetRect().size;
 	size.y = m_height * moveRate;
-	m_pTopImageTransform->SetSize(size);
-	m_pBottomImageTransform->SetSize(size);
+	m_refTopImageTransform->SetSize(size);
+	m_refBottomImageTransform->SetSize(size);
 }
 
 // 出現
@@ -99,8 +99,8 @@ void BlackBelt::Appear(bool isAppear)
 // 幅を設定
 void BlackBelt::SetWidth(float width)
 {
-	Math::Vector2 size = m_pTopImageTransform->GetRect().size;
+	Math::Vector2 size = m_refTopImageTransform->GetRect().size;
 	size.x = width;
-	m_pTopImageTransform->SetSize(size);
-	m_pBottomImageTransform->SetSize(size);
+	m_refTopImageTransform->SetSize(size);
+	m_refBottomImageTransform->SetSize(size);
 }

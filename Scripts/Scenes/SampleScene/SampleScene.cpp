@@ -1,7 +1,7 @@
 /*
  * FileName:     SampleScene.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/09
+ * Last Updated: 2026/10/21
  *
  * サンプルシーン
  */
@@ -52,26 +52,26 @@ void SampleScene::Initialize(const SceneTransitionData& data)
 	pIGameObjectManager->Load("Scene_Sample");
 
 	// デバッグカメラを取得
-	GameObject* pCamera = pIGameObjectManager->Find("DebugCamera");
-	m_pCameraScreen = pCamera->GetComponent<Renderings::ICameraScreen>();
+	GameObject& camera = pIGameObjectManager->Find("DebugCamera");
+	m_pCameraScreen = &camera.GetComponent<Renderings::ICameraScreen>();
 	m_pCameraScreen->SetProjectionMatrix(outputSize);
-	m_pDebugCamera = pCamera->GetComponent<DebugCamera>();
+	m_pDebugCamera = &camera.GetComponent<DebugCamera>();
 
 	// キャンバスを取得
-	m_pCanvas = pIGameObjectManager->Find("Canvas")->GetComponent<Renderings::Canvas>();
+	m_pCanvas = &pIGameObjectManager->Find("Canvas").GetComponent<Renderings::Canvas>();
 	m_pCanvas->SetSize(outputSize);
 
 	// パーティクル管理を取得
-	m_pParticleManager = pIGameObjectManager->Find("ParticleManager")->GetComponent<Renderings::ParticleManager>();
+	m_pParticleManager = &pIGameObjectManager->Find("ParticleManager").GetComponent<Renderings::ParticleManager>();
 
 	// プレイヤーを取得
-	GameObject* pPlayer = pIGameObjectManager->Find("Player");
-	pPlayer->GetComponent<Colliders::BoxCollider>()->ApplyTransform();
-	pPlayer->GetComponent<Colliders::SphereCollider>()->ApplyTransform();
+	GameObject& player = pIGameObjectManager->Find("Player");
+	player.GetComponent<Colliders::BoxCollider>().ApplyTransform();
+	player.GetComponent<Colliders::SphereCollider>().ApplyTransform();
 
 	// 地面を取得
-	GameObject* pGround = pIGameObjectManager->Find("Ground");
-	pGround->GetComponent<Colliders::MeshCollider>()->ApplyTransform();
+	GameObject& ground = pIGameObjectManager->Find("Ground");
+	ground.GetComponent<Colliders::MeshCollider>().ApplyTransform();
 }
 
 // 更新処理

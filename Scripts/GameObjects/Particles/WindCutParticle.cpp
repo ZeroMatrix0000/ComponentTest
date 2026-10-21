@@ -21,9 +21,9 @@ WindCutParticle::WindCutParticle(Renderings::IModel3DRenderer* pIModelRenderer, 
 }
 
 // 初期化処理
-void WindCutParticle::Initalize(const Transform* pTransform)
+void WindCutParticle::Initalize(const Transform& transform)
 {
-	Math::Quaternion rotation = pTransform->GetRotation() * Math::Euler
+	Math::Quaternion rotation = transform.GetRotation() * Math::Euler
 	{
 		Random::GetFloatRange(-10.0f, 10.0f),
 		Random::GetFloatRange(-10.0f, 10.0f),
@@ -32,7 +32,7 @@ void WindCutParticle::Initalize(const Transform* pTransform)
 
 	Math::Vector3 direction = Math::Vector3::Transform(Math::Vector3::Backward, rotation);
 
-	Math::Vector3 position = pTransform->GetPosition() + Math::Vector3
+	Math::Vector3 position = transform.GetPosition() + Math::Vector3
 	{
 		Random::GetFloatRange(-0.75f, 0.75f),
 		Random::GetFloatRange(-0.75f, 0.75f),

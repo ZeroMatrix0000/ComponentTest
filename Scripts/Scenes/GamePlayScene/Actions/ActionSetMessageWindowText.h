@@ -46,7 +46,7 @@ private:
 	// 話者
 	std::wstring m_character;
 
-	// メッセージウィンドウ
-	MessageWindow* m_pMessageWindow;
+	// メッセージウィンドウの参照
+	Ref<MessageWindow> m_refMessageWindow;
 
 };

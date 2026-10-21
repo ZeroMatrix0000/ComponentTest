@@ -82,8 +82,8 @@ namespace Colliders
 		// メッシュのポインタ
 		const Mesh* m_pMesh;
 
-		// トランスフォーム
-		Transform* m_pTransform;
+		// トランスフォームの参照
+		Ref<Transform> m_refTransform;
 
 		// 映るカメラ画面のポインタリスト
 		std::vector<const Renderings::ICameraScreen*> m_pICameraScreens;

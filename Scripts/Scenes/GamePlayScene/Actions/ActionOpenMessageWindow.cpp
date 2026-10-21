@@ -1,7 +1,7 @@
 /*
  * FileName:     ActionOpenMessageWindow.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/10
+ * Last Updated: 2026/10/21
  *
  * メッセージウィンドウ開アクション
  */
@@ -16,7 +16,7 @@
 ActionOpenMessageWindow::ActionOpenMessageWindow(const ComponentDesc& desc)
 	: Action{ desc }
 	, m_isWait{}
-	, m_pMessageWindow{ GetPOwner()->GetNullReferences<MessageWindow>() }
+	, m_refMessageWindow{ GetOwner().GetNullReferences<MessageWindow>() }
 {
 }
 
@@ -24,7 +24,7 @@ ActionOpenMessageWindow::ActionOpenMessageWindow(const ComponentDesc& desc)
 void ActionOpenMessageWindow::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
 {
 	Systems::JsonSerializer serializer{ pIGameObjectFinder };
-	serializer.AddParameter(&m_pMessageWindow, "MessageWindow");
+	serializer.AddParameter(&m_refMessageWindow, "MessageWindow");
 	serializer.Load(json);
 }
 
@@ -40,17 +40,17 @@ void ActionOpenMessageWindow::SetParams(const nlohmann::ordered_json& json, IGam
 void ActionOpenMessageWindow::Enter()
 {
 	// ダイアログボックスを出現
-	m_pMessageWindow->Appear(true);
+	m_refMessageWindow->Appear(true);
 	// テキストを初期化
-	m_pMessageWindow->SetText();
-	m_pMessageWindow->SetCharacter();
+	m_refMessageWindow->SetText();
+	m_refMessageWindow->SetCharacter();
 }
 
 // 更新処理
 void ActionOpenMessageWindow::Update(float elapsedTime, const IGameInput& iGameInput)
 {
 	// 開き終わるまで待たないか、開き終わったなら次のアクションへ移動
-	if (!m_isWait || !m_pMessageWindow->IsMoving())
+	if (!m_isWait || !m_refMessageWindow->IsMoving())
 	{
 		GoNext();
 	}

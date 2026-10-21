@@ -1,7 +1,7 @@
 /*
  * FileName:     SceneTransitionAnimation.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/28
+ * Last Updated: 2026/10/21
  *
  * シーン遷移時のアニメーション
  */
@@ -32,15 +32,15 @@ void Scenes::SceneTransitionAnimation::Initialize(const Math::Vector2& outputSiz
 	SetAnimation(false);
 
 	// 画像の設定
-	auto* pObj = pIGameObjectInstantiator->Instantiate("Prefab_SceneTransitionAnimation", true);
-	m_pImageRectTransform = pObj->GetComponent<RectTransform>();
-	auto* pImage = pObj->GetComponent<Renderings::Image>();
+	GameObject& obj = pIGameObjectInstantiator->Instantiate("Prefab_SceneTransitionAnimation", true);
+	m_pImageRectTransform = &obj.GetComponent<RectTransform>();
+	auto& image = obj.GetComponent<Renderings::Image>();
 	// キャンバスの設定
-	m_pCanvas = pIGameObjectInstantiator->Instantiate("Prefab_Canvas", true)->GetComponent<Renderings::Canvas>();
+	m_pCanvas = &pIGameObjectInstantiator->Instantiate("Prefab_Canvas", true).GetComponent<Renderings::Canvas>();
 	m_pCanvas->Initialize(Renderings::Canvas::FixedSize::None, outputSize);
 
 	// キャンバスに画像を映す
-	pImage->SetCanvas(*m_pCanvas);
+	image.SetCanvas(*m_pCanvas);
 
 	m_angle = m_pImageRectTransform->GetAngle();
 

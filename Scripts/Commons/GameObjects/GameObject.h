@@ -1,7 +1,7 @@
 /*
  * FileName:     GameObject.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/14
+ * Last Updated: 2026/10/21
  *
  * ゲームオブジェクト
  */
@@ -40,35 +40,35 @@ namespace GameObjects
 
 		// コンポーネントを取得
 		template<typename TComponent> requires IsDerived<TComponent, Component>
-		TComponent* GetComponent()
+		TComponent& GetComponent()
 		{
 			auto it = m_pComponents.find(typeid(TComponent));
 			if (it == m_pComponents.end())
 			{
 				return m_pIComponentManager->GetNullReferences<TComponent>(true);
 			}
-			return static_cast<TComponent*>(it->second);
+			return *static_cast<TComponent*>(it->second);
 		}
 		// 変更不可コンポーネントを取得
 		template<typename TComponent> requires IsDerived<TComponent, Component>
-		const TComponent* GetConstComponent() const
+		const TComponent& GetConstComponent() const
 		{
 			auto it = m_pComponents.find(typeid(TComponent));
 			if (it == m_pComponents.end())
 			{
 				return m_pIComponentManager->GetNullReferences<TComponent>(true);
 			}
-			return static_cast<TComponent*>(it->second);
+			return *static_cast<TComponent*>(it->second);
 		}
 
 		// コンポーネントを追加
 		template<typename TComponent> requires IsDerived<TComponent, Component>
-		TComponent* AddComponent()
+		TComponent& AddComponent()
 		{
 			auto it = m_pComponents.find(typeid(TComponent));
 			if (it != m_pComponents.end())
 			{
-				return static_cast<TComponent*>(it->second);
+				return *static_cast<TComponent*>(it->second);
 			}
 
 			// コンポーネントを生成
@@ -80,12 +80,12 @@ namespace GameObjects
 			// 取得用リストに追加
 			AddPComponent<TComponent>(pComponent);
 
-			return static_cast<TComponent*>(pComponent);
+			return *static_cast<TComponent*>(pComponent);
 		}
 
 		// 未参照コンポーネントを取得
 		template<typename TComponent> requires IsDerived<TComponent, Component>
-		TComponent* GetNullReferences()
+		TComponent& GetNullReferences()
 		{
 			return m_pIComponentManager->GetNullReferences<TComponent>();
 		}

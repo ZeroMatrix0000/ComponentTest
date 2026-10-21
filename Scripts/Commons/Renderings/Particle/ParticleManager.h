@@ -57,7 +57,7 @@ namespace Renderings
 				particle->AddICameraScreen(*pICameraScreen);
 			}
 			// 初期化処理
-			particle->Initalize(m_pTransform);
+			particle->Initalize(m_refTransform);
 		}
 
 
@@ -69,8 +69,8 @@ namespace Renderings
 		// パーティクルリスト
 		std::vector<std::unique_ptr<Particle>> m_particles;
 
-		// トランスフォーム
-		const Transform* m_pTransform;
+		// トランスフォームの参照
+		Ref<const Transform> m_refTransform;
 
 		// 映るカメラ画面のポインタリスト
 		std::vector<const ICameraScreen*> m_pICameraScreens;

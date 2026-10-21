@@ -40,13 +40,13 @@ namespace GameObjects
 		void Load(const std::string& jsonName) override;
 
 		// ゲームオブジェクトを名前で検索
-		GameObject* Find(const std::string& name) const override;
+		GameObject& Find(const std::string& name) const override;
 
 		// ゲームオブジェクトを生成
-		GameObject* Instantiate(const std::string& jsonName, bool dontDestroyOnLoad) override;
+		GameObject& Instantiate(const std::string& jsonName, bool dontDestroyOnLoad) override;
 
 		// 未参照ゲームオブジェクトを取得
-		GameObject* GetNullReferences() const override { return m_nullReference.get(); }
+		GameObject& GetNullReferences() const override { return *m_nullReference; }
 
 		// コンポーネントを追加関数を追加
 		template<typename TComponent> requires IsDerived<TComponent, Component>
@@ -57,7 +57,7 @@ namespace GameObjects
 				componentName,
 				[](GameObject* pOwner)
 				{
-					return pOwner->AddComponent<TComponent>();
+					return &pOwner->AddComponent<TComponent>();
 				}
 			);
 		}

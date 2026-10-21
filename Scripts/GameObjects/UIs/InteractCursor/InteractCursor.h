@@ -1,7 +1,7 @@
 /*
  * FileName:     InteractCursor.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/07
+ * Last Updated: 2026/10/21
  *
  * 話しかける・調べる際のカーソル
  */
@@ -64,14 +64,14 @@ private:
 	// 不透明度
 	Limited m_alpha;
 
-	// テキストのトランスフォーム
-	RectTransform* m_pTextTransform;
-	// テキスト
-	Renderings::Text* m_pText;
+	// テキストのトランスフォームの参照
+	Ref<RectTransform> m_refTextTransform;
+	// テキストの参照
+	Ref<Renderings::Text> m_refText;
 
-	// 画像のトランスフォーム
-	RectTransform* m_pImageTransform;
-	// 画像
-	Renderings::Image* m_pImage;
+	// 画像のトランスフォームの参照
+	Ref<RectTransform> m_refImageTransform;
+	// 画像の参照
+	Ref<Renderings::Image> m_refImage;
 
 };

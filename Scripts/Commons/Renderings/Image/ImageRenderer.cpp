@@ -59,7 +59,7 @@ void Renderings::ImageRenderer::Draw(const Image* pImage)
 	}
 
 	// 画像の所有者の2Dトランスフォーム
-	const RectTransform* pRectTransform = pImage->GetConstPOwner()->GetConstComponent<RectTransform>();
+	const RectTransform& rectTransform = pImage->GetConstOwner().GetConstComponent<RectTransform>();
 
 	// 画像が映るキャンバス
 	const Canvas* pCanvas = pImage->GetPCanvas();
@@ -80,7 +80,7 @@ void Renderings::ImageRenderer::Draw(const Image* pImage)
 	};
 
 	// ピボットにあわせて画像の中心を移動
-	switch (pRectTransform->GetPivot())
+	switch (rectTransform.GetPivot())
 	{
 	case Utility::AlignmentPoint::TopLeft:
 		origin.x = 0.0f;
@@ -115,12 +115,12 @@ void Renderings::ImageRenderer::Draw(const Image* pImage)
 	}
 
 	// 長方形
-	Math::Rect rect = pRectTransform->GetRect();
+	Math::Rect rect = rectTransform.GetRect();
 	// キャンバスサイズ
 	Math::Vector2 canvasSize = pCanvas->GetSize();
 
 	// アンカーに合わせて画像を移動
-	switch (pRectTransform->GetAnchor())
+	switch (rectTransform.GetAnchor())
 	{
 	case Utility::AlignmentPoint::TopCenter:
 		rect.position.x += canvasSize.x / 2.0f;
@@ -184,7 +184,7 @@ void Renderings::ImageRenderer::Draw(const Image* pImage)
 		},
 		nullptr,
 		pImage->GetColor(),
-		Math::Deg2Rad(pRectTransform->GetAngle()),
+		Math::Deg2Rad(rectTransform.GetAngle()),
 		origin
 	);
 

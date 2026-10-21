@@ -191,13 +191,26 @@ namespace Systems
 		template<typename TComponent> requires IsDerived<TComponent, Component>
 		static void Serialize(TComponent** ptr, const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
 		{
-			*ptr = pIGameObjectFinder->Find(json.get<std::string>())->GetComponent<TComponent>();
+			*ptr = &pIGameObjectFinder->Find(json.get<std::string>()).GetComponent<TComponent>();
 		}
 		// シリアライズ（変更負荷コンポーネント）
 		template<typename TComponent> requires IsDerived<TComponent, Component>
 		static void Serialize(const TComponent** ptr, const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
 		{
-			*ptr = pIGameObjectFinder->Find(json.get<std::string>())->GetConstComponent<TComponent>();
+			*ptr = &pIGameObjectFinder->Find(json.get<std::string>()).GetConstComponent<TComponent>();
+		}
+
+		// シリアライズ（コンポーネント）
+		template<typename TComponent> requires IsDerived<TComponent, Component>
+		static void Serialize(Ref<TComponent>* ptr, const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+		{
+			*ptr = pIGameObjectFinder->Find(json.get<std::string>()).GetComponent<TComponent>();
+		}
+		// シリアライズ（変更負荷コンポーネント）
+		template<typename TComponent> requires IsDerived<TComponent, Component>
+		static void Serialize(Ref<const TComponent>* ptr, const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+		{
+			*ptr = pIGameObjectFinder->Find(json.get<std::string>()).GetConstComponent<TComponent>();
 		}
 
 		// シリアライズ（std::vector）

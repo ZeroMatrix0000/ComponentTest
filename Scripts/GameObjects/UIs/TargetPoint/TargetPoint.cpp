@@ -27,10 +27,10 @@ TargetPoint::TargetPoint(const ComponentDesc& desc)
 	, m_brightInterval{}
 	, m_brightTimer{}
 	, m_info{}
-	, m_pTransform{ GetPOwner()->GetNullReferences<RectTransform>() }
-	, m_pImage{ GetPOwner()->GetNullReferences<Renderings::Image>() }
-	, m_pPlayer{ GetPOwner()->GetNullReferences<Colliders::BoxCollider>() }
-	, m_pICameraScreen{ GetPOwner()->GetNullReferences<Renderings::ICameraScreen>() }
+	, m_refTransform{ GetOwner().GetNullReferences<RectTransform>() }
+	, m_refImage{ GetOwner().GetNullReferences<Renderings::Image>() }
+	, m_refPlayer{ GetOwner().GetNullReferences<Colliders::BoxCollider>() }
+	, m_refICameraScreen{ GetOwner().GetNullReferences<Renderings::ICameraScreen>() }
 	, m_pTargetObjects{}
 	, m_pGrounds{}
 {
@@ -39,15 +39,15 @@ TargetPoint::TargetPoint(const ComponentDesc& desc)
 // 初期化処理
 void TargetPoint::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
 {
-	m_pImage = GetPOwner()->GetComponent<Renderings::Image>();
-	m_pTransform = GetPOwner()->GetComponent<RectTransform>();
+	m_refImage = GetOwner().GetComponent<Renderings::Image>();
+	m_refTransform = GetOwner().GetComponent<RectTransform>();
 
 	Systems::JsonSerializer serializer{ pIGameObjectFinder };
 	serializer.AddParameter(&m_targetDistance, "TargetDistance");
 	serializer.AddParameter(&m_rayLength, "RayLength");
 	serializer.AddParameter(&m_brightInterval, "BrightInterval");
-	serializer.AddParameter(&m_pPlayer, "Player");
-	serializer.AddParameter(&m_pICameraScreen, "CameraScreen");
+	serializer.AddParameter(&m_refPlayer, "Player");
+	serializer.AddParameter(&m_refICameraScreen, "CameraScreen");
 	serializer.AddParameter(&m_pTargetObjects, "TargetObjects");
 	serializer.AddParameter(&m_pGrounds, "Grounds");
 	serializer.Load(json);
@@ -61,20 +61,20 @@ void TargetPoint::Update(float elapsedTime)
 	if (m_brightTimer >= m_brightInterval)
 	{
 		m_brightTimer -= m_brightInterval;
-		Math::Color color = Math::Color{ m_pImage->GetColor() == Math::Color{ DirectX::Colors::Red } ? DirectX::Colors::Orange : DirectX::Colors::Red };
-		m_pImage->SetColor(color);
+		Math::Color color = Math::Color{ m_refImage->GetColor() == Math::Color{ DirectX::Colors::Red } ? DirectX::Colors::Orange : DirectX::Colors::Red };
+		m_refImage->SetColor(color);
 	}
 
 	m_info.position = Math::Vector3::Zero;
 	m_info.type = Type::Air;
 
 	// プレイヤーの座標
-	const Math::Vector3& playerPosition = m_pPlayer->GetWorldBox().position;
+	const Math::Vector3& playerPosition = m_refPlayer->GetWorldBox().position;
 
 	// カメラの目線の位置
-	Math::Vector3 eyePosition = m_pICameraScreen->GetEyePosition();
+	Math::Vector3 eyePosition = m_refICameraScreen->GetEyePosition();
 	// カメラの目線の方向
-	Math::Vector3 eyeDirection = m_pICameraScreen->GetEyeDirection();
+	Math::Vector3 eyeDirection = m_refICameraScreen->GetEyeDirection();
 
 	// 距離の最小
 	float distanceMin = 0.0f;
@@ -115,12 +115,12 @@ void TargetPoint::Update(float elapsedTime)
 		Math::Vector2 screenPosition = Math::Geometry::Projection
 		(
 			m_info.position,
-			m_pICameraScreen->GetViewMatrix(),
-			m_pICameraScreen->GetProjectionMatrix(),
-			m_pImage->GetPCanvas()->GetSize()
+			m_refICameraScreen->GetViewMatrix(),
+			m_refICameraScreen->GetProjectionMatrix(),
+			m_refImage->GetPCanvas()->GetSize()
 		);
 
-		m_pTransform->SetPosition(screenPosition);
+		m_refTransform->SetPosition(screenPosition);
 		return;
 	}
 
@@ -163,26 +163,26 @@ void TargetPoint::Update(float elapsedTime)
 	// ターゲットが地面なら
 	if (m_info.type == Type::Ground)
 	{
-		m_pTransform->SetPosition(m_pImage->GetPCanvas()->GetSize() / 2.0f);
+		m_refTransform->SetPosition(m_refImage->GetPCanvas()->GetSize() / 2.0f);
 		return;
 	}
 
 	distanceMin = Math::Geometry::AngledDistance(eyePosition, Math::Sphere{ playerPosition, m_targetDistance }, eyeDirection).second;
 	m_info.position = eyePosition + eyeDirection * distanceMin;
-	m_pTransform->SetPosition(Math::Vector2{ -10.0f, -10.0f });
+	m_refTransform->SetPosition(Math::Vector2{ -10.0f, -10.0f });
 }
 
 // ターゲットを表示
 void TargetPoint::Appear(bool isAppear)
 {
-	m_pImage->SetColor(isAppear ? DirectX::Colors::Red : DirectX::Colors::Transparent);
+	m_refImage->SetColor(isAppear ? DirectX::Colors::Red : DirectX::Colors::Transparent);
 }
 
 // ターゲット情報を取得
 const TargetPoint::Info& TargetPoint::GetTargetInfo()
 {
 	// プレイヤーの座標
-	const Math::Vector3& playerPosition = m_pPlayer->GetWorldBox().position;
+	const Math::Vector3& playerPosition = m_refPlayer->GetWorldBox().position;
 	// プレイヤーからターゲットを指す方向
 	Math::Vector3 direction = m_info.position - playerPosition;
 

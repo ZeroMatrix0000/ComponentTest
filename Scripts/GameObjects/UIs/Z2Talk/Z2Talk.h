@@ -1,7 +1,7 @@
 /*
  * FileName:     Z2Talk.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/07
+ * Last Updated: 2026/10/21
  *
  * Z: はなす
  */
@@ -52,9 +52,9 @@ private:
 	// 不透明度の速度
 	float m_alphaVelocity;
 
-	// トランスフォーム
-	RectTransform* m_pRectTransform;
-	// テキスト
-	Renderings::Text* m_pText;
+	// トランスフォームの参照
+	Ref<RectTransform> m_refRectTransform;
+	// テキストの参照
+	Ref<Renderings::Text> m_refText;
 
 };

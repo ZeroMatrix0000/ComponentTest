@@ -1,7 +1,7 @@
 /*
  * FileName:     TargetPoint.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/16
+ * Last Updated: 2026/10/21
  *
  * ターゲット照準
  */
@@ -92,16 +92,16 @@ private:
 	// ターゲット情報
 	Info m_info;
 
-	// 画像のトランスフォーム
-	RectTransform* m_pTransform;
-	// 画像
-	Renderings::Image* m_pImage;
+	// 画像のトランスフォームの参照
+	Ref<RectTransform> m_refTransform;
+	// 画像の参照
+	Ref<Renderings::Image> m_refImage;
 
-	// プレイヤー
-	Colliders::BoxCollider* m_pPlayer;
+	// プレイヤーの参照
+	Ref<Colliders::BoxCollider> m_refPlayer;
 
-	// カメラ画面
-	Renderings::ICameraScreen* m_pICameraScreen;
+	// カメラ画面の参照
+	Ref<Renderings::ICameraScreen> m_refICameraScreen;
 
 	// ターゲットリスト
 	std::vector<Colliders::SphereCollider*> m_pTargetObjects;

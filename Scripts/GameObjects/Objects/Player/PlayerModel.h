@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerModel.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/19
+ * Last Updated: 2026/10/21
  *
  * プレイヤーのモデル
  */
@@ -85,11 +85,11 @@ private:
 	// 糸伸ばし時の傾き
 	Spring<float> m_wireAngle;
 
-	// 自身のトランスフォーム
-	Transform* m_pTransform;
+	// 自身のトランスフォームのポインタ
+	Ref<Transform> m_refTransform;
 
-	// シルエットのトランスフォーム
-	Transform* m_pSilhouette;
+	// シルエットのトランスフォームのポインタ
+	Ref<Transform> m_refSilhouette;
 
 	// パーティクル管理
 	Renderings::ParticleManager* m_pParticleManager;

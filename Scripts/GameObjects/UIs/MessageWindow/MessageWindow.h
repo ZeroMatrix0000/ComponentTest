@@ -1,7 +1,7 @@
 /*
  * FileName:     MessageWindow.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/19
+ * Last Updated: 2026/10/21
  *
  * メッセージウィンドウ
  */
@@ -92,20 +92,20 @@ private:
 	// 文字数カウント
 	Limited m_textCount;
 
-	// 背景のトランスフォーム
-	RectTransform* m_pBackgroundTransform;
-	// 背景
-	Renderings::Image* m_pBackground;
+	// 背景のトランスフォームの参照
+	Ref<RectTransform> m_refBackgroundTransform;
+	// 背景の参照
+	Ref<Renderings::Image> m_refBackground;
 
-	// キャラクター名のトランスフォーム
-	RectTransform* m_pCharacterTransform;
-	// キャラクター名
-	Renderings::Text* m_pCharacter;
+	// キャラクター名のトランスフォームの参照
+	Ref<RectTransform> m_refCharacterTransform;
+	// キャラクター名の参照
+	Ref<Renderings::Text> m_refCharacter;
 
-	// テキストのトランスフォーム
-	RectTransform* m_pTextTransform;
-	// テキスト
-	Renderings::Text* m_pText;
+	// テキストのトランスフォームの参照
+	Ref<RectTransform> m_refTextTransform;
+	// テキストの参照
+	Ref<Renderings::Text> m_refText;
 
 
 };

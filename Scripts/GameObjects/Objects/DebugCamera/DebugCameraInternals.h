@@ -1,7 +1,7 @@
 /*
  * FileName:     DebugCameraInternals.h
  * Author:       Takao Hayata
- * Last Updated: 2026/07/08
+ * Last Updated: 2026/10/21
  *
  * デバッグ用カメラの内部データ
  */
@@ -22,6 +22,6 @@ struct DebugCameraInternals
 	// マウスホイールの回転量
 	int mouseWheelDelta{};
 
-	// カメラ画面のポインタ
+	// カメラ画面の参照
 	Renderings::CameraScreen<Camera::EulerTargetCamera>* pCameraScreen{};
 };

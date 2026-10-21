@@ -31,10 +31,10 @@ public:
 	WindCutParticle(Renderings::IModel3DRenderer* pIModelRenderer, Systems::IResources* pIResources);
 
 	// 初期化処理
-	void Initalize(const Transform* pTransform);
+	void Initalize(const Transform& transform) override;
 
 	// 更新処理
-	void Update(float elapsedTime);
+	void Update(float elapsedTime) override;
 
 
 private:

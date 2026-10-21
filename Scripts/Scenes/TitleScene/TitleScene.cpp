@@ -56,27 +56,27 @@ void TitleScene::Initialize(const SceneTransitionData& data)
 	pIGameObjectManager->Load("Scene_Title");
 
 	// カメラ画面を取得
-	m_pCameraScreen = pIGameObjectManager->Find("TitleCamera")->GetComponent<Renderings::CameraScreen<Camera::EulerTargetCamera>>();
+	m_pCameraScreen = &pIGameObjectManager->Find("TitleCamera").GetComponent<Renderings::CameraScreen<Camera::EulerTargetCamera>>();
 	m_pCameraScreen->SetProjectionMatrix(outputSize);
 
 	// キャンバスを取得
-	m_pCanvas = pIGameObjectManager->Find("Canvas")->GetComponent<Renderings::Canvas>();
+	m_pCanvas = &pIGameObjectManager->Find("Canvas").GetComponent<Renderings::Canvas>();
 	m_pCanvas->SetSize(outputSize);
 
 	// 地面を取得
-	GameObject* pGround = pIGameObjectManager->Find("Ground");
-	pGround->GetComponent<Colliders::MeshCollider>()->ApplyTransform();
-	pGround->GetComponent<Renderings::Model3D>()->GetPModelSource()->GetPPixelShader()->GetConstantBuffer()->SetVariable("ShadowCount", 0);
+	GameObject* pGround = &pIGameObjectManager->Find("Ground");
+	pGround->GetComponent<Colliders::MeshCollider>().ApplyTransform();
+	pGround->GetComponent<Renderings::Model3D>().GetPModelSource()->GetPPixelShader()->GetConstantBuffer()->SetVariable("ShadowCount", 0);
 
 	// 選択メニューを取得
-	m_pSelectMenu = pIGameObjectManager->Find("TitleMenu")->GetComponent<SelectMenu>();
+	m_pSelectMenu = &pIGameObjectManager->Find("TitleMenu").GetComponent<SelectMenu>();
 	m_pSelectMenu->AddOption(L"スタート", [&] { gameContext.GetPISceneManager()->SetNextScene<GamePlayScene>(); });
 	m_pSelectMenu->AddOption(L"ゲームを<ruby=しゅうりょう>終了</ruby>", [&] { gameContext.GetPIWindowController()->Destroy(); });
 
 	// タイトルを取得
-	GameObject* pObj = pIGameObjectManager->Find("Title");
-	m_pTitle = pObj->GetComponent<RectTransform>();
-	m_pTitleImage = pObj->GetComponent<Renderings::Image>();
+	GameObject& obj = pIGameObjectManager->Find("Title");
+	m_pTitle = &obj.GetComponent<RectTransform>();
+	m_pTitleImage = &obj.GetComponent<Renderings::Image>();
 	m_pTitleImage->GetPPixelShader()->GetConstantBuffer()->SetVariable("TextureSize", m_pTitleImage->GetSize());
 	m_titlePosition = m_pTitle->GetRect().position;
 	m_titleSway.Initialize(0.0f, 0.0f, 360.0f);

@@ -20,7 +20,7 @@ Renderings::ParticleSample::ParticleSample(IModel3DRenderer* pIModelRenderer, Sy
 }
 
 // 初期化処理
-void Renderings::ParticleSample::Initalize(const Transform* pTransform)
+void Renderings::ParticleSample::Initalize(const Transform& transform)
 {
 	for (int i = 0; i < ELEMENT_COUNT; i++)
 	{
@@ -31,7 +31,7 @@ void Renderings::ParticleSample::Initalize(const Transform* pTransform)
 		AddElement(&pUpdateElement, &pRenderElement);
 
 		// 管理者の位置に移動
-		pUpdateElement->position = pTransform->GetPosition();
+		pUpdateElement->position = transform.GetPosition();
 		// ランダムに回転
 		pUpdateElement->rotation = Math::Quaternion::CreateFromYawPitchRoll
 		(

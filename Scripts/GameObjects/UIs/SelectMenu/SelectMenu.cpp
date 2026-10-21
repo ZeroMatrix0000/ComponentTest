@@ -1,7 +1,7 @@
 /*
  * FileName:     SelectMenu.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/28
+ * Last Updated: 2026/10/21
  *
  * 選択メニュー
  */
@@ -27,19 +27,19 @@ SelectMenu::SelectMenu(const ComponentDesc& desc)
 	, m_pTexts{}
 	, m_Processes{}
 	, m_fontSizes{}
-	, m_pCursorImage{ GetPOwner()->GetNullReferences<Renderings::Image>() }
-	, m_pCursorRectTransform{ GetPOwner()->GetNullReferences<RectTransform>() }
+	, m_refCursorImage{ GetOwner().GetNullReferences<Renderings::Image>() }
+	, m_refCursorRectTransform{ GetOwner().GetNullReferences<RectTransform>() }
 {
 }
 
 // 初期化処理
 void SelectMenu::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
 {
-	if (m_pCursorImage == GetPOwner()->GetNullReferences<Renderings::Image>())
+	if (m_refCursorImage == GetOwner().GetNullReferences<Renderings::Image>())
 	{
-		GameObject* pObj = Instantiate("Prefab_SelectMenuCursor");
-		m_pCursorImage = pObj->GetComponent<Renderings::Image>();
-		m_pCursorRectTransform = pObj->GetComponent<RectTransform>();
+		GameObject& obj = Instantiate("Prefab_SelectMenuCursor");
+		m_refCursorImage = obj.GetComponent<Renderings::Image>();
+		m_refCursorRectTransform = obj.GetComponent<RectTransform>();
 	}
 
 	// 選択番号を初期化
@@ -48,7 +48,7 @@ void SelectMenu::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder
 	m_cursorDelayY.SetMovement(0.0f, 0.0f);
 
 	float cursorSwayTime = m_cursorSwayTimer.GetMax();
-	const Renderings::Canvas* pCanvas = m_pCursorImage->GetPCanvas();
+	const Renderings::Canvas* pCanvas = m_refCursorImage->GetPCanvas();
 
 	Systems::JsonSerializer serializer{ pIGameObjectFinder };
 	serializer.AddParameter(&m_params.width, "Width");
@@ -66,7 +66,7 @@ void SelectMenu::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder
 	serializer.Load(json);
 
 	m_cursorSwayTimer.Initialize(0.0f, 0.0f, cursorSwayTime);
-	m_pCursorImage->SetCanvas(*pCanvas);
+	m_refCursorImage->SetCanvas(*pCanvas);
 }
 
 // 更新処理
@@ -88,7 +88,7 @@ void SelectMenu::Update(float elapsedTime)
 	};
 
 	// カーソルの位置を変更
-	m_pCursorRectTransform->SetPosition(m_params.basePosition + Math::Vector2{ -m_params.width / 2.0f, 0.0f } + cursorDelay);
+	m_refCursorRectTransform->SetPosition(m_params.basePosition + Math::Vector2{ -m_params.width / 2.0f, 0.0f } + cursorDelay);
 
 	// フォントサイズを変更
 	for (size_t i = 0; i < m_pTexts.size(); i++)
@@ -101,16 +101,16 @@ void SelectMenu::Update(float elapsedTime)
 // 選択肢を追加
 void SelectMenu::AddOption(const std::wstring& str, const std::function<void()>& Process)
 {
-	GameObject* gameObject = Instantiate("Prefab_SelectMenuText");
-	auto* pText = gameObject->AddComponent<Renderings::Text>();
-	pText->SetStr(str);
-	pText->SetCanvas(*m_pCursorImage->GetPCanvas());
-	pText->SetFontSize(m_params.fontSizeBegin);
-	auto* pRectTransform = gameObject->AddComponent<RectTransform>();
-	pRectTransform->SetPosition(m_params.basePosition + Math::Vector2{ 0.0f, m_params.height + m_params.interval } * static_cast<float>(m_Processes.size()));
-	pRectTransform->SetSize(Math::Vector2{ m_params.width, m_params.height });
+	GameObject& obj = Instantiate("Prefab_SelectMenuText");
+	auto& text = obj.AddComponent<Renderings::Text>();
+	text.SetStr(str);
+	text.SetCanvas(*m_refCursorImage->GetPCanvas());
+	text.SetFontSize(m_params.fontSizeBegin);
+	auto& rectTransform = obj.AddComponent<RectTransform>();
+	rectTransform.SetPosition(m_params.basePosition + Math::Vector2{ 0.0f, m_params.height + m_params.interval } * static_cast<float>(m_Processes.size()));
+	rectTransform.SetSize(Math::Vector2{ m_params.width, m_params.height });
 
-	m_pTexts.push_back(pText);
+	m_pTexts.push_back(text);
 	m_Processes.push_back(Process);
 	m_fontSizes.push_back(Easing::Value<float>{});
 	m_fontSizes.back().SetMovement(static_cast<int>(m_fontSizes.size()) == m_selectNumber + 1 ? m_params.fontSizeEnd : m_params.fontSizeBegin, 0.0f);

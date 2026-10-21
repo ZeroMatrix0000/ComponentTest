@@ -66,7 +66,7 @@ namespace Renderings
 		virtual ~Particle();
 
 		// 初期化処理
-		virtual void Initalize(const Transform* pTransform) = 0;
+		virtual void Initalize(const Transform& transform) = 0;
 
 		// 更新処理
 		virtual void Update(float elapsedTime) = 0;

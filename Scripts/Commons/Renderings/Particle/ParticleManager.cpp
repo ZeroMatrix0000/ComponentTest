@@ -20,7 +20,7 @@
 Renderings::ParticleManager::ParticleManager(const ComponentDesc& desc, IModel3DRenderer* pIModelRenderer, Systems::IResources* pIResources)
 	: Component{ desc }
 	, m_particles{}
-	, m_pTransform{ GetPOwner()->GetNullReferences<Transform>() }
+	, m_refTransform{ GetOwner().GetNullReferences<Transform>() }
 	, m_pICameraScreens{}
 	, m_pIModelRenderer{ pIModelRenderer }
 	, m_pIResources{ pIResources }
@@ -30,7 +30,7 @@ Renderings::ParticleManager::ParticleManager(const ComponentDesc& desc, IModel3D
 // 初期化処理
 void Renderings::ParticleManager::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
 {
-	m_pTransform = GetPOwner()->GetComponent<Transform>();
+	m_refTransform = GetOwner().GetComponent<Transform>();
 
 	Systems::JsonSerializer serializer{ pIGameObjectFinder };
 	serializer.AddParameter(&m_pICameraScreens, "CameraScreens");

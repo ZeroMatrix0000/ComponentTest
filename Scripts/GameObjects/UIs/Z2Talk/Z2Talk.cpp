@@ -1,7 +1,7 @@
 /*
  * FileName:     Z2Talk.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/28
+ * Last Updated: 2026/10/21
  *
  * Z: はなす
  */
@@ -22,8 +22,8 @@ Z2Talk::Z2Talk(const ComponentDesc& desc)
 	: Component{ desc }
 	, m_alpha{}
 	, m_alphaVelocity{}
-	, m_pRectTransform{ GetPOwner()->GetNullReferences<RectTransform>() }
-	, m_pText{ GetPOwner()->GetNullReferences<Renderings::Text>() }
+	, m_refRectTransform{ GetOwner().GetNullReferences<RectTransform>() }
+	, m_refText{ GetOwner().GetNullReferences<Renderings::Text>() }
 {
 }
 
@@ -35,8 +35,8 @@ void Z2Talk::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pI
 	serializer.Load(json);
 
 	m_alpha.Initialize(0.0f, 0.0f, 1.0f);
-	m_pRectTransform = GetPOwner()->GetComponent<RectTransform>();
-	m_pText = GetPOwner()->GetComponent<Renderings::Text>();
+	m_refRectTransform = GetOwner().GetComponent<RectTransform>();
+	m_refText = GetOwner().GetComponent<Renderings::Text>();
 }
 
 // 更新処理
@@ -45,9 +45,9 @@ void Z2Talk::Update(float elapsedTime, bool isFocused)
 	// 不透明度を設定
 	m_alpha += m_alphaVelocity * elapsedTime * (isFocused ? 1.0f : -1.0f);
 
-	Math::Color color = m_pText->GetFontColor();
+	Math::Color color = m_refText->GetFontColor();
 	color.w = m_alpha;
-	m_pText->SetFontColor(color);
+	m_refText->SetFontColor(color);
 }
 
 // 座標を設定
@@ -64,8 +64,8 @@ void Z2Talk::SetPosition(const Math::Box& playerBox, const Renderings::ICameraSc
 		playerBox.position - playerBox.size * Math::Vector3::Up / 2.0f,
 		iCameraScreen.GetViewMatrix(),
 		iCameraScreen.GetProjectionMatrix(),
-		m_pText->GetPCanvas()->GetSize()
+		m_refText->GetPCanvas()->GetSize()
 	);
 
-	m_pRectTransform->SetPosition(screenPosition);
+	m_refRectTransform->SetPosition(screenPosition);
 }
