@@ -1,7 +1,7 @@
 /*
  * FileName:     ParticleManager.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/09
+ * Last Updated: 2026/10/21
  *
  * パーティクル管理
  */
@@ -17,13 +17,13 @@
 #include "Scripts/Commons/Systems/IResources.h"
 #include "Scripts/Commons/Systems/JsonSerializer.h"
 
-Renderings::ParticleManager::ParticleManager(const ComponentDesc& desc, IModel3DRenderer* pIModelRenderer, const Systems::IResources& iResources)
+Renderings::ParticleManager::ParticleManager(const ComponentDesc& desc, IModel3DRenderer* pIModelRenderer, Systems::IResources* pIResources)
 	: Component{ desc }
 	, m_particles{}
 	, m_pTransform{ GetPOwner()->GetNullReferences<Transform>() }
 	, m_pICameraScreens{}
 	, m_pIModelRenderer{ pIModelRenderer }
-	, m_refIResources{ iResources }
+	, m_pIResources{ pIResources }
 {
 }
 

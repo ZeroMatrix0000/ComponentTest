@@ -1,7 +1,7 @@
 /*
  * FileName:     SparklingParticle.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/19
+ * Last Updated: 2026/10/21
  *
  * 火花パーティクル
  */
@@ -20,7 +20,7 @@ public:
 	/* メンバ関数 */
 
 	// コンストラクタ
-	SparklingParticle(Renderings::IModel3DRenderer* pIModelRenderer, const Systems::IResources& iResources);
+	SparklingParticle(Renderings::IModel3DRenderer* pIModelRenderer, Systems::IResources* pIResources);
 
 	// 初期化処理
 	void Initalize(const Transform* pTransform);

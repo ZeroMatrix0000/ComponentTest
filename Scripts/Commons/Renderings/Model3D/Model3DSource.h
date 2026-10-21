@@ -78,10 +78,13 @@ namespace Renderings
 		// ピクセルシェーダを取得
 		const PixelShader* GetPPixelShader() const { return m_pPixelShader; }
 
+		// 初期化済みかどうかを取得
+		bool IsInitialized() const { return m_model.get(); }
+
 		/* 静的関数 */
 
 		// 生成
-		static Model3DSource Create(ID3D11Device* device, InstancingEffectFactory* fx, const std::wstring& filePath);
+		static Model3DSource Create(ID3D11Device* device, InstancingEffectFactory* fx, const PixelShader* pPixelShader, const std::wstring& filePath);
 
 
 	private:

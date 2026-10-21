@@ -1,7 +1,7 @@
 /*
  * FileName:     PoppingParticle.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/19
+ * Last Updated: 2026/10/21
  *
  * 弾けパーティクル
  */
@@ -12,8 +12,8 @@
 #include "Scripts/Commons/Components/Transform.h"
 
  // コンストラクタ
-PoppingParticle::PoppingParticle(Renderings::IModel3DRenderer* pIModelRenderer, const Systems::IResources& iResources)
-	: Particle{ pIModelRenderer, iResources }
+PoppingParticle::PoppingParticle(Renderings::IModel3DRenderer* pIModelRenderer, Systems::IResources* pIResources)
+	: Particle{ pIModelRenderer, pIResources }
 	, m_directions{}
 	, m_speed{}
 	, m_scale{}

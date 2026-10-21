@@ -1,7 +1,7 @@
 /*
  * FileName:     LandingParticle.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/18
+ * Last Updated: 2026/10/21
  *
  * 着地パーティクル
  */
@@ -20,7 +20,7 @@ public:
 	/* メンバ関数 */
 
 	// コンストラクタ
-	LandingParticle(Renderings::IModel3DRenderer* pIModelRenderer, const Systems::IResources& iResources);
+	LandingParticle(Renderings::IModel3DRenderer* pIModelRenderer, Systems::IResources* pIResources);
 
 	// 初期化処理
 	void Initalize(const Transform* pTransform);

@@ -1,7 +1,7 @@
 /*
  * FileName:     WindCutParticle.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/19
+ * Last Updated: 2026/10/21
  *
  * 風切りパーティクル
  */
@@ -12,8 +12,8 @@
 #include "Scripts/Commons/Components/Transform.h"
 
  // コンストラクタ
-WindCutParticle::WindCutParticle(Renderings::IModel3DRenderer* pIModelRenderer, const Systems::IResources& iResources)
-	: Particle{ pIModelRenderer, iResources }
+WindCutParticle::WindCutParticle(Renderings::IModel3DRenderer* pIModelRenderer, Systems::IResources* pIResources)
+	: Particle{ pIModelRenderer, pIResources }
 	, m_position{}
 	, m_length{}
 	, m_pUpdateElement{}

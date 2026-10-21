@@ -1,7 +1,7 @@
 /*
  * FileName:     Image.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/29
+ * Last Updated: 2026/10/21
  *
  * 画像
  */
@@ -32,7 +32,7 @@ namespace Renderings
 		/* メンバ関数 */
 
 		// コンストラクタ
-		Image(const ComponentDesc& desc, IImageRenderer* pIImageRenderer, const Systems::IResources& iResources);
+		Image(const ComponentDesc& desc, IImageRenderer* pIImageRenderer, Systems::IResources* pIResources);
 		// デストラクタ
 		~Image();
 
@@ -94,8 +94,8 @@ namespace Renderings
 		// 画像描画インタフェースのポインタ
 		IImageRenderer* m_pIImageRenderer;
 
-		// リソース管理
-		const Systems::IResources& m_refIResources;
+		// リソース管理のポインタ
+		Systems::IResources* m_pIResources;
 
 	};
 }

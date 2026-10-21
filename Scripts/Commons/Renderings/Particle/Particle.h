@@ -1,7 +1,7 @@
 /*
  * FileName:     Particle.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/16
+ * Last Updated: 2026/10/21
  *
  * パーティクル
  */
@@ -61,7 +61,7 @@ namespace Renderings
 		/* メンバ関数 */
 
 		// コンストラクタ
-		Particle(IModel3DRenderer* pIModelRenderer, const Systems::IResources& iResources);
+		Particle(IModel3DRenderer* pIModelRenderer, Systems::IResources* pIResources);
 		// デストラクタ
 		virtual ~Particle();
 
@@ -120,8 +120,8 @@ namespace Renderings
 		// モデル描画インタフェースのポインタ
 		IModel3DRenderer* m_pIModelRenderer;
 
-		// リソース管理
-		const Systems::IResources& m_refIResources;
+		// リソース管理のポインタ
+		Systems::IResources* m_pIResources;
 
 	};
 }

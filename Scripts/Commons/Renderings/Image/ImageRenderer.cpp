@@ -1,7 +1,7 @@
 /*
  * FileName:     ImageRenderer.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/08
+ * Last Updated: 2026/10/21
  *
  * 画像描画
  */
@@ -53,7 +53,7 @@ void Renderings::ImageRenderer::Draw(const Image* pImage)
 {
 	// 画像ソース
 	const ImageSource* pImageSource = pImage->GetPImageSource();
-	if (!pImageSource)
+	if (!pImageSource->IsInitialized())
 	{
 		return;
 	}
@@ -163,7 +163,7 @@ void Renderings::ImageRenderer::Draw(const Image* pImage)
 	// ピクセルシェーダ
 	const Renderings::PixelShader* pPixelShader = pImage->GetPPixelShader();
 	
-	if (pPixelShader)
+	if (pPixelShader->IsInitialized())
 	{
 		// ピクセルシェーダを設定
 		m_pContext->PSSetShader(pPixelShader->GetD3DShader(), nullptr, 0);
@@ -188,7 +188,7 @@ void Renderings::ImageRenderer::Draw(const Image* pImage)
 		origin
 	);
 
-	if (pPixelShader)
+	if (pPixelShader->IsInitialized())
 	{
 		m_pContext->PSSetShader(nullptr, nullptr, 0);
 	}
@@ -222,7 +222,7 @@ Math::Vector2 Renderings::ImageRenderer::GetImageSize(const Image* pImage) const
 {
 	// 画像ソース
 	const ImageSource* pImageSource = pImage->GetPImageSource();
-	if (!pImageSource)
+	if (!pImageSource->IsInitialized())
 	{
 		return Math::Vector2::Zero;
 	}

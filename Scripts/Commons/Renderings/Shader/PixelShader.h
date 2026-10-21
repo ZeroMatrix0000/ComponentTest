@@ -1,7 +1,7 @@
 /*
  * FileName:     PixelShader.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/12
+ * Last Updated: 2026/10/21
  *
  * ピクセルシェーダ
  */
@@ -35,6 +35,9 @@ namespace Renderings
 
 		// 定数バッファを GPU に送信
 		void SetConstantBuffer(ID3D11Device5* pDevice, ID3D11DeviceContext4* pContext, UINT index) const;
+
+		// 初期化済みかどうかを取得
+		bool IsInitialized() const { return m_blob.Get() && m_d3dShader.Get(); }
 
 		/* 静的関数 */
 

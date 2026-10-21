@@ -1,7 +1,7 @@
 /*
  * FileName:     Particle.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/18
+ * Last Updated: 2026/10/21
  *
  * パーティクル
  */
@@ -17,13 +17,13 @@
 #include "Scripts/Commons/Systems/IResources.h"
 
 // コンストラクタ
-Renderings::Particle::Particle(IModel3DRenderer* pIModelRenderer, const Systems::IResources& iResources)
+Renderings::Particle::Particle(IModel3DRenderer* pIModelRenderer, Systems::IResources* pIResources)
 	: m_updateElements{}
 	, m_renderElements{}
 	, m_isActive{ true }
 	, m_pICameraScreens{}
 	, m_pIModelRenderer{ pIModelRenderer }
-	, m_refIResources{ iResources }
+	, m_pIResources{ pIResources }
 {
 }
 
@@ -65,7 +65,7 @@ void Renderings::Particle::SetModelSource(const std::string& modelSourceName, Re
 	{
 		m_pIModelRenderer->RemovePParticle(pICameraScreen, pRenderElement);
 	}
-	pRenderElement->pModelSource = m_refIResources.GetModelSource(modelSourceName);
+	pRenderElement->pModelSource = m_pIResources->GetModelSource(modelSourceName);
 	// 描画者にパーティクルを追加
 	for (const auto* pICameraScreen : m_pICameraScreens)
 	{
@@ -110,6 +110,7 @@ void Renderings::Particle::AddElement(UpdateElement** ppUpdateElement, RenderEle
 
 	auto& renderElement = m_renderElements.emplace_back();
 	renderElement = std::make_unique<RenderElement>();
+	renderElement->pModelSource = m_pIResources->GetNullModelSource();
 	if (ppRenderElement)
 	{
 		*ppRenderElement = renderElement.get();

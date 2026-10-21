@@ -14,14 +14,14 @@
 #include "Scripts/Commons/Systems/IResources.h"
 
 // コンストラクタ
-ActionManager::ActionManager(const ComponentDesc& desc, const Systems::IResources& iResources)
+ActionManager::ActionManager(const ComponentDesc& desc, Systems::IResources* pIResources)
 	: Component{ desc }
 	, m_eventCount{}
 	, m_eventIndex{}
 	, m_pEvent{}
 	, m_pCurrentAction{}
 	, m_pIGameObjectFinder{}
-	, m_refIResources{ iResources }
+	, m_pIResources{ pIResources }
 {
 }
 
@@ -53,11 +53,7 @@ void ActionManager::Update(float elapsedTime, const IGameInput& iGameInput)
 // イベントを設定
 void ActionManager::LoadEvent(const std::string& eventName)
 {
-	m_pEvent = m_refIResources.GetJson(eventName);
-	if (!m_pEvent)
-	{
-		return;
-	}
+	m_pEvent = m_pIResources->GetJson(eventName);
 
 	m_eventCount = m_pEvent->size();
 	m_eventIndex = 0;

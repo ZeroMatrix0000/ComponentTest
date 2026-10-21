@@ -1,7 +1,7 @@
 /*
  * FileName:     GameObjectManager.h
  * Author:       Takao Hayata
- * Last Updated: 2026/08/05
+ * Last Updated: 2026/10/21
  *
  * ゲームオブジェクト管理
  */
@@ -28,7 +28,7 @@ namespace GameObjects
 		/* メンバ関数 */
 
 		// コンストラクタ
-		GameObjectManager(const Systems::IResources& iResources);
+		GameObjectManager(Systems::IResources* pIResources);
 
 		// 初期化処理
 		void Initialize(IComponentManager* pIComponentManager);
@@ -91,8 +91,8 @@ namespace GameObjects
 		// コンポーネント管理のポインタ
 		IComponentManager* m_pIComponentManager;
 
-		// リソースのインタフェースの参照
-		const Systems::IResources& m_refIResources;
+		// リソースのインタフェースのポインタ
+		Systems::IResources* m_pIResources;
 
 	};
 }

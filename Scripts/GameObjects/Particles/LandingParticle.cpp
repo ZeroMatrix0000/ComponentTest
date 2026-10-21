@@ -1,7 +1,7 @@
 /*
  * FileName:     LandingParticle.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/18
+ * Last Updated: 2026/10/21
  *
  * 着地パーティクル
  */
@@ -12,8 +12,8 @@
 #include "Scripts/Commons/Components/Transform.h"
 
  // コンストラクタ
-LandingParticle::LandingParticle(Renderings::IModel3DRenderer* pIModelRenderer, const Systems::IResources& iResources)
-	: Particle{ pIModelRenderer, iResources }
+LandingParticle::LandingParticle(Renderings::IModel3DRenderer* pIModelRenderer, Systems::IResources* pIResources)
+	: Particle{ pIModelRenderer, pIResources }
 	, m_directions{}
 	, m_speed{}
 	, m_scale{}

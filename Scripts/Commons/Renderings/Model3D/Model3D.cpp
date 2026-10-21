@@ -1,7 +1,7 @@
 /*
  * FileName:     Model3D.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/16
+ * Last Updated: 2026/10/21
  *
  * 3Dモデル
  */
@@ -16,13 +16,13 @@
 #include "Scripts/Commons/Systems/IResources.h"
 #include "Scripts/Commons/Systems/JsonSerializer.h"
 
-Renderings::Model3D::Model3D(const ComponentDesc& desc, IModel3DRenderer* pIModelRenderer, const Systems::IResources& iResources)
+Renderings::Model3D::Model3D(const ComponentDesc& desc, IModel3DRenderer* pIModelRenderer, Systems::IResources* pIResources)
 	: Component{ desc }
 	, m_color{ DirectX::Colors::White }
-	, m_pModelSource{}
+	, m_pModelSource{ pIResources->GetNullModelSource() }
 	, m_pICameraScreens{}
 	, m_pIModelRenderer{ pIModelRenderer }
-	, m_refIResources{ iResources }
+	, m_pIResources{ pIResources }
 {
 }
 
@@ -61,7 +61,7 @@ void Renderings::Model3D::SetModelSource(const std::string& modelSourceName)
 	{
 		m_pIModelRenderer->RemovePModel(pICameraScreen, this);
 	}
-	m_pModelSource = m_refIResources.GetModelSource(modelSourceName);
+	m_pModelSource = m_pIResources->GetModelSource(modelSourceName);
 	// 描画者にモデルを追加
 	for (const auto* pICameraScreen : m_pICameraScreens)
 	{

@@ -1,7 +1,7 @@
 /*
  * FileName:     PixelShader.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/12
+ * Last Updated: 2026/10/21
  *
  * ピクセルシェーダ
  */
@@ -14,6 +14,7 @@ Renderings::PixelShader::PixelShader()
 	: m_d3dShader{}
 	, m_constantBuffer{}
 {
+	m_constantBuffer = std::make_unique<ConstantBuffer>();
 }
 
 // 初期化処理
@@ -32,7 +33,6 @@ void Renderings::PixelShader::Initialize(ID3D11Device5* pDevice, const std::wstr
 	));
 
 	// 定数バッファ
-	m_constantBuffer = std::make_unique<ConstantBuffer>();
 	m_constantBuffer->Initialize(pDevice, m_blob.Get());
 }
 

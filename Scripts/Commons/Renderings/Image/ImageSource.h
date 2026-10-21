@@ -1,7 +1,7 @@
 /*
  * FileName:     ImageSource.h
  * Author:       Takao Hayata
- * Last Updated: 2026/07/06
+ * Last Updated: 2026/10/21
  *
  * 画像ソース
  */
@@ -29,6 +29,9 @@ namespace Renderings
 		auto* GetTexture()  const { return m_texture.Get(); }
 		// リソースを取得
 		auto* GetResource() const { return m_resource.Get(); }
+
+		// 初期化済みかどうかを取得
+		bool IsInitialized() const { return m_texture.Get() && m_resource.Get(); }
 
 
 		/* 静的関数 */

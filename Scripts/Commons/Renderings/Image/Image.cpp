@@ -1,7 +1,7 @@
 /*
  * FileName:     Image.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/28
+ * Last Updated: 2026/10/21
  *
  * 画像
  */
@@ -17,15 +17,15 @@
 #include "Scripts/Commons/Systems/JsonSerializer.h"
 
 // コンストラクタ
-Renderings::Image::Image(const ComponentDesc& desc, IImageRenderer* pIImageRenderer, const Systems::IResources& iResources)
+Renderings::Image::Image(const ComponentDesc& desc, IImageRenderer* pIImageRenderer, Systems::IResources* pIResources)
 	: Component{ desc }
 	, m_color{ DirectX::Colors::White }
 	, m_orderInLayer{}
-	, m_pImageSource{}
-	, m_pPixelShader{}
+	, m_pImageSource{ pIResources->GetNullImageSource() }
+	, m_pPixelShader{ pIResources->GetNullPixelShader() }
 	, m_pCanvas{}
 	, m_pIImageRenderer{ pIImageRenderer }
-	, m_refIResources{ iResources }
+	, m_pIResources{ pIResources }
 {
 	// 画像描画にポインタを追加
 	m_pIImageRenderer->AddPImage(this);
@@ -65,13 +65,13 @@ void Renderings::Image::Initalize(const nlohmann::ordered_json& json, IGameObjec
 // 画像ソースを設定
 void Renderings::Image::SetImageSource(const std::string& imageSourceName)
 {
-	m_pImageSource = m_refIResources.GetImageSource(imageSourceName);
+	m_pImageSource = m_pIResources->GetImageSource(imageSourceName);
 }
 
 // ピクセルシェーダを設定
 void Renderings::Image::SetPixelShader(const std::string& pixelShaderName)
 {
-	m_pPixelShader = m_refIResources.GetPixelShader(pixelShaderName);
+	m_pPixelShader = m_pIResources->GetPixelShader(pixelShaderName);
 }
 
 // 画像サイズを取得

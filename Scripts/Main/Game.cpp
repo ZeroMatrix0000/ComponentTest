@@ -51,7 +51,7 @@ Game::Game()
 	, m_input{}
 	, m_errorMessage{}
 	, m_componentManager{}
-	, m_gameObjectManager{ m_resources }
+	, m_gameObjectManager{ &m_resources }
 	, m_sceneManager{ m_context }
 	, m_gameInput{ m_input }
 	, m_context{}
@@ -354,12 +354,12 @@ void Game::RegisterComponents()
 	// 3Dモデル
 	m_componentManager.RegisterCreate<Renderings::Model3D>([&](const ComponentDesc& desc)
 	{
-		return std::make_unique<Renderings::Model3D>(desc, &m_renderer.GetModelRenderer(), m_resources);
+		return std::make_unique<Renderings::Model3D>(desc, &m_renderer.GetModelRenderer(), &m_resources);
 	});
 	// 画像
 	m_componentManager.RegisterCreate<Renderings::Image>([&](const ComponentDesc& desc)
 	{
-		return std::make_unique<Renderings::Image>(desc, &m_renderer.GetImageRenderer(), m_resources);
+		return std::make_unique<Renderings::Image>(desc, &m_renderer.GetImageRenderer(), &m_resources);
 	});
 	// テキスト
 	m_componentManager.RegisterCreate<Renderings::Text>([&](const ComponentDesc& desc)
@@ -369,7 +369,7 @@ void Game::RegisterComponents()
 	// パーティクル管理
 	m_componentManager.RegisterCreate<Renderings::ParticleManager>([&](const ComponentDesc& desc)
 	{
-		return std::make_unique<Renderings::ParticleManager>(desc, &m_renderer.GetModelRenderer(), m_resources);
+		return std::make_unique<Renderings::ParticleManager>(desc, &m_renderer.GetModelRenderer(), &m_resources);
 	});
 
 	// 長方形の当たり判定
@@ -385,7 +385,7 @@ void Game::RegisterComponents()
 	// メッシュの当たり判定
 	m_componentManager.RegisterCreate<Colliders::MeshCollider>([&](const ComponentDesc& desc)
 	{
-		return std::make_unique<Colliders::MeshCollider>(desc, &m_renderer.GetColliderRenderer(), m_resources);
+		return std::make_unique<Colliders::MeshCollider>(desc, &m_renderer.GetColliderRenderer(), &m_resources);
 	});
 
 	// カメラ画面
@@ -397,7 +397,7 @@ void Game::RegisterComponents()
 	// アクション管理
 	m_componentManager.RegisterCreate<ActionManager>([&](const ComponentDesc& desc)
 	{
-		return std::make_unique<ActionManager>(desc, m_resources);
+		return std::make_unique<ActionManager>(desc, &m_resources);
 	});
 
 

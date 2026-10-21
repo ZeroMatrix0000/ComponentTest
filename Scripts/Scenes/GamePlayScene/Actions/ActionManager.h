@@ -1,7 +1,7 @@
 /*
  * FileName:     ActionManager.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/10
+ * Last Updated: 2026/09/21
  *
  * アクション管理
  */
@@ -27,7 +27,7 @@ public:
 	/* メンバ関数 */
 
 	// コンストラクタ
-	ActionManager(const ComponentDesc& desc, const Systems::IResources& iResources);
+	ActionManager(const ComponentDesc& desc, Systems::IResources* pIResources);
 
 	// 初期化処理
 	void Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder) override;
@@ -71,6 +71,6 @@ private:
 	IGameObjectFinder* m_pIGameObjectFinder;
 
 	// リソース管理
-	const Systems::IResources& m_refIResources;
+	Systems::IResources* m_pIResources;
 
 };

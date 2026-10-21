@@ -1,7 +1,7 @@
 /*
  * FileName:     GameObjectManager.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/08/05
+ * Last Updated: 2026/10/21
  *
  * ゲームオブジェクト管理
  */
@@ -14,14 +14,14 @@
 #include "../Systems/IErrorMessage.h"
 
 // コンストラクタ
-GameObjects::GameObjectManager::GameObjectManager(const Systems::IResources& iResources)
+GameObjects::GameObjectManager::GameObjectManager(Systems::IResources* pIResources)
 	: IGameObjectManager{}
 	, m_AddComponentList{}
 	, m_nullReference{}
 	, m_pGameObjects{}
 	, m_dontDestroyOnLoadGameObjects{}
 	, m_pIComponentManager{}
-	, m_refIResources{ iResources }
+	, m_pIResources{ pIResources }
 {
 }
 
@@ -42,11 +42,7 @@ void GameObjects::GameObjectManager::SetPGameObjects(std::vector<std::unique_ptr
 void GameObjects::GameObjectManager::Load(const std::string& jsonName)
 {
 	// Json
-	const auto* json = m_refIResources.GetJson(jsonName);
-	if (!json)
-	{
-		return;
-	}
+	const auto* json = m_pIResources->GetJson(jsonName);
 
 	m_pGameObjects->clear();
 
@@ -75,11 +71,7 @@ void GameObjects::GameObjectManager::Load(const std::string& jsonName)
 			continue;
 		}
 		// Json
-		const auto* prefabJson = m_refIResources.GetJson(it.value().get<std::string>());
-		if (!prefabJson)
-		{
-			continue;
-		}
+		const auto* prefabJson = m_pIResources->GetJson(it.value().get<std::string>());
 
 		// コンポーネントを追加
 		std::vector<Component*> pComponents = AddComponents(*prefabJson, m_pGameObjects->at(i).get());
@@ -149,11 +141,7 @@ GameObject* GameObjects::GameObjectManager::Find(const std::string& name) const
 GameObject* GameObjects::GameObjectManager::Instantiate(const std::string& jsonName, bool dontDestroyOnLoad)
 {
 	// Json
-	const auto* json = m_refIResources.GetJson(jsonName);
-	if (!json)
-	{
-		return m_nullReference.get();
-	}
+	const auto* json = m_pIResources->GetJson(jsonName);
 
 	// ゲームオブジェクト
 	std::unique_ptr<GameObject> gameObject = std::make_unique<GameObject>(m_pIComponentManager);

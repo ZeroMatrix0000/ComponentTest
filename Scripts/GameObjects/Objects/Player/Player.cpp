@@ -1,7 +1,7 @@
 /*
  * FileName:     Player.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/16
+ * Last Updated: 2026/10/21
  * 
  *
  * プレイヤー
@@ -34,6 +34,9 @@ Player::Player(const ComponentDesc& desc)
 	m_internals.pParticleManager = GetPOwner()->GetNullReferences<Renderings::ParticleManager>();
 	m_internals.pModel = GetPOwner()->GetNullReferences<PlayerModel>();
 	m_internals.pWire = GetPOwner()->GetNullReferences<PlayerWire>();
+
+	// 現在の状態を初期化
+	SetState(std::make_unique<PlayerStateOnGround>());
 }
 
 // 初期化処理
@@ -94,9 +97,6 @@ void Player::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pI
 		m_internals.pModel->AddICameraScreen(*m_internals.P_CAMERA_SCREEN);
 		m_internals.pWire->AddICameraScreen(*m_internals.P_CAMERA_SCREEN);
 	}
-
-	// 現在の状態を初期化
-	SetState(std::make_unique<PlayerStateOnGround>());
 }
 
 // 更新処理

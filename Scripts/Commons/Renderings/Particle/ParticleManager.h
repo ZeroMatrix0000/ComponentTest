@@ -1,7 +1,7 @@
 /*
  * FileName:     ParticleManager.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/09
+ * Last Updated: 2026/10/21
  *
  * パーティクル管理
  */
@@ -31,7 +31,7 @@ namespace Renderings
 		/* メンバ関数 */
 
 		// コンストラクタ
-		ParticleManager(const ComponentDesc& desc, IModel3DRenderer* pIModelRenderer, const Systems::IResources& iResources);
+		ParticleManager(const ComponentDesc& desc, IModel3DRenderer* pIModelRenderer, Systems::IResources* pIResources);
 
 		// 初期化処理
 		void Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder) override;
@@ -50,7 +50,7 @@ namespace Renderings
 		{
 			// パーティクルを生成
 			auto& particle = m_particles.emplace_back();
-			particle = std::make_unique<TParticle>(m_pIModelRenderer, m_refIResources);
+			particle = std::make_unique<TParticle>(m_pIModelRenderer, m_pIResources);
 			// カメラを設定
 			for (const auto* pICameraScreen : m_pICameraScreens)
 			{
@@ -79,7 +79,7 @@ namespace Renderings
 		IModel3DRenderer* m_pIModelRenderer;
 
 		// リソース管理
-		const Systems::IResources& m_refIResources;
+		Systems::IResources* m_pIResources;
 
 	};
 }

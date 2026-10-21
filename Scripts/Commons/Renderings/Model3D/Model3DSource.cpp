@@ -51,9 +51,10 @@ void Renderings::Model3DSource::SetDepthStencilState(const D3D11_DEPTH_STENCIL_D
 }
 
 // 生成
-Renderings::Model3DSource Renderings::Model3DSource::Create(ID3D11Device* device, InstancingEffectFactory* fx, const std::wstring& filePath)
+Renderings::Model3DSource Renderings::Model3DSource::Create(ID3D11Device* device, InstancingEffectFactory* fx, const PixelShader* pPixelShader, const std::wstring& filePath)
 {
 	Model3DSource model;
 	model.Initialize(device, fx, filePath);
+	model.m_pPixelShader = pPixelShader;
 	return model;
 }

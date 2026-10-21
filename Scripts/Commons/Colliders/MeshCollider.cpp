@@ -1,7 +1,7 @@
 /*
  * FileName:     MeshCollider.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/07
+ * Last Updated: 2026/10/21
  *
  * メッシュの当たり判定
  */
@@ -18,7 +18,7 @@
 #include "../Systems/JsonSerializer.h"
 
 // コンストラクタ
-Colliders::MeshCollider::MeshCollider(const ComponentDesc& desc, Renderings::IColliderRenderer* pIColliderRenderer, const Systems::IResources& iResources)
+Colliders::MeshCollider::MeshCollider(const ComponentDesc& desc, Renderings::IColliderRenderer* pIColliderRenderer, Systems::IResources* pIResources)
 	: Component{ desc }
 	, m_color{ DirectX::Colors::LightGreen }
 	, m_worldMesh{}
@@ -26,7 +26,7 @@ Colliders::MeshCollider::MeshCollider(const ComponentDesc& desc, Renderings::ICo
 	, m_pTransform{ GetPOwner()->GetNullReferences<Transform>() }
 	, m_pICameraScreens{}
 	, m_pIColliderRenderer{ pIColliderRenderer }
-	, m_refIResources{ iResources }
+	, m_pIResources{ pIResources }
 {
 	// 描画者に長方形を追加
 	m_pIColliderRenderer->AddPMeshCollider(this);
@@ -61,7 +61,7 @@ void Colliders::MeshCollider::Initalize(const nlohmann::ordered_json& json, IGam
 // メッシュを設定
 void Colliders::MeshCollider::SetMesh(const std::string& meshName)
 {
-	m_pMesh = m_refIResources.GetMesh(meshName);
+	m_pMesh = m_pIResources->GetMesh(meshName);
 }
 
 // 映るカメラ画面を追加

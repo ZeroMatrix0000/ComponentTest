@@ -1,7 +1,7 @@
 /*
  * FileName:     MeshCollider.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/23
+ * Last Updated: 2026/10/21
  *
  * メッシュの当たり判定
  */
@@ -36,7 +36,7 @@ namespace Colliders
 		/* メンバ関数 */
 
 		// コンストラクタ
-		MeshCollider(const ComponentDesc& desc, Renderings::IColliderRenderer* pIColliderRenderer, const Systems::IResources& iResources);
+		MeshCollider(const ComponentDesc& desc, Renderings::IColliderRenderer* pIColliderRenderer, Systems::IResources* pIResources);
 		// デストラクタ
 		~MeshCollider();
 
@@ -91,8 +91,8 @@ namespace Colliders
 		// 当たり判定描画インタフェースのポインタ
 		Renderings::IColliderRenderer* m_pIColliderRenderer;
 
-		// リソース管理
-		const Systems::IResources& m_refIResources;
+		// リソース管理のポインタ
+		Systems::IResources* m_pIResources;
 
 	};
 }

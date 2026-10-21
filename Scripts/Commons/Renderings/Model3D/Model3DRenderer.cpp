@@ -109,7 +109,7 @@ void Renderings::Model3DRenderer::Render(bool isInstance)
 
 			// ピクセルシェーダ
 			const PixelShader* pPixelShader = pModelSource->GetPPixelShader();
-			if (pPixelShader)
+			if (pPixelShader->IsInitialized())
 			{
 				// ピクセルシェーダを設定
 				m_pContext->PSSetShader(pPixelShader->GetD3DShader(), nullptr, 0);
@@ -218,7 +218,7 @@ void Renderings::Model3DRenderer::Render(bool isInstance)
 			}
 
 			// ピクセルシェーダを元に戻す
-			if (pPixelShader)
+			if (pPixelShader->IsInitialized())
 			{
 				m_pContext->PSSetShader(m_pPixelShader->GetD3DShader(), nullptr, 0);
 			}
@@ -252,7 +252,7 @@ void Renderings::Model3DRenderer::AddPModel(const ICameraScreen* pICameraScreen,
 
 	// モデルソース
 	const Model3DSource* pModelSource = pModel->GetPModelSource();
-	if (!pModelSource)
+	if (!pModelSource->IsInitialized())
 	{
 		return;
 	}
@@ -287,7 +287,7 @@ void Renderings::Model3DRenderer::RemovePModel(const ICameraScreen* pICameraScre
 
 	// モデルソース
 	const Model3DSource* pModelSource = pModel->GetPModelSource();
-	if (!pModelSource)
+	if (!pModelSource->IsInitialized())
 	{
 		return;
 	}
@@ -322,7 +322,7 @@ void Renderings::Model3DRenderer::AddPParticle(const ICameraScreen* pICameraScre
 
 	// モデルソース
 	const Model3DSource* pModelSource = pParticleElement->pModelSource;
-	if (!pModelSource)
+	if (!pModelSource->IsInitialized())
 	{
 		return;
 	}
@@ -357,7 +357,7 @@ void Renderings::Model3DRenderer::RemovePParticle(const ICameraScreen* pICameraS
 
 	// モデルソース
 	const Model3DSource* pModelSource = pParticleElement->pModelSource;
-	if (!pModelSource)
+	if (!pModelSource->IsInitialized())
 	{
 		return;
 	}

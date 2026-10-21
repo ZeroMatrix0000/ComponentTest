@@ -1,7 +1,7 @@
 /*
  * FileName:     Resources.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/08
+ * Last Updated: 2026/10/21
  *
  * リソース管理
  */
@@ -49,17 +49,30 @@ namespace Systems
 		void LoadPixelShaders(ID3D11Device5* device, const std::wstring& directoryPath);
 
 		// モデルの取得
-		const Renderings::Model3DSource* GetModelSource(const std::string& modelName)   const override;
+		const Renderings::Model3DSource* GetModelSource(const std::string& modelName)   override;
 		// 画像の取得
-		const Renderings::ImageSource*   GetImageSource(const std::string& imageName)   const override;
+		const Renderings::ImageSource*   GetImageSource(const std::string& imageName)   override;
 		// Jsonの取得
-		const nlohmann::ordered_json*    GetJson(const std::string& jsonName)           const override;
+		const nlohmann::ordered_json*    GetJson(const std::string& jsonName)           override;
 		// メッシュの取得
-		const Mesh*                      GetMesh(const std::string& meshName)           const override;
+		const Mesh*                      GetMesh(const std::string& meshName)           override;
 		// 頂点シェーダの取得
-		const Renderings::VertexShader*  GetVertexShader(const std::string& shaderName) const override;
+		const Renderings::VertexShader*  GetVertexShader(const std::string& shaderName) override;
 		// ピクセルシェーダの取得
-		const Renderings::PixelShader*   GetPixelShader(const std::string& shaderName)  const override;
+		const Renderings::PixelShader*   GetPixelShader(const std::string& shaderName)  override;
+
+		// モデルの取得
+		const Renderings::Model3DSource* GetNullModelSource()  override { return &m_nullModelSource; }
+		// 画像の取得
+		const Renderings::ImageSource*   GetNullImageSource()  override { return &m_nullImageSource; }
+		// Jsonの取得
+		const nlohmann::ordered_json*    GetNullJson()         override { return &m_nullJson; };
+		// メッシュの取得
+		const Mesh*                      GetNullMesh()         override { return &m_nullMesh; }
+		// 頂点シェーダの取得
+		const Renderings::VertexShader*  GetNullVertexShader() override { return &m_nullVertexShader; }
+		// ピクセルシェーダの取得
+		const Renderings::PixelShader*   GetNullPixelShader()  override { return &m_nullPixelShader; }
 		
 
 		// モデルの取得
@@ -95,6 +108,19 @@ namespace Systems
 		std::unordered_map<std::string, Renderings::VertexShader> m_vertexShaders;
 		// ピクセルシェーダリスト
 		std::unordered_map<std::string, Renderings::PixelShader> m_pixelShaders;
+
+		// モデルソース
+		Renderings::Model3DSource m_nullModelSource;
+		// 画像ソース
+		Renderings::ImageSource m_nullImageSource;
+		// Json
+		nlohmann::ordered_json m_nullJson;
+		// メッシュ
+		Mesh m_nullMesh;
+		// 頂点シェーダ
+		Renderings::VertexShader m_nullVertexShader;
+		// ピクセルシェーダ
+		Renderings::PixelShader m_nullPixelShader;
 
 	};
 }
