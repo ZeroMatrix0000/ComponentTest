@@ -1,7 +1,7 @@
 /*
  * FileName:     JsonSerializer.h
  * Author:       Takao Hayata
- * Last Updated: 2026/08/22
+ * Last Updated: 2026/10/21
  *
  * Jsonのシリアライズ
  */
@@ -222,6 +222,19 @@ namespace Systems
 			{
 				ptr->push_back({});
 				Serialize(&ptr->back(), element, pIGameObjectFinder);
+			}
+		}
+
+		// シリアライズ（std::vector）
+		template<typename T>
+		static void Serialize(std::vector<Ref<T>>* ptr, const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+		{
+			ptr->clear();
+			for (const auto& element : json)
+			{
+				T* value{};
+				Serialize(&value, element, pIGameObjectFinder);
+				ptr->push_back(*value);
 			}
 		}
 

@@ -63,7 +63,7 @@ namespace Colliders
 		const Math::Color& GetColor() const { return m_color; }
 
 		// 映るカメラ画面のポインタリストを取得
-		const std::vector<const Renderings::ICameraScreen*>& GetPICameraScreens() const { return m_pICameraScreens; }
+		const std::vector<Ref<const Renderings::ICameraScreen>>& GetRefICameraScreens() const { return m_refICameraScreens; }
 
 	private:
 
@@ -82,8 +82,8 @@ namespace Colliders
 		// トランスフォームの参照
 		Ref<Transform> m_refTransform;
 
-		// 映るカメラ画面のポインタリスト
-		std::vector<const Renderings::ICameraScreen*> m_pICameraScreens;
+		// 映るカメラ画面の参照リスト
+		std::vector<Ref<const Renderings::ICameraScreen>> m_refICameraScreens;
 
 		// 当たり判定描画インタフェースのポインタ
 		Renderings::IColliderRenderer* m_pIColliderRenderer;

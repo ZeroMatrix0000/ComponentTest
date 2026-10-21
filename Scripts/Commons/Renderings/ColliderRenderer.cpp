@@ -60,7 +60,7 @@ void Renderings::ColliderRenderer::Render()
 	for (const auto* pBoxCollider : m_pBoxColliders)
 	{
 		// カメラ画面
-		for (const auto* pICameraScreen : pBoxCollider->GetPICameraScreens())
+		for (const auto& pICameraScreen : pBoxCollider->GetRefICameraScreens())
 		{
 			m_basicEffect->SetMatrices(Math::Matrix::Identity, pICameraScreen->GetViewMatrix(), pICameraScreen->GetProjectionMatrix());
 			m_basicEffect->Apply(m_pContext);

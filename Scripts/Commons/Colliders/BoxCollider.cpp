@@ -23,7 +23,7 @@ Colliders::BoxCollider::BoxCollider(const ComponentDesc& desc, Renderings::IColl
 	, m_worldBox{}
 	, m_color{ DirectX::Colors::LightGreen }
 	, m_refTransform{ GetOwner().GetNullReferences<Transform>() }
-	, m_pICameraScreens{}
+	, m_refICameraScreens{}
 	, m_pIColliderRenderer{ pIColliderRenderer }
 {
 	// 描画者に長方形を追加
@@ -46,26 +46,26 @@ void Colliders::BoxCollider::Initalize(const nlohmann::ordered_json& json, IGame
 	serializer.AddParameter(&m_box.position, "Position");
 	serializer.AddParameter(&m_box.size, "Size");
 	serializer.AddParameter(&m_color, "Color");
-	serializer.AddParameter(&m_pICameraScreens, "CameraScreens");
+	serializer.AddParameter(&m_refICameraScreens, "CameraScreens");
 	serializer.Load(json);
 }
 
 // 映るカメラ画面を追加
 void Colliders::BoxCollider::AddICameraScreen(const Renderings::ICameraScreen& iCameraScreen)
 {
-	if (std::ranges::find(m_pICameraScreens, &iCameraScreen) == m_pICameraScreens.end())
+	if (std::ranges::find(m_refICameraScreens, Ref{ iCameraScreen }) == m_refICameraScreens.end())
 	{
-		m_pICameraScreens.push_back(&iCameraScreen);
+		m_refICameraScreens.push_back(Ref{ iCameraScreen });
 	}
 }
 
 // 映るカメラ画面を削除
 void Colliders::BoxCollider::RemoveICameraScreen(const Renderings::ICameraScreen& iCameraScreen)
 {
-	auto it = std::ranges::find(m_pICameraScreens, &iCameraScreen);
-	if(it != m_pICameraScreens.end())
+	auto it = std::ranges::find(m_refICameraScreens, Ref{ iCameraScreen });
+	if (it != m_refICameraScreens.end())
 	{
-		m_pICameraScreens.erase(it);
+		m_refICameraScreens.erase(it);
 	}
 }
 

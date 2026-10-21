@@ -54,8 +54,9 @@ namespace Libraries
 	};
 
 	template<typename T>
+	bool operator==(const Ref<T>& a, const Ref<T>& b) { return a.Get() == b.Get(); }
+	template<typename T>
 	bool operator==(const Ref<T>& a, const T& b) { return a.Get() == &b; }
-
 	template<typename T>
 	bool operator==(const T& a, const Ref<T>& b) { return &a == b.Get(); }
 }
