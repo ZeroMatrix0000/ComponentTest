@@ -1,7 +1,7 @@
 /*
  * FileName:     Component.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/22
  *
  * コンポーネント
  */
@@ -31,18 +31,21 @@ namespace Components
 		/* メンバ関数 */
 
 		// コンストラクタ
-		Component(const ComponentDesc& desc);
+		Component(Ref<const ComponentDesc> desc);
 		// デストラクタ
 		virtual ~Component() = default;
 
-		// TODO: 純粋仮想関数にする
+		// コピーを破棄
+		Component(const Component&) = delete;
+		Component& operator=(const Component&) = delete;
+
 		// 初期化処理
-		virtual void Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder) {};
+		virtual void Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder) = 0;
 
 		// 所有者を取得
-		GameObject& GetOwner();
+		Ref<GameObject> GetOwner() { return m_refOwner = m_refOwner; }
 		// 変更不可所有者を取得
-		const GameObject& GetConstOwner() const;
+		Ref<const GameObject> GetConstOwner() const { return m_refOwner.Const(); }
 
 
 	protected:
@@ -59,11 +62,11 @@ namespace Components
 
 		/* メンバ変数 */
 
-		// 所有者のポインタ
-		GameObject* m_pOwner;
+		// 所有者の参照
+		Ref<GameObject> m_refOwner;
 
-		// ゲームオブジェクト生成インタフェース
-		IGameObjectInstantiator* m_pIGameObjectInstantiator;
+		// ゲームオブジェクト生成インタフェースの参照
+		const Ref<IGameObjectInstantiator> m_refIGameObjectInstantiator;
 
 	};
 }

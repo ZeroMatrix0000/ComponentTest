@@ -50,7 +50,7 @@ Game::Game()
 	, m_windowController{}
 	, m_input{}
 	, m_errorMessage{}
-	, m_componentManager{}
+	, m_componentManager{ Ref<IGameObjectInstantiator>{ m_gameObjectManager } }
 	, m_gameObjectManager{ &m_resources }
 	, m_sceneManager{ m_context }
 	, m_gameInput{ m_input }
@@ -110,8 +110,6 @@ void Game::Initialize(const HWND& hWindow)
 	// 入力の初期化
 	m_input.Initialize(hWindow);
 
-	// コンポーネント管理の初期化
-	m_componentManager.Initialize(&m_gameObjectManager);
 	// ゲームオブジェクト管理の初期化
 	m_gameObjectManager.Initialize(&m_componentManager);
 

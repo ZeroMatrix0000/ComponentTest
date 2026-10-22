@@ -31,6 +31,8 @@ namespace Scenes
 		}
 
 		// 初期化処理
+		void Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder) override {};
+		// 初期化処理
 		virtual void Initialize(const TTransitionData& data) = 0;
 		// 更新処理
 		virtual void Update(float elapsedTime) = 0;

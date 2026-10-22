@@ -1,7 +1,7 @@
 /*
  * FileName:     BoxCollider.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/22
  *
  * 長方形の当たり判定
  */
@@ -17,30 +17,30 @@
 #include "../Systems/JsonSerializer.h"
 
 // コンストラクタ
-Colliders::BoxCollider::BoxCollider(const ComponentDesc& desc, Renderings::IColliderRenderer* pIColliderRenderer)
+Colliders::BoxCollider::BoxCollider(Ref<const ComponentDesc> desc, Ref<Renderings::IColliderRenderer> iColliderRenderer)
 	: Component{ desc }
 	, m_box{}
 	, m_worldBox{}
 	, m_color{ DirectX::Colors::LightGreen }
-	, m_refTransform{ GetOwner().GetNullReferences<Transform>() }
+	, m_refTransform{ GetOwner()->GetNullReferences<Transform>() }
 	, m_refICameraScreens{}
-	, m_pIColliderRenderer{ pIColliderRenderer }
+	, m_refIColliderRenderer{ iColliderRenderer }
 {
 	// 描画者に長方形を追加
-	m_pIColliderRenderer->AddPBoxCollider(this);
+	m_refIColliderRenderer->AddPBoxCollider(this);
 }
 
 // デストラクタ
 Colliders::BoxCollider::~BoxCollider()
 {
 	// 描画者から長方形を削除
-	m_pIColliderRenderer->RemovePBoxCollider(this);
+	m_refIColliderRenderer->RemovePBoxCollider(this);
 }
 
 // 初期化処理
 void Colliders::BoxCollider::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
 {
-	m_refTransform = GetOwner().GetComponent<Transform>();
+	m_refTransform = GetOwner()->GetComponent<Transform>();
 
 	Systems::JsonSerializer serializer{ pIGameObjectFinder };
 	serializer.AddParameter(&m_box.position, "Position");
@@ -51,18 +51,18 @@ void Colliders::BoxCollider::Initalize(const nlohmann::ordered_json& json, IGame
 }
 
 // 映るカメラ画面を追加
-void Colliders::BoxCollider::AddICameraScreen(const Renderings::ICameraScreen& iCameraScreen)
+void Colliders::BoxCollider::AddICameraScreen(Ref<const Renderings::ICameraScreen> iCameraScreen)
 {
-	if (std::ranges::find(m_refICameraScreens, Ref{ iCameraScreen }) == m_refICameraScreens.end())
+	if (std::ranges::find(m_refICameraScreens, iCameraScreen) == m_refICameraScreens.end())
 	{
-		m_refICameraScreens.push_back(Ref{ iCameraScreen });
+		m_refICameraScreens.push_back(iCameraScreen);
 	}
 }
 
 // 映るカメラ画面を削除
-void Colliders::BoxCollider::RemoveICameraScreen(const Renderings::ICameraScreen& iCameraScreen)
+void Colliders::BoxCollider::RemoveICameraScreen(Ref<const Renderings::ICameraScreen> iCameraScreen)
 {
-	auto it = std::ranges::find(m_refICameraScreens, Ref{ iCameraScreen });
+	auto it = std::ranges::find(m_refICameraScreens, iCameraScreen);
 	if (it != m_refICameraScreens.end())
 	{
 		m_refICameraScreens.erase(it);

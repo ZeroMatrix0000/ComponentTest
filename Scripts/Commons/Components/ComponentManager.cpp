@@ -1,7 +1,7 @@
 /*
  * FileName:     ComponentManager.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/22
  *
  * コンポーネント管理
  */
@@ -11,27 +11,22 @@
 
 #include "../Systems/IErrorMessage.h"
 #include "ComponentDesc.h"
+#include "../GameObjects/IGameObjectInstantiator.h"
 
 // コンストラクタ
-Components::ComponentManager::ComponentManager()
+Components::ComponentManager::ComponentManager(Ref<IGameObjectInstantiator> iGameObjectInstantiator)
 	: IComponentManager{}
 	, m_permit{}
 	, m_CreateComponentList{}
 	, m_nullReferences{}
-	, m_pIGameObjectInstantiator{}
+	, m_refIGameObjectInstantiator{ iGameObjectInstantiator }
 {
-}
-
-// 初期化処理
-void Components::ComponentManager::Initialize(IGameObjectInstantiator* pIGameObjectInstantiator)
-{
-	m_pIGameObjectInstantiator = pIGameObjectInstantiator;
 }
 
 // コンポーネントを作成
 std::unique_ptr<Component> Components::ComponentManager::Create(const std::type_index& index, GameObject* pOwner)
 {
-	return m_CreateComponentList.at(index)(ComponentDesc{ pOwner, m_pIGameObjectInstantiator, m_permit });
+	return m_CreateComponentList.at(index)(ComponentDesc{ pOwner, m_refIGameObjectInstantiator, m_permit });
 }
 
 // コンポーネント作成関数を追加
@@ -64,7 +59,12 @@ Component& Components::ComponentManager::GetNullReferences(const std::type_index
 	if (it == m_nullReferences.end())
 	{
 		// コンポーネントを追加
-		m_nullReferences.emplace(index, (m_CreateComponentList.at(index)(ComponentDesc{ nullptr, m_pIGameObjectInstantiator, m_permit })));
+		m_nullReferences.emplace(index, m_CreateComponentList.at(index)(ComponentDesc
+		{
+			Ref{ m_refIGameObjectInstantiator->GetNullReferences() },
+			Ref{ m_refIGameObjectInstantiator },
+			Ref{ m_permit }.Const()
+		}));
 		return *m_nullReferences.at(index);
 	}
 	else

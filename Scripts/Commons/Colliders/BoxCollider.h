@@ -1,7 +1,7 @@
 /*
  * FileName:     BoxCollider.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/22
  *
  * 長方形の当たり判定
  */
@@ -32,7 +32,7 @@ namespace Colliders
 		/* メンバ関数 */
 
 		// コンストラクタ
-		BoxCollider(const ComponentDesc& desc, Renderings::IColliderRenderer* pIColliderRenderer);
+		BoxCollider(Ref<const ComponentDesc> desc, Ref<Renderings::IColliderRenderer> iColliderRenderer);
 		// デストラクタ
 		~BoxCollider();
 
@@ -40,18 +40,18 @@ namespace Colliders
 		void Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder) override;
 
 		// 座標を設定
-		void SetPosition(const Math::Vector3& position) { m_box.position = position; }
+		void SetPosition(Ref<const Math::Vector3> position) { m_box.position = position; }
 		// 大きさを設定
-		void SetSize(const Math::Vector3& size) { m_box.size = size; }
+		void SetSize(Ref<const Math::Vector3> size) { m_box.size = size; }
 		// 色を設定
-		void SetColor(const Math::Color& color) { m_color = color; }
+		void SetColor(Ref<const Math::Color> color) { m_color = color; }
 		// 色を設定
-		void SetColor(const DirectX::XMVECTORF32& color) { m_color = color; }
+		void SetColor(Ref<const DirectX::XMVECTORF32> color) { m_color = color; }
 
 		// 映るカメラ画面を追加
-		void AddICameraScreen(const Renderings::ICameraScreen& iCameraScreen);
+		void AddICameraScreen(Ref<const Renderings::ICameraScreen> iCameraScreen);
 		// 映るカメラ画面を削除
-		void RemoveICameraScreen(const Renderings::ICameraScreen& iCameraScreen);
+		void RemoveICameraScreen(Ref<const Renderings::ICameraScreen> iCameraScreen);
 
 		// トランスフォームを適用
 		void ApplyTransform();
@@ -85,8 +85,8 @@ namespace Colliders
 		// 映るカメラ画面の参照リスト
 		std::vector<Ref<const Renderings::ICameraScreen>> m_refICameraScreens;
 
-		// 当たり判定描画インタフェースのポインタ
-		Renderings::IColliderRenderer* m_pIColliderRenderer;
+		// 当たり判定描画インタフェースの参照
+		const Ref<Renderings::IColliderRenderer> m_refIColliderRenderer;
 
 	};
 }

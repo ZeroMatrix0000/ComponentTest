@@ -1,9 +1,9 @@
 /*
  * FileName:     Ref.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/22
  *
- * 自作参照型
+ * 自作参照型（参照先変更可能・nullptr禁止）
  */
 
 #pragma once
@@ -21,13 +21,16 @@ namespace Libraries
 		/* メンバ関数 */
 
 		// コンストラクタ
-		Ref(T& ref)
+		explicit Ref(T& ref)
 			: m_ptr{ &ref }
 		{
 		}
 
 		// 生ポインタの取得
 		T* Get() const { return m_ptr; }
+
+		// 定数化
+		Ref<const T> Const() const { return *m_ptr; }
 
 		
 		/* 演算子オーバーロード */
