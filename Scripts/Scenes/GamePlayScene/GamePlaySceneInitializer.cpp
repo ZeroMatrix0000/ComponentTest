@@ -1,7 +1,7 @@
 /*
  * FileName:     GamePlaySceneInitializer.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/22
+ * Last Updated: 2026/10/23
  *
  * ゲームプレイシーンの初期化関数
  */
@@ -13,6 +13,7 @@
 #include "Scripts/GameObjects/Objects/Player/Player.h"
 #include "Scripts/GameObjects/Objects/Player/PlayerCamera.h"
 #include "Scripts/GameObjects/Objects/NPC/NPCManager.h"
+#include "Scripts/GameObjects/UIs/Z2Talk/Z2Talk.h"
 #include "Scripts/GameObjects/UIs/BlackBelt/BlackBelt.h"
 #include "Scripts/GameObjects/UIs/MessageWindow/MessageWindow.h"
 #include "Scripts/GameObjects/UIs/TargetPoint/TargetPoint.h"
@@ -30,8 +31,6 @@
 
 void GamePlaySceneInitializer::operator()(GamePlaySceneInternals* pInternals) const
 {
-	typeid(Z2Talk*);
-
 	// マウスをループ
 	pInternals->refGameContext->GetPIInput()->SetMousePositionLoop(true);
 	pInternals->refGameContext->GetPIInput()->DisplayCursor(false);

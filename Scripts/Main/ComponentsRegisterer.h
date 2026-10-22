@@ -1,7 +1,7 @@
 /*
  * FileName:     ComponentsRegisterer.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/22
+ * Last Updated: 2026/10/23
  *
  * コンポーネント登録者
  */
@@ -28,9 +28,10 @@ namespace Systems
 	class IResources;
 }
 
+// コンポーネント登録者
 namespace ComponentsRegisterer
 {
-	// コンポーネント対応付け
+	// コンポーネント登録
 	void RegisterComponents
 	(
 		Ref<ComponentManager>              componentManager,

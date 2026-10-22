@@ -1,7 +1,7 @@
 /*
  * FileName:     ComponentManager.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/22
+ * Last Updated: 2026/10/23
  *
  * コンポーネント管理
  */
@@ -36,7 +36,7 @@ namespace Components
 		template<typename TComponent> requires IsDerived<TComponent, Component>
 		void RegisterCreate(const std::function<std::unique_ptr<Component>(const ComponentDesc&)>& CreateComponent)
 		{
-			m_CreateComponentList.emplace(typeid(TComponent*), CreateComponent);
+			m_CreateComponentList.emplace(typeid(TComponent), CreateComponent);
 		}
 
 

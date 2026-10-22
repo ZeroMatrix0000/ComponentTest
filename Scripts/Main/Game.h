@@ -57,9 +57,6 @@ private:
 
 	/* メンバ関数 */
 
-	// リソースの初期化
-	void InitializeResources();
-
 	// シーン管理の初期化
 	void InitializeSceneManager();
 

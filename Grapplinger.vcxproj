@@ -226,6 +226,7 @@
     <ClCompile Include="Scripts\Main\Game.cpp" />
     <ClCompile Include="Scripts\Main\GameContext.cpp" />
     <ClCompile Include="Scripts\Main\GameInput.cpp" />
+    <ClCompile Include="Scripts\Main\ResourcesInitializer.cpp" />
     <ClCompile Include="Scripts\Main\WinMain.cpp" />
     <ClCompile Include="Scripts\GameObjects\Objects\DebugCamera\DebugCamera.cpp" />
     <ClCompile Include="Scripts\GameObjects\Objects\DebugCamera\State\DebugCameraStateIdle.cpp" />
@@ -351,6 +352,7 @@
     <ClInclude Include="Scripts\Main\ComponentsRegisterer.h" />
     <ClInclude Include="Scripts\Main\GameInput.h" />
     <ClInclude Include="Scripts\Main\IGameInput.h" />
+    <ClInclude Include="Scripts\Main\ResourcesInitializer.h" />
     <ClInclude Include="Scripts\Scenes\GamePlayScene\Actions\Action.h" />
     <ClInclude Include="Scripts\Scenes\GamePlayScene\Actions\ActionCloseMessageWindow.h" />
     <ClInclude Include="Scripts\Scenes\GamePlayScene\Actions\ActionManager.h" />

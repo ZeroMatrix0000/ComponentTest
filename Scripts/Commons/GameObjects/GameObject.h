@@ -1,7 +1,7 @@
 /*
  * FileName:     GameObject.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/22
+ * Last Updated: 2026/10/23
  *
  * ゲームオブジェクト
  */
@@ -42,7 +42,7 @@ namespace GameObjects
 		template<typename TComponent> requires IsDerived<TComponent, Component>
 		Ref<TComponent> GetComponent()
 		{
-			auto it = m_pComponents.find(typeid(TComponent*));
+			auto it = m_pComponents.find(typeid(TComponent));
 			if (it == m_pComponents.end())
 			{
 				return m_pIComponentManager->GetNullReference<TComponent>(true);
@@ -53,7 +53,7 @@ namespace GameObjects
 		template<typename TComponent> requires IsDerived<TComponent, Component>
 		Ref<const TComponent> GetConstComponent() const
 		{
-			auto it = m_pComponents.find(typeid(TComponent*));
+			auto it = m_pComponents.find(typeid(TComponent));
 			if (it == m_pComponents.end())
 			{
 				return m_pIComponentManager->GetNullReference<TComponent>(true).Const();
@@ -65,7 +65,7 @@ namespace GameObjects
 		template<typename TComponent> requires IsDerived<TComponent, Component>
 		Ref<TComponent> AddComponent()
 		{
-			auto it = m_pComponents.find(typeid(TComponent*));
+			auto it = m_pComponents.find(typeid(TComponent));
 			if (it != m_pComponents.end())
 			{
 				return Ref{ *it->second }.Cast<TComponent>();
@@ -100,7 +100,7 @@ namespace GameObjects
 		template<typename TComponent> requires IsDerived<TComponent, Component>
 		void AddPComponent(Component* pComponent)
 		{
-			m_pComponents.emplace(typeid(TComponent*), pComponent);
+			m_pComponents.emplace(typeid(TComponent), pComponent);
 			// 親コンポーネントが見つかったら
 			if constexpr (requires{ typename TComponent::Base; })
 			{

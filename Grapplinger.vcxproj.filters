@@ -430,6 +430,9 @@
     <ClCompile Include="Scripts\Main\ComponentsRegisterer.cpp">
       <Filter>Scripts\Main</Filter>
     </ClCompile>
+    <ClCompile Include="Scripts\Main\ResourcesInitializer.cpp">
+      <Filter>Scripts\Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Pch.h" />
@@ -851,6 +854,9 @@
       <Filter>Scripts\Commons\Libraries</Filter>
     </ClInclude>
     <ClInclude Include="Scripts\Main\ComponentsRegisterer.h">
+      <Filter>Scripts\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Main\ResourcesInitializer.h">
       <Filter>Scripts\Main</Filter>
     </ClInclude>
   </ItemGroup>

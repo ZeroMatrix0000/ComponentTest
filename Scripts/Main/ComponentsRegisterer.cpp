@@ -1,7 +1,7 @@
 /*
  * FileName:     ComponentsRegisterer.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/22
+ * Last Updated: 2026/10/23
  *
  * コンポーネント登録者
  */
@@ -50,7 +50,7 @@ gameObjectManager->Register<T>(U)
 gameObjectManager->Register<T>(U)
 
 
-// コンポーネント対応付け
+// コンポーネント登録
 void ComponentsRegisterer::RegisterComponents
 (
 	Ref<ComponentManager>              componentManager,
