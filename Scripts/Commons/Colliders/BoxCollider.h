@@ -32,21 +32,21 @@ namespace Colliders
 		/* メンバ関数 */
 
 		// コンストラクタ
-		BoxCollider(Ref<const ComponentDesc> desc, Ref<Renderings::IColliderRenderer> iColliderRenderer);
+		BoxCollider(const ComponentDesc& desc, Ref<Renderings::IColliderRenderer> iColliderRenderer);
 		// デストラクタ
 		~BoxCollider();
 
 		// 初期化処理
-		void Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder) override;
+		void Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder) override;
 
 		// 座標を設定
-		void SetPosition(Ref<const Math::Vector3> position) { m_box.position = position; }
+		void SetPosition(const Math::Vector3& position) { m_box.position = position; }
 		// 大きさを設定
-		void SetSize(Ref<const Math::Vector3> size) { m_box.size = size; }
+		void SetSize(const Math::Vector3& size) { m_box.size = size; }
 		// 色を設定
-		void SetColor(Ref<const Math::Color> color) { m_color = color; }
+		void SetColor(const Math::Color& color) { m_color = color; }
 		// 色を設定
-		void SetColor(Ref<const DirectX::XMVECTORF32> color) { m_color = color; }
+		void SetColor(const DirectX::XMVECTORF32& color) { m_color = color; }
 
 		// 映るカメラ画面を追加
 		void AddICameraScreen(Ref<const Renderings::ICameraScreen> iCameraScreen);
@@ -86,7 +86,7 @@ namespace Colliders
 		std::vector<Ref<const Renderings::ICameraScreen>> m_refICameraScreens;
 
 		// 当たり判定描画インタフェースの参照
-		const Ref<Renderings::IColliderRenderer> m_refIColliderRenderer;
+		Ref<Renderings::IColliderRenderer> m_refIColliderRenderer;
 
 	};
 }

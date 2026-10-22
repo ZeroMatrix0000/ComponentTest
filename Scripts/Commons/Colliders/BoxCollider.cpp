@@ -17,12 +17,12 @@
 #include "../Systems/JsonSerializer.h"
 
 // コンストラクタ
-Colliders::BoxCollider::BoxCollider(Ref<const ComponentDesc> desc, Ref<Renderings::IColliderRenderer> iColliderRenderer)
+Colliders::BoxCollider::BoxCollider(const ComponentDesc& desc, Ref<Renderings::IColliderRenderer> iColliderRenderer)
 	: Component{ desc }
 	, m_box{}
 	, m_worldBox{}
 	, m_color{ DirectX::Colors::LightGreen }
-	, m_refTransform{ GetOwner()->GetNullReferences<Transform>() }
+	, m_refTransform{ GetOwner()->GetNullReference<Transform>() }
 	, m_refICameraScreens{}
 	, m_refIColliderRenderer{ iColliderRenderer }
 {
@@ -38,11 +38,11 @@ Colliders::BoxCollider::~BoxCollider()
 }
 
 // 初期化処理
-void Colliders::BoxCollider::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+void Colliders::BoxCollider::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 {
 	m_refTransform = GetOwner()->GetComponent<Transform>();
 
-	Systems::JsonSerializer serializer{ pIGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinder };
 	serializer.AddParameter(&m_box.position, "Position");
 	serializer.AddParameter(&m_box.size, "Size");
 	serializer.AddParameter(&m_color, "Color");

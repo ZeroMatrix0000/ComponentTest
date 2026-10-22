@@ -31,7 +31,7 @@ namespace Components
 		/* メンバ関数 */
 
 		// コンストラクタ
-		Component(Ref<const ComponentDesc> desc);
+		Component(const ComponentDesc& desc);
 		// デストラクタ
 		virtual ~Component() = default;
 
@@ -40,7 +40,7 @@ namespace Components
 		Component& operator=(const Component&) = delete;
 
 		// 初期化処理
-		virtual void Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder) = 0;
+		virtual void Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder) = 0;
 
 		// 所有者を取得
 		Ref<GameObject> GetOwner() { return m_refOwner = m_refOwner; }
@@ -54,7 +54,7 @@ namespace Components
 		/* メンバ関数 */
 
 		// ゲームオブジェクトを生成
-		GameObject& Instantiate(const std::string& name) const;
+		Ref<GameObject> Instantiate(const std::string& name) const;
 
 
 	private:

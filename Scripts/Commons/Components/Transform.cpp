@@ -22,9 +22,9 @@ Components::Transform::Transform(const ComponentDesc& desc)
 }
 
 // 初期化処理
-void Components::Transform::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+void Components::Transform::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 {
-	Systems::JsonSerializer serializer{ pIGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinder };
 	serializer.AddParameter(&m_position, "Position");
 	serializer.AddParameter(&m_rotation, "Rotation");
 	serializer.AddParameter(&m_scale, "Scale");

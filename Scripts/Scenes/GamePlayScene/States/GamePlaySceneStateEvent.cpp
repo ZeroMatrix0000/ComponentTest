@@ -1,7 +1,7 @@
 /*
  * FileName:     GamePlaySceneStateEvent.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/14
+ * Last Updated: 2026/10/22
  *
  * ゲームプレイシーンのイベント状態
  */
@@ -57,7 +57,7 @@ void GamePlaySceneStateEvent::Update(GamePlaySceneInternals* pInternals, float e
 	pInternals->pNPCManager->SetCursor(*pInternals->pCameraScreen);
 
 	// ゲーム入力
-	auto* pIGameInput = pInternals->gameContext.GetPIGameInput();
+	auto* pIGameInput = pInternals->refGameContext->GetPIGameInput();
 
 	// プレイヤーの更新
 	RotatePlayer(pInternals);

@@ -1,7 +1,7 @@
 /*
  * FileName:     GameObject.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/22
  *
  * ゲームオブジェクト
  */
@@ -40,39 +40,39 @@ namespace GameObjects
 
 		// コンポーネントを取得
 		template<typename TComponent> requires IsDerived<TComponent, Component>
-		TComponent& GetComponent()
+		Ref<TComponent> GetComponent()
 		{
-			auto it = m_pComponents.find(typeid(TComponent));
+			auto it = m_pComponents.find(typeid(TComponent*));
 			if (it == m_pComponents.end())
 			{
-				return m_pIComponentManager->GetNullReferences<TComponent>(true);
+				return m_pIComponentManager->GetNullReference<TComponent>(true);
 			}
-			return *static_cast<TComponent*>(it->second);
+			return Ref{ *it->second }.Cast<TComponent>();
 		}
 		// 変更不可コンポーネントを取得
 		template<typename TComponent> requires IsDerived<TComponent, Component>
-		const TComponent& GetConstComponent() const
+		Ref<const TComponent> GetConstComponent() const
 		{
-			auto it = m_pComponents.find(typeid(TComponent));
+			auto it = m_pComponents.find(typeid(TComponent*));
 			if (it == m_pComponents.end())
 			{
-				return m_pIComponentManager->GetNullReferences<TComponent>(true);
+				return m_pIComponentManager->GetNullReference<TComponent>(true).Const();
 			}
-			return *static_cast<TComponent*>(it->second);
+			return Ref{ *it->second }.Cast<TComponent>().Const();
 		}
 
 		// コンポーネントを追加
 		template<typename TComponent> requires IsDerived<TComponent, Component>
-		TComponent& AddComponent()
+		Ref<TComponent> AddComponent()
 		{
-			auto it = m_pComponents.find(typeid(TComponent));
+			auto it = m_pComponents.find(typeid(TComponent*));
 			if (it != m_pComponents.end())
 			{
-				return *static_cast<TComponent*>(it->second);
+				return Ref{ *it->second }.Cast<TComponent>();
 			}
 
 			// コンポーネントを生成
-			auto component = m_pIComponentManager->Create<TComponent>(this);
+			auto component = m_pIComponentManager->Create<TComponent>(Ref{ *this });
 			auto pComponent = component.get();
 
 			// コンポーネントを追加
@@ -80,14 +80,14 @@ namespace GameObjects
 			// 取得用リストに追加
 			AddPComponent<TComponent>(pComponent);
 
-			return *static_cast<TComponent*>(pComponent);
+			return Ref{ *pComponent }.Cast<TComponent>();
 		}
 
 		// 未参照コンポーネントを取得
 		template<typename TComponent> requires IsDerived<TComponent, Component>
-		TComponent& GetNullReferences()
+		Ref<TComponent> GetNullReference()
 		{
-			return m_pIComponentManager->GetNullReferences<TComponent>();
+			return m_pIComponentManager->GetNullReference<TComponent>();
 		}
 
 
@@ -100,7 +100,7 @@ namespace GameObjects
 		template<typename TComponent> requires IsDerived<TComponent, Component>
 		void AddPComponent(Component* pComponent)
 		{
-			m_pComponents.emplace(typeid(TComponent), pComponent);
+			m_pComponents.emplace(typeid(TComponent*), pComponent);
 			// 親コンポーネントが見つかったら
 			if constexpr (requires{ typename TComponent::Base; })
 			{

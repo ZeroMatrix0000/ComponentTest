@@ -1,7 +1,7 @@
 /*
  * FileName:     GamePlaySceneInitializer.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/22
  *
  * ゲームプレイシーンの初期化関数
  */
@@ -13,7 +13,6 @@
 #include "Scripts/GameObjects/Objects/Player/Player.h"
 #include "Scripts/GameObjects/Objects/Player/PlayerCamera.h"
 #include "Scripts/GameObjects/Objects/NPC/NPCManager.h"
-#include "Scripts/GameObjects/UIs/Z2Talk/Z2Talk.h"
 #include "Scripts/GameObjects/UIs/BlackBelt/BlackBelt.h"
 #include "Scripts/GameObjects/UIs/MessageWindow/MessageWindow.h"
 #include "Scripts/GameObjects/UIs/TargetPoint/TargetPoint.h"
@@ -31,62 +30,64 @@
 
 void GamePlaySceneInitializer::operator()(GamePlaySceneInternals* pInternals) const
 {
+	typeid(Z2Talk*);
+
 	// マウスをループ
-	pInternals->gameContext.GetPIInput()->SetMousePositionLoop(true);
-	pInternals->gameContext.GetPIInput()->DisplayCursor(false);
+	pInternals->refGameContext->GetPIInput()->SetMousePositionLoop(true);
+	pInternals->refGameContext->GetPIInput()->DisplayCursor(false);
 
 	// 出力サイズ
-	const Math::Vector2& outputSize = pInternals->gameContext.GetPIWindowController()->GetOutputSize();
+	const Math::Vector2& outputSize = pInternals->refGameContext->GetPIWindowController()->GetOutputSize();
 
 	// ゲームオブジェクト管理
-	auto* pIGameObjectManager = pInternals->gameContext.GetPIGameObjectManager();
+	auto* pIGameObjectManager = pInternals->refGameContext->GetPIGameObjectManager();
 
-	pIGameObjectManager->SetPGameObjects(pInternals->pGameObjects);
+	pIGameObjectManager->SetPGameObjects(&pInternals->refGameObjects.Get());
 	pIGameObjectManager->Load("Scene_GamePlay");
 
 	// プレイヤーを取得
-	pInternals->pPlayer = &pIGameObjectManager->Find("Player").GetComponent<Player>();
+	pInternals->pPlayer = &pIGameObjectManager->Find("Player")->GetComponent<Player>().Get();
 	pInternals->pPlayer->UpdateModel();
 
 	// プレイヤーカメラを取得
-	GameObject& camera = pIGameObjectManager->Find("PlayerCamera");
-	pInternals->pCameraScreen = &camera.GetComponent<Renderings::ICameraScreen>();
-	pInternals->pPlayerCamera = &camera.GetComponent<PlayerCamera>();
+	Ref<GameObject> camera = pIGameObjectManager->Find("PlayerCamera");
+	pInternals->pCameraScreen = &camera->GetComponent<Renderings::ICameraScreen>().Get();
+	pInternals->pPlayerCamera = &camera->GetComponent<PlayerCamera>().Get();
 	pInternals->pPlayerCamera->SetPosition(pInternals->pPlayer->GetCameraTarget());
 	pInternals->pCameraScreen->UpdateViewMatrix();
 	pInternals->pCameraScreen->SetProjectionMatrix(outputSize);
 
 	// キャンバスを取得
-	pInternals->pCanvas = &pIGameObjectManager->Find("Canvas").GetComponent<Renderings::Canvas>();
+	pInternals->pCanvas = &pIGameObjectManager->Find("Canvas")->GetComponent<Renderings::Canvas>().Get();
 	pInternals->pCanvas->SetSize(outputSize);
 
 	// NPCマネージャーを取得
-	pInternals->pNPCManager = &pIGameObjectManager->Find("NPCManager").GetComponent<NPCManager>();
+	pInternals->pNPCManager = &pIGameObjectManager->Find("NPCManager")->GetComponent<NPCManager>().Get();
 
 	// 地面を取得
-	GameObject& ground = pIGameObjectManager->Find("Ground");
-	pInternals->pGroundMesh = &ground.GetComponent<Colliders::MeshCollider>();
-	pInternals->pGroundModel = &ground.GetComponent<Renderings::Model3D>();
+	Ref<GameObject> ground = pIGameObjectManager->Find("Ground");
+	pInternals->pGroundMesh = &ground->GetComponent<Colliders::MeshCollider>().Get();
+	pInternals->pGroundModel = &ground->GetComponent<Renderings::Model3D>().Get();
 	pInternals->pGroundMesh->ApplyTransform();
 
 	// レティクルを取得
-	pInternals->pReticle = &pIGameObjectManager->Find("Reticle").GetComponent<Renderings::Image>();
+	pInternals->pReticle = &pIGameObjectManager->Find("Reticle")->GetComponent<Renderings::Image>().Get();
 
 	// はなすを取得
-	pInternals->pZ2Talk = &pIGameObjectManager->Find("Z2Talk").GetComponent<Z2Talk>();
+	pInternals->pZ2Talk = &pIGameObjectManager->Find("Z2Talk")->GetComponent<Z2Talk>().Get();
 
 	// 上下の黒帯取得
-	pInternals->pBlackBelt = &pIGameObjectManager->Find("BlackBelt").GetComponent<BlackBelt>();
+	pInternals->pBlackBelt = &pIGameObjectManager->Find("BlackBelt")->GetComponent<BlackBelt>().Get();
 	pInternals->pBlackBelt->SetWidth(pInternals->pCanvas->GetSize().x);
 
 	// メッセージウィンドウを取得
-	pInternals->pMessageWindow = &pIGameObjectManager->Find("MessageWindow").GetComponent<MessageWindow>();
+	pInternals->pMessageWindow = &pIGameObjectManager->Find("MessageWindow")->GetComponent<MessageWindow>().Get();
 
 	// ターゲット照準を取得
-	pInternals->pTargetPoint = &pIGameObjectManager->Find("TargetPoint").GetComponent<TargetPoint>();
+	pInternals->pTargetPoint = &pIGameObjectManager->Find("TargetPoint")->GetComponent<TargetPoint>().Get();
 
 	// アクション管理を取得
-	pInternals->pActionManager = &pIGameObjectManager->Find("ActionManager").GetComponent<ActionManager>();
+	pInternals->pActionManager = &pIGameObjectManager->Find("ActionManager")->GetComponent<ActionManager>().Get();
 
 	// シェーダにプレイヤーの座標を設定
 	Renderings::ConstantBuffer* pConstantBuffer = pInternals->pGroundModel->GetPModelSource()->GetPPixelShader()->GetConstantBuffer();

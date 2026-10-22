@@ -9,33 +9,8 @@
 #include "Pch.h"
 #include "Game.h"
 
+#include "ComponentsRegisterer.h"
 #include "Scripts/Scenes/Scenes.h"
-#include "Scripts/Scenes/GamePlayScene/Actions/Actions.h"
-#include "Scripts/Scenes/GamePlayScene/Actions/ActionManager.h"
-#include "Scripts/GameObjects/UIs/SelectMenu/SelectMenu.h"
-#include "Scripts/GameObjects/UIs/InteractCursor/InteractCursor.h"
-#include "Scripts/GameObjects/UIs/Z2Talk/Z2Talk.h"
-#include "Scripts/GameObjects/UIs/BlackBelt/BlackBelt.h"
-#include "Scripts/GameObjects/UIs/MessageWindow/MessageWindow.h"
-#include "Scripts/GameObjects/UIs/TargetPoint/TargetPoint.h"
-#include "Scripts/GameObjects/Objects/DebugCamera/DebugCamera.h"
-#include "Scripts/GameObjects/Objects/Player/Player.h"
-#include "Scripts/GameObjects/Objects/Player/PlayerModel.h"
-#include "Scripts/GameObjects/Objects/Player/PlayerWire.h"
-#include "Scripts/GameObjects/Objects/Player/PlayerCamera.h"
-#include "Scripts/GameObjects/Objects/NPC/NPC.h"
-#include "Scripts/GameObjects/Objects/NPC/NPCManager.h"
-#include "Scripts/Commons/Renderings/Model3D/Model3D.h"
-#include "Scripts/Commons/Renderings/Image/Image.h"
-#include "Scripts/Commons/Renderings/Text/Text.h"
-#include "Scripts/Commons/Renderings/Particle/ParticleManager.h"
-#include "Scripts/Commons/Renderings/Canvas.h"
-#include "Scripts/Commons/Renderings/CameraScreen.h"
-#include "Scripts/Commons/Colliders/BoxCollider.h"
-#include "Scripts/Commons/Colliders/SphereCollider.h"
-#include "Scripts/Commons/Colliders/MeshCollider.h"
-#include "Scripts/Commons/Components/Transform.h"
-#include "Scripts/Commons/Components/RectTransform.h"
 
 // コンストラクタ
 Game::Game()
@@ -52,7 +27,7 @@ Game::Game()
 	, m_errorMessage{}
 	, m_componentManager{ Ref<IGameObjectInstantiator>{ m_gameObjectManager } }
 	, m_gameObjectManager{ &m_resources }
-	, m_sceneManager{ m_context }
+	, m_sceneManager{ Ref{ m_context }.Const() }
 	, m_gameInput{ m_input }
 	, m_context{}
 {
@@ -113,8 +88,17 @@ void Game::Initialize(const HWND& hWindow)
 	// ゲームオブジェクト管理の初期化
 	m_gameObjectManager.Initialize(&m_componentManager);
 
-	// 対応付け
-	RegisterComponents();
+	// コンポーネントの登録
+	ComponentsRegisterer::RegisterComponents
+	(
+		Ref{ m_componentManager },
+		Ref{ m_gameObjectManager },
+		Ref<Renderings::IModel3DRenderer>{ m_renderer.GetModelRenderer() },
+		Ref<Renderings::IImageRenderer>{ m_renderer.GetImageRenderer() },
+		Ref<Renderings::ITextRenderer>{ m_renderer.GetTextRenderer() },
+		Ref<Renderings::IColliderRenderer>{ m_renderer.GetColliderRenderer() },
+		Ref<Systems::IResources>{ m_resources }
+	);
 
 	// エラーメッセージのオブジェクトを生成
 	m_errorMessage.CreateObjects(&m_gameObjectManager);
@@ -132,6 +116,8 @@ void Game::Initialize(const HWND& hWindow)
 		&m_sceneManager,
 		&m_gameInput
 	);
+
+	Scenes::Scene<SceneTransitionData, GameContext>::SetContext(Ref{ m_context }.Const());
 
 	// 最初のシーンを設定
 	//m_sceneManager.SetFirstScene<SampleScene>();
@@ -346,131 +332,26 @@ void Game::InitializeResources()
 	m_resources.GetEditableModelSource("PlayerSilhouette")->SetDepthStencilState(desc, device);
 }
 
-// コンポーネント対応付け
-void Game::RegisterComponents()
-{
-	// 3Dモデル
-	m_componentManager.RegisterCreate<Renderings::Model3D>([&](const ComponentDesc& desc)
-	{
-		return std::make_unique<Renderings::Model3D>(desc, &m_renderer.GetModelRenderer(), &m_resources);
-	});
-	// 画像
-	m_componentManager.RegisterCreate<Renderings::Image>([&](const ComponentDesc& desc)
-	{
-		return std::make_unique<Renderings::Image>(desc, &m_renderer.GetImageRenderer(), &m_resources);
-	});
-	// テキスト
-	m_componentManager.RegisterCreate<Renderings::Text>([&](const ComponentDesc& desc)
-	{
-		return std::make_unique<Renderings::Text>(desc, &m_renderer.GetTextRenderer());
-	});
-	// パーティクル管理
-	m_componentManager.RegisterCreate<Renderings::ParticleManager>([&](const ComponentDesc& desc)
-	{
-		return std::make_unique<Renderings::ParticleManager>(desc, &m_renderer.GetModelRenderer(), &m_resources);
-	});
-
-	// 長方形の当たり判定
-	m_componentManager.RegisterCreate<Colliders::BoxCollider>([&](const ComponentDesc& desc)
-	{
-		return std::make_unique<Colliders::BoxCollider>(desc, &m_renderer.GetColliderRenderer());
-	});
-	// 球の当たり判定
-	m_componentManager.RegisterCreate<Colliders::SphereCollider>([&](const ComponentDesc& desc)
-	{
-		return std::make_unique<Colliders::SphereCollider>(desc, &m_renderer.GetColliderRenderer());
-	});
-	// メッシュの当たり判定
-	m_componentManager.RegisterCreate<Colliders::MeshCollider>([&](const ComponentDesc& desc)
-	{
-		return std::make_unique<Colliders::MeshCollider>(desc, &m_renderer.GetColliderRenderer(), &m_resources);
-	});
-
-	// カメラ画面
-	m_componentManager.RegisterCreate<Renderings::ICameraScreen>([&](const ComponentDesc& desc)
-	{
-		return std::make_unique<Renderings::CameraScreen<Camera::QuaternionCamera>>(desc);
-	});
-
-	// アクション管理
-	m_componentManager.RegisterCreate<ActionManager>([&](const ComponentDesc& desc)
-	{
-		return std::make_unique<ActionManager>(desc, &m_resources);
-	});
-
-
-	// トランスフォーム
-	m_gameObjectManager.Register<Transform>("Transform");
-	// 2D用トランスフォーム
-	m_gameObjectManager.Register<RectTransform>("RectTransform");
-	// 3Dモデル
-	m_gameObjectManager.Register<Renderings::Model3D>("Model3D");
-	// 画像
-	m_gameObjectManager.Register<Renderings::Image>("Image");
-	// 文字
-	m_gameObjectManager.Register<Renderings::Text>("Text");
-	// 文字
-	m_gameObjectManager.Register<Renderings::ParticleManager>("ParticleManager");
-	// カメラ画面
-	m_gameObjectManager.Register<Renderings::CameraScreen<Camera::QuaternionCamera>>("QuaternionCameraScreen");
-	m_gameObjectManager.Register<Renderings::CameraScreen<Camera::QuaternionTargetCamera>>("QuaternionTargetCameraScreen");
-	m_gameObjectManager.Register<Renderings::CameraScreen<Camera::EulerCamera>>("EulerCameraScreen");
-	m_gameObjectManager.Register<Renderings::CameraScreen<Camera::EulerTargetCamera>>("EulerTargetCameraScreen");
-	// キャンバス
-	m_gameObjectManager.Register<Renderings::Canvas>("Canvas");
-	// コライダー
-	m_gameObjectManager.Register<Colliders::BoxCollider>("BoxCollider");
-	m_gameObjectManager.Register<Colliders::SphereCollider>("SphereCollider");
-	m_gameObjectManager.Register<Colliders::MeshCollider>("MeshCollider");
-	// アクション
-	m_gameObjectManager.Register<Action>("Action");
-	m_gameObjectManager.Register<ActionOpenMessageWindow>("ActionOpenMessageWindow");
-	m_gameObjectManager.Register<ActionCloseMessageWindow>("ActionCloseMessageWindow");
-	m_gameObjectManager.Register<ActionSetMessageWindowText>("ActionSetMessageWindowText");
-	// アクション管理
-	m_gameObjectManager.Register<ActionManager>("ActionManager");
-	// 選択メニュー
-	m_gameObjectManager.Register<SelectMenu>("SelectMenu");
-	// カーソル
-	m_gameObjectManager.Register<InteractCursor>("InteractCursor");
-	// Z: はなす
-	m_gameObjectManager.Register<Z2Talk>("Z2Talk");
-	// 上下の黒帯
-	m_gameObjectManager.Register<BlackBelt>("BlackBelt");
-	// メッセージウィンドウ
-	m_gameObjectManager.Register<MessageWindow>("MessageWindow");
-	// ターゲット照準
-	m_gameObjectManager.Register<TargetPoint>("TargetPoint");
-	// デバッグ用カメラ
-	m_gameObjectManager.Register<DebugCamera>("DebugCamera");
-	// プレイヤー
-	m_gameObjectManager.Register<Player>("Player");
-	m_gameObjectManager.Register<PlayerModel>("PlayerModel");
-	m_gameObjectManager.Register<PlayerWire>("PlayerWire");
-	m_gameObjectManager.Register<PlayerCamera>("PlayerCamera");
-	// NPC管理
-	m_gameObjectManager.Register<NPC>("NPC");
-	m_gameObjectManager.Register<NPCManager>("NPCManager");
-}
-
 // シーン管理の初期化
 void Game::InitializeSceneManager()
 {
 	// コンポーネント管理のインタフェース
-	IComponentManager* pIComponentManager = &m_componentManager;
+	Ref iComponentManager = Ref<IComponentManager>{ m_componentManager };
+	// 未参照オブジェクト
+	Ref nullReference = m_gameObjectManager.GetNullReference();
 
 	// シーンの追加
-	m_sceneManager.AddScene<SampleScene>([pIComponentManager]
+	m_sceneManager.AddScene<SampleScene>([iComponentManager, nullReference]
 		{
-			return std::unique_ptr<SampleScene>{ static_cast<SampleScene*>(pIComponentManager->Create<SampleScene>().release()) };
+			return std::unique_ptr<SampleScene>{ static_cast<SampleScene*>(iComponentManager->Create<SampleScene>(nullReference).release()) };
 		});
-	m_sceneManager.AddScene<TitleScene>([pIComponentManager]
+	m_sceneManager.AddScene<TitleScene>([iComponentManager, nullReference]
 		{
-			return std::unique_ptr<TitleScene>{ static_cast<TitleScene*>(pIComponentManager->Create<TitleScene>().release()) };
+			return std::unique_ptr<TitleScene>{ static_cast<TitleScene*>(iComponentManager->Create<TitleScene>(nullReference).release()) };
 		});
-	m_sceneManager.AddScene<GamePlayScene>([pIComponentManager]
+	m_sceneManager.AddScene<GamePlayScene>([iComponentManager, nullReference]
 		{
-			return std::unique_ptr<GamePlayScene>{ static_cast<GamePlayScene*>(pIComponentManager->Create<GamePlayScene>().release()) };
+			return std::unique_ptr<GamePlayScene>{ static_cast<GamePlayScene*>(iComponentManager->Create<GamePlayScene>(nullReference).release()) };
 		});
 	// シーン管理の初期化
 	m_sceneManager.Initialize(m_windowController.GetOutputSize(), &m_gameObjectManager);

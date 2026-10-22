@@ -37,11 +37,11 @@ Renderings::Model3D::~Model3D()
 }
 
 // 初期化処理
-void Renderings::Model3D::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+void Renderings::Model3D::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 {
 	std::string modelSourceName{};
 
-	Systems::JsonSerializer serializer{ pIGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinder };
 	serializer.AddParameter(&modelSourceName, "ModelSourceName");
 	serializer.AddParameter(&m_color, "Color");
 	serializer.AddParameter(&m_pICameraScreens, "CameraScreens");

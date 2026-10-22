@@ -27,10 +27,10 @@ public:
 	virtual ~Action() = default;
 
 	// 初期化処理
-	void Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder) override;
+	void Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder) override;
 
 	// パラメータを設定
-	virtual void SetParams(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder);
+	virtual void SetParams(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder);
 
 	// 開始処理
 	virtual void Enter();

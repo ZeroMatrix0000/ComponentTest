@@ -22,21 +22,21 @@ Z2Talk::Z2Talk(const ComponentDesc& desc)
 	: Component{ desc }
 	, m_alpha{}
 	, m_alphaVelocity{}
-	, m_refRectTransform{ GetOwner().GetNullReferences<RectTransform>() }
-	, m_refText{ GetOwner().GetNullReferences<Renderings::Text>() }
+	, m_refRectTransform{ GetOwner()->GetNullReference<RectTransform>() }
+	, m_refText{ GetOwner()->GetNullReference<Renderings::Text>() }
 {
 }
 
 // 初期化処理
-void Z2Talk::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+void Z2Talk::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 {
-	Systems::JsonSerializer serializer{ pIGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinder };
 	serializer.AddParameter(&m_alphaVelocity, "AlphaVelocity");
 	serializer.Load(json);
 
 	m_alpha.Initialize(0.0f, 0.0f, 1.0f);
-	m_refRectTransform = GetOwner().GetComponent<RectTransform>();
-	m_refText = GetOwner().GetComponent<Renderings::Text>();
+	m_refRectTransform = GetOwner()->GetComponent<RectTransform>();
+	m_refText = GetOwner()->GetComponent<Renderings::Text>();
 }
 
 // 更新処理

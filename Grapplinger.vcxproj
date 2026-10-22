@@ -222,6 +222,7 @@
     <ClCompile Include="Scripts\GameObjects\UIs\MessageWindow\MessageWindow.cpp" />
     <ClCompile Include="Scripts\GameObjects\UIs\TargetPoint\TargetPoint.cpp" />
     <ClCompile Include="Scripts\GameObjects\UIs\Z2Talk\Z2Talk.cpp" />
+    <ClCompile Include="Scripts\Main\ComponentsRegisterer.cpp" />
     <ClCompile Include="Scripts\Main\Game.cpp" />
     <ClCompile Include="Scripts\Main\GameContext.cpp" />
     <ClCompile Include="Scripts\Main\GameInput.cpp" />
@@ -347,6 +348,7 @@
     <ClInclude Include="Scripts\GameObjects\UIs\SelectMenu\SelectMenuParams.h" />
     <ClInclude Include="Scripts\GameObjects\UIs\TargetPoint\TargetPoint.h" />
     <ClInclude Include="Scripts\GameObjects\UIs\Z2Talk\Z2Talk.h" />
+    <ClInclude Include="Scripts\Main\ComponentsRegisterer.h" />
     <ClInclude Include="Scripts\Main\GameInput.h" />
     <ClInclude Include="Scripts\Main\IGameInput.h" />
     <ClInclude Include="Scripts\Scenes\GamePlayScene\Actions\Action.h" />

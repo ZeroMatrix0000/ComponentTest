@@ -427,6 +427,9 @@
     <ClCompile Include="Scripts\GameObjects\Objects\Player\States\PlayerStateStick.cpp">
       <Filter>Scripts\GameObjects\Objects\Player\States</Filter>
     </ClCompile>
+    <ClCompile Include="Scripts\Main\ComponentsRegisterer.cpp">
+      <Filter>Scripts\Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Pch.h" />
@@ -846,6 +849,9 @@
     </ClInclude>
     <ClInclude Include="Scripts\Commons\Libraries\Ref.h">
       <Filter>Scripts\Commons\Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Main\ComponentsRegisterer.h">
+      <Filter>Scripts\Main</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

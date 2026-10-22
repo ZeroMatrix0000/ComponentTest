@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerWire.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/22
  *
  * プレイヤーの糸
  */
@@ -46,7 +46,7 @@ public:
 	PlayerWire(const ComponentDesc& desc);
 
 	// 初期化処理
-	void Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder) override;
+	void Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder) override;
 
 	// 更新処理
 	void Update(float elapsedTime);
@@ -59,7 +59,7 @@ public:
 	void Scaling(float elapsedTime);
 
 	// 映るカメラ画面を追加
-	void AddICameraScreen(const Renderings::ICameraScreen& iCameraScreen);
+	void AddICameraScreen(Ref<const Renderings::ICameraScreen> iCameraScreen);
 
 	// ターゲットを設定
 	void SetTarget(const Math::Vector3& playerPosition, const Math::Vector3& targetPosition, const Math::Quaternion& rotation, bool toAir);

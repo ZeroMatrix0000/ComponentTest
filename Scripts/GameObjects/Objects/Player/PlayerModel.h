@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerModel.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/22
  *
  * プレイヤーのモデル
  */
@@ -34,7 +34,7 @@ public:
 	PlayerModel(const ComponentDesc& desc);
 
 	// 初期化処理
-	void Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder) override;
+	void Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder) override;
 
 	// 更新処理
 	void Update(float elapsedTime, const Player& player);
@@ -47,7 +47,7 @@ public:
 	void Rotate(float elapsedTime, const Player& player);
 
 	// 映るカメラ画面を追加
-	void AddICameraScreen(const Renderings::ICameraScreen& iCameraScreen);
+	void AddICameraScreen(Ref<const Renderings::ICameraScreen> iCameraScreen);
 
 	// トランスフォームを設定
 	void SetTransform(const Transform& transform);

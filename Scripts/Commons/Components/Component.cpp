@@ -13,14 +13,14 @@
 #include "../GameObjects/IGameObjectInstantiator.h"
 
 // コンストラクタ
-Components::Component::Component(Ref<const ComponentDesc> desc)
-	: m_refOwner{ desc->refOwner }
-	, m_refIGameObjectInstantiator{ desc->refIGameObjectInstantiator }
+Components::Component::Component(const ComponentDesc& desc)
+	: m_refOwner{ desc.refOwner }
+	, m_refIGameObjectInstantiator{ desc.refIGameObjectInstantiator }
 {
 }
 
 // ゲームオブジェクトを生成
-GameObject& Components::Component::Instantiate(const std::string& name) const
+Ref<GameObject> Components::Component::Instantiate(const std::string& name) const
 {
 	return m_refIGameObjectInstantiator->Instantiate(name);
 }

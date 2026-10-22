@@ -1,7 +1,7 @@
 /*
  * FileName:     TitleScene.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/28
+ * Last Updated: 2026/10/22
  *
  * タイトルシーン
  */
@@ -47,36 +47,36 @@ void TitleScene::Initialize(const SceneTransitionData& data)
 	const auto& gameContext = GetContext();
 
 	// 出力サイズ
-	const Math::Vector2& outputSize = gameContext.GetPIWindowController()->GetOutputSize();
+	const Math::Vector2& outputSize = gameContext->GetPIWindowController()->GetOutputSize();
 
 	// ゲームオブジェクト管理
-	auto* pIGameObjectManager = gameContext.GetPIGameObjectManager();
+	auto* pIGameObjectManager = gameContext->GetPIGameObjectManager();
 
-	pIGameObjectManager->SetPGameObjects(GetPGameObjects());
+	pIGameObjectManager->SetPGameObjects(&GetGameObjects().Get());
 	pIGameObjectManager->Load("Scene_Title");
 
 	// カメラ画面を取得
-	m_pCameraScreen = &pIGameObjectManager->Find("TitleCamera").GetComponent<Renderings::CameraScreen<Camera::EulerTargetCamera>>();
+	m_pCameraScreen = &pIGameObjectManager->Find("TitleCamera")->GetComponent<Renderings::CameraScreen<Camera::EulerTargetCamera>>().Get();
 	m_pCameraScreen->SetProjectionMatrix(outputSize);
 
 	// キャンバスを取得
-	m_pCanvas = &pIGameObjectManager->Find("Canvas").GetComponent<Renderings::Canvas>();
+	m_pCanvas = &pIGameObjectManager->Find("Canvas")->GetComponent<Renderings::Canvas>().Get();
 	m_pCanvas->SetSize(outputSize);
 
 	// 地面を取得
-	GameObject* pGround = &pIGameObjectManager->Find("Ground");
-	pGround->GetComponent<Colliders::MeshCollider>().ApplyTransform();
-	pGround->GetComponent<Renderings::Model3D>().GetPModelSource()->GetPPixelShader()->GetConstantBuffer()->SetVariable("ShadowCount", 0);
+	Ref<GameObject> ground = pIGameObjectManager->Find("Ground");
+	ground->GetComponent<Colliders::MeshCollider>()->ApplyTransform();
+	ground->GetComponent<Renderings::Model3D>()->GetPModelSource()->GetPPixelShader()->GetConstantBuffer()->SetVariable("ShadowCount", 0);
 
 	// 選択メニューを取得
-	m_pSelectMenu = &pIGameObjectManager->Find("TitleMenu").GetComponent<SelectMenu>();
-	m_pSelectMenu->AddOption(L"スタート", [&] { gameContext.GetPISceneManager()->SetNextScene<GamePlayScene>(); });
-	m_pSelectMenu->AddOption(L"ゲームを<ruby=しゅうりょう>終了</ruby>", [&] { gameContext.GetPIWindowController()->Destroy(); });
+	m_pSelectMenu = &pIGameObjectManager->Find("TitleMenu")->GetComponent<SelectMenu>().Get();
+	m_pSelectMenu->AddOption(L"スタート", [gameContext] { gameContext->GetPISceneManager()->SetNextScene<GamePlayScene>(); });
+	m_pSelectMenu->AddOption(L"ゲームを<ruby=しゅうりょう>終了</ruby>", [gameContext] { gameContext->GetPIWindowController()->Destroy(); });
 
 	// タイトルを取得
-	GameObject& obj = pIGameObjectManager->Find("Title");
-	m_pTitle = &obj.GetComponent<RectTransform>();
-	m_pTitleImage = &obj.GetComponent<Renderings::Image>();
+	Ref<GameObject> title = pIGameObjectManager->Find("Title");
+	m_pTitle = &title->GetComponent<RectTransform>().Get();
+	m_pTitleImage = &title->GetComponent<Renderings::Image>().Get();
 	m_pTitleImage->GetPPixelShader()->GetConstantBuffer()->SetVariable("TextureSize", m_pTitleImage->GetSize());
 	m_titlePosition = m_pTitle->GetRect().position;
 	m_titleSway.Initialize(0.0f, 0.0f, 360.0f);
@@ -86,10 +86,10 @@ void TitleScene::Initialize(const SceneTransitionData& data)
 void TitleScene::Update(float elapsedTime)
 {
 	// シーン切り替え中でないなら
-	if (!GetContext().GetPISceneManager()->IsChanging())
+	if (!GetContext()->GetPISceneManager()->IsChanging())
 	{
 		// 入力管理
-		auto* pIInput = GetContext().GetPIInput();
+		auto* pIInput = GetContext()->GetPIInput();
 
 		// W or ↑ で上選択
 		if (pIInput->GetKeyDown(KeyName::W) || pIInput->GetKeyDown(KeyName::Up))
@@ -137,7 +137,7 @@ void TitleScene::AcceptMessage(const std::string& message)
 	if (message == "WindowSizeChanged")
 	{
 		// 出力サイズ
-		const Math::Vector2& outputSize = GetContext().GetPIWindowController()->GetOutputSize();
+		const Math::Vector2& outputSize = GetContext()->GetPIWindowController()->GetOutputSize();
 		// プロジェクション行列を設定
 		m_pCameraScreen->SetProjectionMatrix(outputSize);
 		// キャンバスのサイズを設定

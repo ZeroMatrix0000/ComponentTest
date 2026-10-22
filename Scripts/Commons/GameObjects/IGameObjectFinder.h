@@ -1,7 +1,7 @@
 /*
  * FileName:     IGameObjectFinder.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/22
  *
  * ゲームオブジェクト検索のインタフェース
  */
@@ -30,7 +30,7 @@ namespace GameObjects
 		}
 
 		// ゲームオブジェクトを名前で検索
-		virtual GameObject& Find(const std::string& name) const = 0;
+		virtual Ref<GameObject> Find(const std::string& name) const = 0;
 
 	};
 }

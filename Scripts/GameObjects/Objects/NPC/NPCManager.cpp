@@ -1,7 +1,7 @@
 /*
  * FileName:     NPCManager.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/22
  *
  * NPC管理
  */
@@ -31,11 +31,11 @@ NPCManager::NPCManager(const ComponentDesc& desc)
 }
 
 // 初期化処理
-void NPCManager::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+void NPCManager::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 {
 	const Renderings::Canvas* pCanvas = nullptr;
 
-	Systems::JsonSerializer serializer{ pIGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinder };
 	serializer.AddParameter(&m_pNPCList, "NPCList");
 	serializer.AddParameter(&pCanvas, "Canvas");
 	serializer.Load(json);
@@ -43,12 +43,12 @@ void NPCManager::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder
 	// NPC の数だけテキストを追加
 	for (int i = 0; i < m_pNPCList.size(); i++)
 	{
-		InteractCursor& interactCursor = Instantiate("Prefab_InteractCursor").GetComponent<InteractCursor>();
+		Ref interactCursor = Instantiate("Prefab_InteractCursor")->GetComponent<InteractCursor>();
 		m_pInteractCursorList.push_back(interactCursor);
-		interactCursor.SetName(m_pNPCList.at(i)->GetName());
+		interactCursor->SetName(m_pNPCList.at(i)->GetName());
 		if (pCanvas)
 		{
-			interactCursor.SetCanvas(*pCanvas);
+			interactCursor->SetCanvas(*pCanvas);
 		}
 	}
 }

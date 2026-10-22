@@ -21,23 +21,23 @@ InteractCursor::InteractCursor(const ComponentDesc& desc)
 	: Component{ desc }
 	, m_alphaVelocity{}
 	, m_alpha{}
-	, m_refTextTransform{ GetOwner().GetNullReferences<RectTransform>() }
-	, m_refText{ GetOwner().GetNullReferences<Renderings::Text>() }
-	, m_refImageTransform{ GetOwner().GetNullReferences<RectTransform>() }
-	, m_refImage{ GetOwner().GetNullReferences<Renderings::Image>() }
+	, m_refTextTransform{ GetOwner()->GetNullReference<RectTransform>() }
+	, m_refText{ GetOwner()->GetNullReference<Renderings::Text>() }
+	, m_refImageTransform{ GetOwner()->GetNullReference<RectTransform>() }
+	, m_refImage{ GetOwner()->GetNullReference<Renderings::Image>() }
 {
 }
 
 // 初期化処理
-void InteractCursor::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+void InteractCursor::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 {
-	Systems::JsonSerializer serializer{ pIGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinder };
 	serializer.AddParameter(&m_alphaVelocity, "AlphaVelocity");
 	serializer.Load(json);
 
 	m_alpha.Initialize(0.0f, 0.0f, 1.0f);
 
-	if (m_refTextTransform == GetOwner().GetNullReferences<RectTransform>())
+	if (m_refTextTransform == GetOwner()->GetNullReference<RectTransform>())
 	{
 		Ref<GameObject> refObj = Instantiate("Prefab_InteractCursorText");
 		m_refTextTransform = refObj->GetComponent<RectTransform>();

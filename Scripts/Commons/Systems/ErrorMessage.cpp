@@ -1,7 +1,7 @@
 /*
  * FileName:     ErrorMessage.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/22
  *
  * エラーメッセージ
  */
@@ -65,10 +65,10 @@ void Systems::ErrorMessage::Update(float elapsedTime)
 void Systems::ErrorMessage::CreateObjects(IGameObjectInstantiator* pIGameObjectInstantiator)
 {
 	// テキストの設定
-	m_pText = &pIGameObjectInstantiator->Instantiate("Prefab_ErrorMessage", true).GetComponent<Renderings::Text>();
+	m_pText = &pIGameObjectInstantiator->Instantiate("Prefab_ErrorMessage", true)->GetComponent<Renderings::Text>().Get();
 	// キャンバスの設定
-	auto& canvas = pIGameObjectInstantiator->Instantiate("Prefab_Canvas", true).GetComponent<Renderings::Canvas>();
-	canvas.Initialize(Renderings::Canvas::FixedSize::None, Math::Vector2{ 1600.0f, 900.0f });
+	Ref canvas = pIGameObjectInstantiator->Instantiate("Prefab_Canvas", true)->GetComponent<Renderings::Canvas>();
+	canvas->Initialize(Renderings::Canvas::FixedSize::None, Math::Vector2{ 1600.0f, 900.0f });
 
 	// キャンバスに画像を映す
 	m_pText->SetCanvas(canvas);

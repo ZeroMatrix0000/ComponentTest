@@ -43,12 +43,12 @@ Renderings::Text::~Text()
 }
 
 // 初期化処理
-void Renderings::Text::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+void Renderings::Text::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 {
 	std::wstring str = m_str.GetSourceStr();
 	bool isDecoration = m_str.IsDecoration();
 
-	Systems::JsonSerializer serializer{ pIGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinder };
 	serializer.AddParameter(&str, "Str");
 	serializer.AddParameter(&isDecoration, "IsDecoration");
 	serializer.AddParameter(&m_fontName, "FontName");

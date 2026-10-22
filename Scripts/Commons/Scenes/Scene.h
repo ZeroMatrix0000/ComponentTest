@@ -1,7 +1,7 @@
 /*
  * FileName:     Scene.h
  * Author:       Takao Hayata
- * Last Updated: 2026/07/21
+ * Last Updated: 2026/10/22
  *
  * シーン
  */
@@ -26,12 +26,11 @@ namespace Scenes
 		Scene(const ComponentDesc& desc)
 			: Component{ desc }
 			, m_gameObjects{}
-			, m_pContext{}
 		{
 		}
 
 		// 初期化処理
-		void Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder) override {};
+		void Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder) override {};
 		// 初期化処理
 		virtual void Initialize(const TTransitionData& data) = 0;
 		// 更新処理
@@ -39,32 +38,41 @@ namespace Scenes
 		// 終了処理
 		virtual void Finalize() = 0;
 
+
+		/* 静的関数 */
+
 		// コンテキストを設定
-		void SetContext(const TContext& context) { m_pContext = &context; }
+		static void SetContext(Ref<const TContext> context) { s_pContext = &context.Get(); }
 
 
 	protected:
 
 
+		/* 静的関数 */
+
+		// コンテキストを取得
+		static Ref<const TContext> GetContext() { return Ref{ *s_pContext }; }
+
+
 		/* メンバ関数 */
 
 		// ゲームオブジェクトリストを取得
-		std::vector<std::unique_ptr<GameObject>>* GetPGameObjects() { return &m_gameObjects; }
-
-		// コンテキストを取得
-		const TContext& GetContext() const { return *m_pContext; }
+		Ref<std::vector<std::unique_ptr<GameObject>>> GetGameObjects() { return Ref{ m_gameObjects }; }
 
 
 	private:
+
+
+		/* 静的変数 */
+
+		// コンテキストのポインタ
+		inline static const TContext* s_pContext{ nullptr };
 
 
 		/* メンバ変数 */
 
 		// ゲームオブジェクトリスト
 		std::vector<std::unique_ptr<GameObject>> m_gameObjects;
-
-		// コンテキストのポインタ
-		const TContext* m_pContext;
 
 	};
 }

@@ -26,26 +26,26 @@ NPC::NPC(const ComponentDesc& desc)
 	, m_baseRotation{}
 	, m_rotation{}
 	, m_spinAngle{}
-	, m_refTransform{ GetOwner().GetNullReferences<Transform>() }
-	, m_refBoxCollider{ GetOwner().GetNullReferences<Colliders::BoxCollider>() }
-	, m_refSphereCollider{ GetOwner().GetNullReferences<Colliders::SphereCollider>() }
+	, m_refTransform{ GetOwner()->GetNullReference<Transform>() }
+	, m_refBoxCollider{ GetOwner()->GetNullReference<Colliders::BoxCollider>() }
+	, m_refSphereCollider{ GetOwner()->GetNullReference<Colliders::SphereCollider>() }
 {
 }
 
 // 初期化処理
-void NPC::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+void NPC::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 {
-	m_refTransform = GetOwner().GetComponent<Transform>();
-	m_refBoxCollider = GetOwner().GetComponent<Colliders::BoxCollider>();
+	m_refTransform = GetOwner()->GetComponent<Transform>();
+	m_refBoxCollider = GetOwner()->GetComponent<Colliders::BoxCollider>();
 	m_refBoxCollider->ApplyTransform();
-	m_refSphereCollider = GetOwner().GetComponent<Colliders::SphereCollider>();
+	m_refSphereCollider = GetOwner()->GetComponent<Colliders::SphereCollider>();
 	m_refSphereCollider->ApplyTransform();
 
 	m_baseRotation = m_refTransform->GetRotation();
 	m_rotation.SetValue(m_baseRotation);
 	m_spinAngle.SetMovement(0.0f, 0.0f);
 
-	Systems::JsonSerializer serializer{ pIGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinder };
 	serializer.AddParameter(&m_name, "Name");
 	serializer.AddParameter(&m_eventName, "EventName");
 	serializer.AddParameter(&m_focusDistance, "FocusDistance");

@@ -36,7 +36,7 @@ namespace Renderings
 		Canvas(const ComponentDesc& desc);
 
 		// 初期化処理
-		void Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder) override;
+		void Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder) override;
 		// 初期化処理
 		void Initialize(FixedSize fixedSize, const Math::Vector2& outputSize);
 		

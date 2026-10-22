@@ -147,7 +147,7 @@ void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 	}
 
 	// テキストの所有者の2Dトランスフォーム
-	const RectTransform& rectTransform = pText->GetConstOwner().GetConstComponent<RectTransform>();
+	const RectTransform& rectTransform = pText->GetConstOwner()->GetConstComponent<RectTransform>();
 
 	// テキストが映るキャンバス
 	const Canvas* pCanvas = pText->GetPCanvas();

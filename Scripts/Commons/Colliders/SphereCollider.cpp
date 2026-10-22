@@ -1,7 +1,7 @@
 /*
  * FileName:     SphereCollider.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/22
  *
  * 球の当たり判定
  */
@@ -22,7 +22,7 @@ Colliders::SphereCollider::SphereCollider(const ComponentDesc& desc, Renderings:
 	, m_sphere{}
 	, m_worldSphere{}
 	, m_color{ DirectX::Colors::LightGreen }
-	, m_refTransform{ GetOwner().GetNullReferences<Transform>() }
+	, m_refTransform{ GetOwner()->GetNullReference<Transform>() }
 	, m_pICameraScreens{}
 	, m_pIColliderRenderer{ pIColliderRenderer }
 {
@@ -38,11 +38,11 @@ Colliders::SphereCollider::~SphereCollider()
 }
 
 // 初期化処理
-void Colliders::SphereCollider::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+void Colliders::SphereCollider::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 {
-	m_refTransform = GetOwner().GetComponent<Transform>();
+	m_refTransform = GetOwner()->GetComponent<Transform>();
 
-	Systems::JsonSerializer serializer{ pIGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinder };
 	serializer.AddParameter(&m_sphere.centerPosition, "Position");
 	serializer.AddParameter(&m_sphere.radius, "Radius");
 	serializer.AddParameter(&m_color, "Color");
@@ -73,7 +73,7 @@ void Colliders::SphereCollider::RemoveICameraScreen(const Renderings::ICameraScr
 void Colliders::SphereCollider::ApplyTransform()
 {
 	// 取得できなければ何もしない
-	if (m_refTransform == GetOwner().GetNullReferences<Transform>())
+	if (m_refTransform == GetOwner()->GetNullReference<Transform>())
 	{
 		m_worldSphere = m_sphere;
 		return;

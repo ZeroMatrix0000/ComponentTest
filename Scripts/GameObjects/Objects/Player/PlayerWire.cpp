@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerWire.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/22
  *
  * プレイヤーの糸
  */
@@ -41,22 +41,22 @@ PlayerWire::PlayerWire(const ComponentDesc& desc)
 	, m_toAir{}
 	, m_particleTimer{}
 	, m_isDisplay{}
-	, m_refTransform{ GetOwner().GetNullReferences<Transform>() }
-	, m_refParticleManager{ GetOwner().GetNullReferences<Renderings::ParticleManager>() }
-	, m_refParticleManagerTransform{ GetOwner().GetNullReferences<Transform>() }
+	, m_refTransform{ GetOwner()->GetNullReference<Transform>() }
+	, m_refParticleManager{ GetOwner()->GetNullReference<Renderings::ParticleManager>() }
+	, m_refParticleManagerTransform{ GetOwner()->GetNullReference<Transform>() }
 {
 }
 
 // 初期化処理
-void PlayerWire::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+void PlayerWire::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 {
-	m_refTransform = GetOwner().GetComponent<Transform>();
+	m_refTransform = GetOwner()->GetComponent<Transform>();
 
 	m_rotationAngle.Initialize(0.0f, -180.0f, 180.0f);
 
 	m_currentState = State::None;
 
-	Systems::JsonSerializer serializer{ pIGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinder };
 	serializer.AddParameter(&THICKNESS, "Thickness");
 	serializer.AddParameter(&EXPAND_SPEED, "ExpandSpeed");
 	serializer.AddParameter(&ROTATION_SPEED, "RotationSpeed");
@@ -66,7 +66,7 @@ void PlayerWire::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder
 	serializer.Load(json);
 
 	// パーティクル管理生成
-	if (m_refParticleManager == GetOwner().GetNullReferences<Renderings::ParticleManager>())
+	if (m_refParticleManager == GetOwner()->GetNullReference<Renderings::ParticleManager>())
 	{
 		GameObject& obj = Instantiate("Prefab_PlayerWireParticleManager");
 		m_refParticleManager = obj.GetComponent<Renderings::ParticleManager>();
@@ -193,9 +193,9 @@ void PlayerWire::Scaling(float elapsedTime)
 }
 
 // 映るカメラ画面を追加
-void PlayerWire::AddICameraScreen(const Renderings::ICameraScreen& iCameraScreen)
+void PlayerWire::AddICameraScreen(Ref<const Renderings::ICameraScreen> iCameraScreen)
 {
-	GetOwner().GetComponent<Renderings::Model3D>().AddICameraScreen(iCameraScreen);
+	GetOwner()->GetComponent<Renderings::Model3D>()->AddICameraScreen(iCameraScreen);
 	m_refParticleManager->AddICameraScreen(iCameraScreen);
 }
 

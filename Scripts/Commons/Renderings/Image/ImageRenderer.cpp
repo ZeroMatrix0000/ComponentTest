@@ -59,7 +59,7 @@ void Renderings::ImageRenderer::Draw(const Image* pImage)
 	}
 
 	// 画像の所有者の2Dトランスフォーム
-	const RectTransform& rectTransform = pImage->GetConstOwner().GetConstComponent<RectTransform>();
+	const RectTransform& rectTransform = pImage->GetConstOwner()->GetConstComponent<RectTransform>();
 
 	// 画像が映るキャンバス
 	const Canvas* pCanvas = pImage->GetPCanvas();

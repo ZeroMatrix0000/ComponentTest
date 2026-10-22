@@ -1,7 +1,7 @@
 /*
  * FileName:     SelectMenu.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/22
  *
  * 選択メニュー
  */
@@ -27,15 +27,15 @@ SelectMenu::SelectMenu(const ComponentDesc& desc)
 	, m_pTexts{}
 	, m_Processes{}
 	, m_fontSizes{}
-	, m_refCursorImage{ GetOwner().GetNullReferences<Renderings::Image>() }
-	, m_refCursorRectTransform{ GetOwner().GetNullReferences<RectTransform>() }
+	, m_refCursorImage{ GetOwner()->GetNullReference<Renderings::Image>() }
+	, m_refCursorRectTransform{ GetOwner()->GetNullReference<RectTransform>() }
 {
 }
 
 // 初期化処理
-void SelectMenu::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+void SelectMenu::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 {
-	if (m_refCursorImage == GetOwner().GetNullReferences<Renderings::Image>())
+	if (m_refCursorImage == GetOwner()->GetNullReference<Renderings::Image>())
 	{
 		GameObject& obj = Instantiate("Prefab_SelectMenuCursor");
 		m_refCursorImage = obj.GetComponent<Renderings::Image>();
@@ -50,7 +50,7 @@ void SelectMenu::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder
 	float cursorSwayTime = m_cursorSwayTimer.GetMax();
 	const Renderings::Canvas* pCanvas = m_refCursorImage->GetPCanvas();
 
-	Systems::JsonSerializer serializer{ pIGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinder };
 	serializer.AddParameter(&m_params.width, "Width");
 	serializer.AddParameter(&m_params.height, "Height");
 	serializer.AddParameter(&m_params.interval, "Interval");
@@ -101,14 +101,14 @@ void SelectMenu::Update(float elapsedTime)
 // 選択肢を追加
 void SelectMenu::AddOption(const std::wstring& str, const std::function<void()>& Process)
 {
-	GameObject& obj = Instantiate("Prefab_SelectMenuText");
-	auto& text = obj.AddComponent<Renderings::Text>();
-	text.SetStr(str);
-	text.SetCanvas(*m_refCursorImage->GetPCanvas());
-	text.SetFontSize(m_params.fontSizeBegin);
-	auto& rectTransform = obj.AddComponent<RectTransform>();
-	rectTransform.SetPosition(m_params.basePosition + Math::Vector2{ 0.0f, m_params.height + m_params.interval } * static_cast<float>(m_Processes.size()));
-	rectTransform.SetSize(Math::Vector2{ m_params.width, m_params.height });
+	Ref<GameObject> refObj = Instantiate("Prefab_SelectMenuText");
+	Ref text = refObj->AddComponent<Renderings::Text>();
+	text->SetStr(str);
+	text->SetCanvas(*m_refCursorImage->GetPCanvas());
+	text->SetFontSize(m_params.fontSizeBegin);
+	Ref rectTransform = refObj->AddComponent<RectTransform>();
+	rectTransform->SetPosition(m_params.basePosition + Math::Vector2{ 0.0f, m_params.height + m_params.interval } * static_cast<float>(m_Processes.size()));
+	rectTransform->SetSize(Math::Vector2{ m_params.width, m_params.height });
 
 	m_pTexts.push_back(text);
 	m_Processes.push_back(Process);

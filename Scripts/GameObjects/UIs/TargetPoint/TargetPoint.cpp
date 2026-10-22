@@ -27,22 +27,22 @@ TargetPoint::TargetPoint(const ComponentDesc& desc)
 	, m_brightInterval{}
 	, m_brightTimer{}
 	, m_info{}
-	, m_refTransform{ GetOwner().GetNullReferences<RectTransform>() }
-	, m_refImage{ GetOwner().GetNullReferences<Renderings::Image>() }
-	, m_refPlayer{ GetOwner().GetNullReferences<Colliders::BoxCollider>() }
-	, m_refICameraScreen{ GetOwner().GetNullReferences<Renderings::ICameraScreen>() }
+	, m_refTransform{ GetOwner()->GetNullReference<RectTransform>() }
+	, m_refImage{ GetOwner()->GetNullReference<Renderings::Image>() }
+	, m_refPlayer{ GetOwner()->GetNullReference<Colliders::BoxCollider>() }
+	, m_refICameraScreen{ GetOwner()->GetNullReference<Renderings::ICameraScreen>() }
 	, m_pTargetObjects{}
 	, m_pGrounds{}
 {
 }
 
 // 初期化処理
-void TargetPoint::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+void TargetPoint::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 {
-	m_refImage = GetOwner().GetComponent<Renderings::Image>();
-	m_refTransform = GetOwner().GetComponent<RectTransform>();
+	m_refImage = GetOwner()->GetComponent<Renderings::Image>();
+	m_refTransform = GetOwner()->GetComponent<RectTransform>();
 
-	Systems::JsonSerializer serializer{ pIGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinder };
 	serializer.AddParameter(&m_targetDistance, "TargetDistance");
 	serializer.AddParameter(&m_rayLength, "RayLength");
 	serializer.AddParameter(&m_brightInterval, "BrightInterval");

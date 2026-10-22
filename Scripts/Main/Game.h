@@ -60,9 +60,6 @@ private:
 	// リソースの初期化
 	void InitializeResources();
 
-	// コンポーネント対応付け
-	void RegisterComponents();
-
 	// シーン管理の初期化
 	void InitializeSceneManager();
 

@@ -1,7 +1,7 @@
 /*
  * FileName:     SceneManager.h
  * Author:       Takao Hayata
- * Last Updated: 2026/07/24
+ * Last Updated: 2026/10/22
  *
  * シーン管理
  */
@@ -28,14 +28,14 @@ namespace Scenes
 		/* メンバ関数 */
 
 		// コンストラクタ
-		SceneManager(const TContext& context)
+		SceneManager(Ref<const TContext> refContext)
 			: ISceneManager<TTransitionData, TContext>{}
 			, m_currentScene{}
 			, m_nextScene{}
 			, m_CreateComponentList{}
 			, m_data{}
 			, m_animation{}
-			, m_refContext{ context }
+			, m_refContext{ refContext }
 		{
 		}
 
@@ -59,7 +59,6 @@ namespace Scenes
 				m_currentScene = std::move(m_nextScene);
 				m_nextScene = nullptr;
 				// 次のシーンの初期化
-				m_currentScene->SetContext(m_refContext);
 				m_currentScene->Initialize(m_data);
 
 				// アニメーションの設定
@@ -135,8 +134,8 @@ namespace Scenes
 		// シーン切り替えアニメーション
 		SceneTransitionAnimation m_animation;
 
-		// コンテキスト
-		const TContext& m_refContext;
+		// コンテキストの参照
+		Ref<const TContext> m_refContext;
 
 	};
 }

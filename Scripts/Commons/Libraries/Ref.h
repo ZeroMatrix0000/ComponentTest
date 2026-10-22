@@ -26,11 +26,15 @@ namespace Libraries
 		{
 		}
 
-		// 生ポインタの取得
-		T* Get() const { return m_ptr; }
+		// 参照の取得
+		T& Get() const { return *m_ptr; }
 
 		// 定数化
-		Ref<const T> Const() const { return *m_ptr; }
+		Ref<const T> Const() const { return Ref<const T>{ *m_ptr }; }
+
+		// キャスト
+		template<typename U>
+		Ref<U> Cast() const { return Ref<U>{ *static_cast<U*>(m_ptr) }; }
 
 		
 		/* 演算子オーバーロード */
@@ -57,9 +61,5 @@ namespace Libraries
 	};
 
 	template<typename T>
-	bool operator==(const Ref<T>& a, const Ref<T>& b) { return a.Get() == b.Get(); }
-	template<typename T>
-	bool operator==(const Ref<T>& a, const T& b) { return a.Get() == &b; }
-	template<typename T>
-	bool operator==(const T& a, const Ref<T>& b) { return &a == b.Get(); }
+	bool operator==(const Ref<T>& a, const Ref<T>& b) { return &a.Get() == &b.Get(); }
 }

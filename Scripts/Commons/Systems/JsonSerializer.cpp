@@ -1,7 +1,7 @@
 /*
  * FileName:     JsonSerializer.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/08/04
+ * Last Updated: 2026/10/22
  *
  * Jsonのシリアライズ
  */
@@ -11,25 +11,18 @@
 
 #include "../Systems/IErrorMessage.h"
 
-std::unordered_map<std::type_index, std::function<void(void*, const nlohmann::ordered_json&, IGameObjectFinder*)>> Systems::JsonSerializer::s_methods{};
+std::unordered_map<std::type_index, std::function<void(void*, const nlohmann::ordered_json&, Ref<IGameObjectFinder>)>> Systems::JsonSerializer::s_methods{};
 
 // コンストラクタ
-Systems::JsonSerializer::JsonSerializer(IGameObjectFinder* pIGameObjectFinder)
+Systems::JsonSerializer::JsonSerializer(Ref<IGameObjectFinder> iGameObjectFinder)
 	: m_parameters{}
-	, m_pIGameObjectFinder{ pIGameObjectFinder }
+	, m_refIGameObjectFinder{ iGameObjectFinder }
 {
 }
 
 // パラメータを読み込む
 void Systems::JsonSerializer::Load(const nlohmann::ordered_json& json)
 {
-	if (!m_pIGameObjectFinder)
-	{
-		// エラーメッセージを追加
-		IErrorMessage::GetInstance()->AddMessage(L"ゲームオブジェクトを探すことが出来ません。");
-		return;
-	}
-
 	for (const auto& element : json.items())
 	{
 		// パラメータ名
@@ -51,7 +44,7 @@ void Systems::JsonSerializer::Load(const nlohmann::ordered_json& json)
 
 		try
 		{
-			s_methods.at(it->second.index)(it->second.ptr, element.value(), m_pIGameObjectFinder);
+			s_methods.at(it->second.index)(it->second.ptr, element.value(), m_refIGameObjectFinder);
 		}
 		catch (std::exception e)
 		{

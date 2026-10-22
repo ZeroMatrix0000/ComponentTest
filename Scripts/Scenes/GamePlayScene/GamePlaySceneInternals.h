@@ -1,7 +1,7 @@
 /*
  * FileName:     GamePlaySceneInternals.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/14
+ * Last Updated: 2026/10/22
  *
  * ゲームプレイシーンの内部データ
  */
@@ -42,9 +42,9 @@ struct GamePlaySceneInternals
 	/* メンバ関数 */
 
 	// コンストラクタ
-	GamePlaySceneInternals(std::vector<std::unique_ptr<GameObject>>* pGameObjects, const GameContext& gameContext)
-		: pGameObjects{ pGameObjects }
-		, gameContext{ gameContext }
+	GamePlaySceneInternals(Ref<std::vector<std::unique_ptr<GameObject>>> refGameObjects, Ref<const GameContext> refGameContext)
+		: refGameObjects{ refGameObjects }
+		, refGameContext{ refGameContext }
 		, pPlayer{}
 		, pPlayerCamera{}
 		, pNPCManager{}
@@ -65,9 +65,9 @@ struct GamePlaySceneInternals
 	/* メンバ変数 */
 
 	// ゲームオブジェクトリスト
-	std::vector<std::unique_ptr<GameObject>>* pGameObjects;
+	Ref<std::vector<std::unique_ptr<GameObject>>> refGameObjects;
 	// ゲームコンテキスト
-	const GameContext& gameContext;
+	Ref<const GameContext> refGameContext;
 
 	// プレイヤー
 	Player* pPlayer;

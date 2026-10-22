@@ -39,12 +39,12 @@ Renderings::Image::~Image()
 }
 
 // 初期化処理
-void Renderings::Image::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+void Renderings::Image::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 {
 	std::string imageSourceName{};
 	std::string pixelShaderName{};
 
-	Systems::JsonSerializer serializer{ pIGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinder };
 	serializer.AddParameter(&imageSourceName, "ImageSourceName");
 	serializer.AddParameter(&m_color, "Color");
 	serializer.AddParameter(&pixelShaderName, "PixelShaderName");

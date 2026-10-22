@@ -36,7 +36,7 @@ namespace Components
 		template<typename TComponent> requires IsDerived<TComponent, Component>
 		void RegisterCreate(const std::function<std::unique_ptr<Component>(const ComponentDesc&)>& CreateComponent)
 		{
-			m_CreateComponentList.emplace(typeid(TComponent), CreateComponent);
+			m_CreateComponentList.emplace(typeid(TComponent*), CreateComponent);
 		}
 
 
@@ -46,17 +46,10 @@ namespace Components
 		/* メンバ関数 */
 
 		// コンポーネントを作成
-		std::unique_ptr<Component> Create(const std::type_index& index, GameObject* pOwner) override;
-
-		// コンポーネント作成関数を追加
-		void RegisterCreate
-		(
-			const std::type_index& index,
-			const std::function<std::unique_ptr<Component>(const ComponentDesc&)>& CreateComponent
-		);
+		std::unique_ptr<Component> Create(const std::type_index& index, Ref<GameObject> owner) override;
 
 		// 未参照コンポーネントを取得
-		Component& GetNullReferences(const std::type_index& index, bool addErrorMessage) override;
+		Ref<Component> GetNullReference(const std::type_index& index, bool addErrorMessage) override;
 
 
 		/* メンバ変数 */

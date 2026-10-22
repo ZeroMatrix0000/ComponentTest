@@ -23,7 +23,7 @@ DebugCamera::DebugCamera(const ComponentDesc& desc)
 }
 
 // 初期化処理
-void DebugCamera::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+void DebugCamera::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 {
 	SetPCameraScreen();
 }
@@ -45,7 +45,7 @@ void DebugCamera::Update(float elapsedTime)
 // カメラ画面を設定
 void DebugCamera::SetPCameraScreen()
 {
-	m_internals.pCameraScreen = &GetOwner().GetComponent<Renderings::CameraScreen<Camera::EulerTargetCamera>>();
+	m_internals.pCameraScreen = &GetOwner()->GetComponent<Renderings::CameraScreen<Camera::EulerTargetCamera>>().Get();
 }
 
 // 入力を設定

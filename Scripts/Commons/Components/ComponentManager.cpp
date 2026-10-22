@@ -24,26 +24,13 @@ Components::ComponentManager::ComponentManager(Ref<IGameObjectInstantiator> iGam
 }
 
 // コンポーネントを作成
-std::unique_ptr<Component> Components::ComponentManager::Create(const std::type_index& index, GameObject* pOwner)
+std::unique_ptr<Component> Components::ComponentManager::Create(const std::type_index& index, Ref<GameObject> owner)
 {
-	return m_CreateComponentList.at(index)(ComponentDesc{ pOwner, m_refIGameObjectInstantiator, m_permit });
-}
-
-// コンポーネント作成関数を追加
-void Components::ComponentManager::RegisterCreate
-(
-	const std::type_index& index,
-	const std::function<std::unique_ptr<Component>(const ComponentDesc&)>& CreateComponent
-)
-{
-	if (m_CreateComponentList.find(index) == m_CreateComponentList.end())
-	{
-		m_CreateComponentList.emplace(index, CreateComponent);
-	}
+	return m_CreateComponentList.at(index)(ComponentDesc{ owner, m_refIGameObjectInstantiator, m_permit });
 }
 
 // 未参照コンポーネントを取得
-Component& Components::ComponentManager::GetNullReferences(const std::type_index& index, bool addErrorMessage)
+Ref<Component> Components::ComponentManager::GetNullReference(const std::type_index& index, bool addErrorMessage)
 {
 	if (addErrorMessage)
 	{
@@ -60,15 +47,15 @@ Component& Components::ComponentManager::GetNullReferences(const std::type_index
 	{
 		// コンポーネントを追加
 		m_nullReferences.emplace(index, m_CreateComponentList.at(index)(ComponentDesc
-		{
-			Ref{ m_refIGameObjectInstantiator->GetNullReferences() },
-			Ref{ m_refIGameObjectInstantiator },
-			Ref{ m_permit }.Const()
-		}));
-		return *m_nullReferences.at(index);
+			{
+				m_refIGameObjectInstantiator->GetNullReference(),
+				Ref{ m_refIGameObjectInstantiator },
+				m_permit
+			}));
+		return Ref{ *m_nullReferences.at(index) };
 	}
 	else
 	{
-		return *it->second;
+		return Ref{ *it->second };
 	}
 }

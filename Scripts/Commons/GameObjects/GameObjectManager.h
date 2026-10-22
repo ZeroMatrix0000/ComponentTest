@@ -1,7 +1,7 @@
 /*
  * FileName:     GameObjectManager.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/22
  *
  * ゲームオブジェクト管理
  */
@@ -40,13 +40,13 @@ namespace GameObjects
 		void Load(const std::string& jsonName) override;
 
 		// ゲームオブジェクトを名前で検索
-		GameObject& Find(const std::string& name) const override;
+		Ref<GameObject> Find(const std::string& name) const override;
 
 		// ゲームオブジェクトを生成
-		GameObject& Instantiate(const std::string& jsonName, bool dontDestroyOnLoad) override;
+		Ref<GameObject> Instantiate(const std::string& jsonName, bool dontDestroyOnLoad) override;
 
 		// 未参照ゲームオブジェクトを取得
-		GameObject& GetNullReferences() const override { return *m_nullReference; }
+		Ref<GameObject> GetNullReference() const override { return Ref{ *m_nullReference }; }
 
 		// コンポーネントを追加関数を追加
 		template<typename TComponent> requires IsDerived<TComponent, Component>
@@ -55,9 +55,9 @@ namespace GameObjects
 			m_AddComponentList.emplace
 			(
 				componentName,
-				[](GameObject* pOwner)
+				[](Ref<GameObject> owner)
 				{
-					return &pOwner->AddComponent<TComponent>();
+					return owner->AddComponent<TComponent>().Cast<Component>();
 				}
 			);
 		}
@@ -69,7 +69,7 @@ namespace GameObjects
 		/* メンバ関数 */
 
 		// コンポーネントを追加
-		std::vector<Component*> AddComponents(const nlohmann::ordered_json& json, GameObject* pGameObject);
+		std::vector<Component*> AddComponents(const nlohmann::ordered_json& json, Ref<GameObject> owner);
 		// コンポーネントを初期化
 		void InitializeComponents(const nlohmann::ordered_json& json, const std::vector<Component*>& pComponents);
 
@@ -77,7 +77,7 @@ namespace GameObjects
 		/* メンバ変数 */
 
 		// コンポーネント追加関数
-		std::unordered_map<std::string, std::function<Component*(GameObject*)>> m_AddComponentList;
+		std::unordered_map<std::string, std::function<Ref<Component>(Ref<GameObject>)>> m_AddComponentList;
 
 		// 未参照ゲームオブジェクト
 		std::unique_ptr<GameObject> m_nullReference;

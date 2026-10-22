@@ -41,7 +41,7 @@ void GamePlaySceneStateField::Enter(GamePlaySceneInternals* pInternals)
 void GamePlaySceneStateField::Update(GamePlaySceneInternals* pInternals, float elapsedTime)
 {
 	// ゲーム入力
-	auto* pIGameInput = pInternals->gameContext.GetPIGameInput();
+	auto* pIGameInput = pInternals->refGameContext->GetPIGameInput();
 
 	// 糸伸ばし入力で糸を伸ばす
 	if (pIGameInput->GetPlayerExpandWire() && pInternals->pPlayer->CanExpandWire())

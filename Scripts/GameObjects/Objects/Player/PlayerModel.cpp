@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerModel.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/22
  *
  * プレイヤーのモデル
  */
@@ -30,18 +30,18 @@ PlayerModel::PlayerModel(const ComponentDesc& desc)
 	, m_scaling{}
 	, m_dashAngle{}
 	, m_wireAngle{}
-	, m_refTransform{ GetOwner().GetNullReferences<Transform>() }
-	, m_refSilhouette{ GetOwner().GetNullReferences<Transform>() }
+	, m_refTransform{ GetOwner()->GetNullReference<Transform>() }
+	, m_refSilhouette{ GetOwner()->GetNullReference<Transform>() }
 	, m_pParticleManager{}
 {
 }
 
 // 初期化処理
-void PlayerModel::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+void PlayerModel::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 {
 	float bounceTime = m_bounceTime.GetMax();
 
-	Systems::JsonSerializer serializer{ pIGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinder };
 	serializer.AddParameter(&bounceTime, "BounceTime");
 	serializer.AddParameter(&m_bounceHeight, "BounceHeight");
 	serializer.AddParameter(&m_fallSpeedCoefficient, "FallSpeedCoefficient");
@@ -51,10 +51,10 @@ void PlayerModel::Initalize(const nlohmann::ordered_json& json, IGameObjectFinde
 
 	m_bounceTime.Initialize(0.0f, 0.0f, bounceTime);
 
-	m_refTransform = GetOwner().GetComponent<Transform>();
+	m_refTransform = GetOwner()->GetComponent<Transform>();
 
 	// シルエットを生成
-	if (m_refSilhouette == GetOwner().GetNullReferences<Transform>())
+	if (m_refSilhouette == GetOwner()->GetNullReference<Transform>())
 	{
 		GameObject& obj = Instantiate("Prefab_PlayerSilhouette");
 		m_refSilhouette = obj.GetComponent<Transform>();
@@ -177,10 +177,10 @@ void PlayerModel::Scaling(float elapsedTime, const Player& player)
 }
 
 // 映るカメラ画面を追加
-void PlayerModel::AddICameraScreen(const Renderings::ICameraScreen& iCameraScreen)
+void PlayerModel::AddICameraScreen(Ref<const Renderings::ICameraScreen> iCameraScreen)
 {
-	GetOwner().GetComponent<Renderings::Model3D>().AddICameraScreen(iCameraScreen);
-	m_refSilhouette->GetOwner().GetComponent<Renderings::Model3D>().AddICameraScreen(iCameraScreen);
+	GetOwner()->GetComponent<Renderings::Model3D>()->AddICameraScreen(iCameraScreen);
+	m_refSilhouette->GetOwner()->GetComponent<Renderings::Model3D>()->AddICameraScreen(iCameraScreen);
 }
 
 // トランスフォームを設定

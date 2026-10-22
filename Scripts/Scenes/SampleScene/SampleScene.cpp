@@ -1,7 +1,7 @@
 /*
  * FileName:     SampleScene.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/22
  *
  * サンプルシーン
  */
@@ -40,50 +40,50 @@ SampleScene::SampleScene(const ComponentDesc& desc)
 void SampleScene::Initialize(const SceneTransitionData& data)
 {
 	// コンテキスト
-	const auto& gameContext = GetContext();
+	Ref gameContext = GetContext();
 
 	// 出力サイズ
-	const Math::Vector2& outputSize = gameContext.GetPIWindowController()->GetOutputSize();
+	const Math::Vector2& outputSize = gameContext->GetPIWindowController()->GetOutputSize();
 
 	// ゲームオブジェクト管理
-	auto* pIGameObjectManager = gameContext.GetPIGameObjectManager();
+	auto* pIGameObjectManager = gameContext->GetPIGameObjectManager();
 
-	pIGameObjectManager->SetPGameObjects(GetPGameObjects());
+	pIGameObjectManager->SetPGameObjects(&GetGameObjects().Get());
 	pIGameObjectManager->Load("Scene_Sample");
 
 	// デバッグカメラを取得
-	GameObject& camera = pIGameObjectManager->Find("DebugCamera");
-	m_pCameraScreen = &camera.GetComponent<Renderings::ICameraScreen>();
+	Ref<GameObject> camera = pIGameObjectManager->Find("DebugCamera");
+	m_pCameraScreen = &camera->GetComponent<Renderings::ICameraScreen>().Get();
 	m_pCameraScreen->SetProjectionMatrix(outputSize);
-	m_pDebugCamera = &camera.GetComponent<DebugCamera>();
+	m_pDebugCamera = &camera->GetComponent<DebugCamera>().Get();
 
 	// キャンバスを取得
-	m_pCanvas = &pIGameObjectManager->Find("Canvas").GetComponent<Renderings::Canvas>();
+	m_pCanvas = &pIGameObjectManager->Find("Canvas")->GetComponent<Renderings::Canvas>().Get();
 	m_pCanvas->SetSize(outputSize);
 
 	// パーティクル管理を取得
-	m_pParticleManager = &pIGameObjectManager->Find("ParticleManager").GetComponent<Renderings::ParticleManager>();
+	m_pParticleManager = &pIGameObjectManager->Find("ParticleManager")->GetComponent<Renderings::ParticleManager>().Get();
 
 	// プレイヤーを取得
-	GameObject& player = pIGameObjectManager->Find("Player");
-	player.GetComponent<Colliders::BoxCollider>().ApplyTransform();
-	player.GetComponent<Colliders::SphereCollider>().ApplyTransform();
+	Ref<GameObject> player = pIGameObjectManager->Find("Player");
+	player->GetComponent<Colliders::BoxCollider>()->ApplyTransform();
+	player->GetComponent<Colliders::SphereCollider>()->ApplyTransform();
 
 	// 地面を取得
-	GameObject& ground = pIGameObjectManager->Find("Ground");
-	ground.GetComponent<Colliders::MeshCollider>().ApplyTransform();
+	Ref<GameObject> ground = pIGameObjectManager->Find("Ground");
+	ground->GetComponent<Colliders::MeshCollider>()->ApplyTransform();
 }
 
 // 更新処理
 void SampleScene::Update(float elapsedTime)
 {
 	// 入力管理
-	auto* pIInput = GetContext().GetPIInput();
+	auto* pIInput = GetContext()->GetPIInput();
 
 	// F5でシーン移動
 	if (pIInput->GetKeyDown(KeyName::F5))
 	{
-		GetContext().GetPISceneManager()->SetNextScene<SampleScene>();
+		GetContext()->GetPISceneManager()->SetNextScene<SampleScene>();
 		return;
 	}
 
@@ -116,7 +116,7 @@ void SampleScene::AcceptMessage(const std::string& message)
 	if (message == "WindowSizeChanged")
 	{
 		// 出力サイズ
-		const Math::Vector2& outputSize = GetContext().GetPIWindowController()->GetOutputSize();
+		const Math::Vector2& outputSize = GetContext()->GetPIWindowController()->GetOutputSize();
 		// プロジェクション行列を設定
 		m_pCameraScreen->SetProjectionMatrix(outputSize);
 		// キャンバスのサイズを設定

@@ -20,15 +20,15 @@ PlayerCamera::PlayerCamera(const ComponentDesc& desc)
 	, m_distance{}
 	, m_maxDistance{}
 	, m_camera{}
-	, m_refCameraScreen{ GetOwner().GetNullReferences<Renderings::CameraScreen<Camera::EulerTargetCamera>>() }
+	, m_refCameraScreen{ GetOwner()->GetNullReference<Renderings::CameraScreen<Camera::EulerTargetCamera>>() }
 {
 }
 
 // 初期化処理
-void PlayerCamera::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+void PlayerCamera::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 {
 	// カメラ画面を取得
-	m_refCameraScreen = GetOwner().GetComponent<Renderings::CameraScreen<Camera::EulerTargetCamera>>();
+	m_refCameraScreen = GetOwner()->GetComponent<Renderings::CameraScreen<Camera::EulerTargetCamera>>();
 	// カメラ
 	const auto& camera = m_refCameraScreen->GetCamera();
 

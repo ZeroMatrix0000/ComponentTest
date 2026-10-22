@@ -1,7 +1,7 @@
 /*
  * FileName:     IComponentManager.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/22
  *
  * コンポーネント管理のインタフェース
  */
@@ -32,40 +32,16 @@ namespace Components
 
 		// コンポーネントを作成
 		template<typename TComponent> requires IsDerived<TComponent, Component>
-		std::unique_ptr<Component> Create(GameObject* pOwner = nullptr)
+		std::unique_ptr<Component> Create(Ref<GameObject> owner)
 		{
-			// コンポーネントのコンストラクタがDescのみなら作成関数を追加
-			if constexpr (std::constructible_from<TComponent, const ComponentDesc&>)
-			{
-				RegisterCreate
-				(
-					typeid(TComponent),
-					[](const ComponentDesc& desc)
-					{
-						return std::make_unique<TComponent>(desc);
-					}
-				);
-			}
-			return Create(typeid(TComponent), pOwner);
+			return Create(typeid(TComponent*), owner);
 		};
 
 		// 未参照コンポーネントを取得
 		template<typename TComponent> requires IsDerived<TComponent, Component>
-		TComponent& GetNullReferences(bool addErrorMessage = false)
+		Ref<TComponent> GetNullReference(bool addErrorMessage = false)
 		{
-			// コンポーネントのコンストラクタがDescのみなら作成関数を追加
-			if constexpr (std::constructible_from<TComponent, const ComponentDesc&>)
-			{
-				RegisterCreate
-				(
-					typeid(TComponent),
-					[](const ComponentDesc& desc)
-					{
-						return std::make_unique<TComponent>(desc);
-					}
-				);
-			}
-			return static_cast<TComponent&>(GetNullReferences(typeid(TComponent), addErrorMessage));
+			return GetNullReference(typeid(TComponent*), addErrorMessage).Cast<TComponent>();
 		};
 
 
@@ -75,17 +51,10 @@ namespace Components
 		/* メンバ関数 */
 
 		// コンポーネントを作成
-		virtual std::unique_ptr<Component> Create(const std::type_index& index, GameObject* pOwner) = 0;
-
-		// コンポーネント作成関数を追加
-		virtual void RegisterCreate
-		(
-			const std::type_index& index,
-			const std::function<std::unique_ptr<Component>(const ComponentDesc&)>& CreateComponent
-		) = 0;
+		virtual std::unique_ptr<Component> Create(const std::type_index& index, Ref<GameObject> owner) = 0;
 
 		// 未参照コンポーネントを取得
-		virtual Component& GetNullReferences(const std::type_index& index, bool addErrorMessage) = 0;
+		virtual Ref<Component> GetNullReference(const std::type_index& index, bool addErrorMessage) = 0;
 
 
 	};

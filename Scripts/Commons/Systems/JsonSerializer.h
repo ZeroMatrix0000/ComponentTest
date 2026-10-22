@@ -1,7 +1,7 @@
 /*
  * FileName:     JsonSerializer.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/22
  *
  * Jsonのシリアライズ
  */
@@ -28,7 +28,7 @@ namespace Systems
 		/* メンバ関数 */
 
 		// コンストラクタ
-		JsonSerializer(IGameObjectFinder* pIGameObjectFinder);
+		JsonSerializer(Ref<IGameObjectFinder> iGameObjectFinder);
 
 		// パラメータを追加
 		template<typename T>
@@ -41,7 +41,7 @@ namespace Systems
 			auto it = s_methods.find(typeid(T));
 			if (it == s_methods.end())
 			{
-				s_methods.emplace(typeid(T), [](void* ptr, const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder) { Serialize(static_cast<T*>(ptr), json, pIGameObjectFinder); });
+				s_methods.emplace(typeid(T), [](void* ptr, const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder) { Serialize(static_cast<T*>(ptr), json, iGameObjectFinder); });
 			}
 		}
 
@@ -69,7 +69,7 @@ namespace Systems
 
 		// シリアライズ
 		template<typename T>
-		static void Serialize(T* ptr, const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+		static void Serialize(T* ptr, const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 		{
 			if constexpr (requires{ json.get<T>(); })
 			{
@@ -79,19 +79,19 @@ namespace Systems
 		}
 		// シリアライズ（列挙型）
 		template<typename TEnum> requires std::is_enum_v<TEnum>
-		static void Serialize(TEnum* ptr, const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+		static void Serialize(TEnum* ptr, const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 		{
 			*ptr = magic_enum::enum_cast<TEnum>(json.get<std::string>()).value();
 		}
 		// シリアライズ（std::wstring）
 		template<>
-		static void Serialize(std::wstring* ptr, const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+		static void Serialize(std::wstring* ptr, const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 		{
 			*ptr = Utility::string2wstring(json.get<std::string>());
 		}
 		// シリアライズ（D2D1::ColorF）
 		template<>
-		static void Serialize(D2D1::ColorF* ptr, const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+		static void Serialize(D2D1::ColorF* ptr, const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 		{
 			*ptr = D2D1::ColorF
 			{
@@ -103,7 +103,7 @@ namespace Systems
 		}
 		// シリアライズ（Math::Color）
 		template<>
-		static void Serialize(Math::Color* ptr, const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+		static void Serialize(Math::Color* ptr, const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 		{
 			*ptr = Math::Color
 			{
@@ -115,7 +115,7 @@ namespace Systems
 		}
 		// シリアライズ（Math::Vector2）
 		template<>
-		static void Serialize(Math::Vector2* ptr, const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+		static void Serialize(Math::Vector2* ptr, const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 		{
 			*ptr = Math::Vector2
 			{
@@ -125,7 +125,7 @@ namespace Systems
 		}
 		// シリアライズ（Math::Vector3）
 		template<>
-		static void Serialize(Math::Vector3* ptr, const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+		static void Serialize(Math::Vector3* ptr, const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 		{
 			*ptr = Math::Vector3
 			{
@@ -136,7 +136,7 @@ namespace Systems
 		}
 		// シリアライズ（Math::Euler）
 		template<>
-		static void Serialize(Math::Euler* ptr, const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+		static void Serialize(Math::Euler* ptr, const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 		{
 			*ptr = Math::Euler
 			{
@@ -147,7 +147,7 @@ namespace Systems
 		}
 		// シリアライズ（Math::Quaternion）
 		template<>
-		static void Serialize(Math::Quaternion* ptr, const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+		static void Serialize(Math::Quaternion* ptr, const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 		{
 			*ptr = Math::Euler
 			{
@@ -158,83 +158,83 @@ namespace Systems
 		}
 		// シリアライズ（Camera::QuaternionCamera）
 		template<>
-		static void Serialize(Camera::QuaternionCamera* ptr, const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+		static void Serialize(Camera::QuaternionCamera* ptr, const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 		{
-			Serialize(&ptr->position, json.at("Position"), pIGameObjectFinder);
-			Serialize(&ptr->rotation, json.at("Rotation"), pIGameObjectFinder);
+			Serialize(&ptr->position, json.at("Position"), iGameObjectFinder);
+			Serialize(&ptr->rotation, json.at("Rotation"), iGameObjectFinder);
 		}
 		// シリアライズ（Camera::QuaternionTargetCamera）
 		template<>
-		static void Serialize(Camera::QuaternionTargetCamera* ptr, const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+		static void Serialize(Camera::QuaternionTargetCamera* ptr, const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 		{
-			Serialize(&ptr->position, json.at("Position"), pIGameObjectFinder);
-			Serialize(&ptr->rotation, json.at("Rotation"), pIGameObjectFinder);
-			Serialize(&ptr->distance, json.at("Distance"), pIGameObjectFinder);
+			Serialize(&ptr->position, json.at("Position"), iGameObjectFinder);
+			Serialize(&ptr->rotation, json.at("Rotation"), iGameObjectFinder);
+			Serialize(&ptr->distance, json.at("Distance"), iGameObjectFinder);
 		}
 		// シリアライズ（Camera::EulerCamera）
 		template<>
-		static void Serialize(Camera::EulerCamera* ptr, const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+		static void Serialize(Camera::EulerCamera* ptr, const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 		{
-			Serialize(&ptr->position, json.at("Position"), pIGameObjectFinder);
-			Serialize(&ptr->rotation, json.at("Rotation"), pIGameObjectFinder);
+			Serialize(&ptr->position, json.at("Position"), iGameObjectFinder);
+			Serialize(&ptr->rotation, json.at("Rotation"), iGameObjectFinder);
 		}
 		// シリアライズ（Camera::EulerTargetCamera）
 		template<>
-		static void Serialize(Camera::EulerTargetCamera* ptr, const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+		static void Serialize(Camera::EulerTargetCamera* ptr, const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 		{
-			Serialize(&ptr->position, json.at("Position"), pIGameObjectFinder);
-			Serialize(&ptr->rotation, json.at("Rotation"), pIGameObjectFinder);
-			Serialize(&ptr->distance, json.at("Distance"), pIGameObjectFinder);
+			Serialize(&ptr->position, json.at("Position"), iGameObjectFinder);
+			Serialize(&ptr->rotation, json.at("Rotation"), iGameObjectFinder);
+			Serialize(&ptr->distance, json.at("Distance"), iGameObjectFinder);
 		}
 
 		// シリアライズ（コンポーネント）
 		template<typename TComponent> requires IsDerived<TComponent, Component>
-		static void Serialize(TComponent** ptr, const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+		static void Serialize(TComponent** ptr, const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 		{
-			*ptr = &pIGameObjectFinder->Find(json.get<std::string>()).GetComponent<TComponent>();
+			*ptr = &iGameObjectFinder->Find(json.get<std::string>())->GetComponent<TComponent>().Get();
 		}
 		// シリアライズ（変更負荷コンポーネント）
 		template<typename TComponent> requires IsDerived<TComponent, Component>
-		static void Serialize(const TComponent** ptr, const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+		static void Serialize(const TComponent** ptr, const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 		{
-			*ptr = &pIGameObjectFinder->Find(json.get<std::string>()).GetConstComponent<TComponent>();
+			*ptr = &iGameObjectFinder->Find(json.get<std::string>())->GetConstComponent<TComponent>().Get();
 		}
 
 		// シリアライズ（コンポーネント）
 		template<typename TComponent> requires IsDerived<TComponent, Component>
-		static void Serialize(Ref<TComponent>* ptr, const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+		static void Serialize(Ref<TComponent>* ptr, const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 		{
-			*ptr = pIGameObjectFinder->Find(json.get<std::string>()).GetComponent<TComponent>();
+			*ptr = iGameObjectFinder->Find(json.get<std::string>())->GetComponent<TComponent>();
 		}
 		// シリアライズ（変更負荷コンポーネント）
 		template<typename TComponent> requires IsDerived<TComponent, Component>
-		static void Serialize(Ref<const TComponent>* ptr, const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+		static void Serialize(Ref<const TComponent>* ptr, const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 		{
-			*ptr = pIGameObjectFinder->Find(json.get<std::string>()).GetConstComponent<TComponent>();
+			*ptr = iGameObjectFinder->Find(json.get<std::string>())->GetConstComponent<TComponent>();
 		}
 
 		// シリアライズ（std::vector）
 		template<typename T>
-		static void Serialize(std::vector<T>* ptr, const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+		static void Serialize(std::vector<T>* ptr, const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 		{
 			ptr->clear();
 			for (const auto& element : json)
 			{
 				ptr->push_back({});
-				Serialize(&ptr->back(), element, pIGameObjectFinder);
+				Serialize(&ptr->back(), element, iGameObjectFinder);
 			}
 		}
 
 		// シリアライズ（std::vector）
 		template<typename T>
-		static void Serialize(std::vector<Ref<T>>* ptr, const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+		static void Serialize(std::vector<Ref<T>>* ptr, const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 		{
 			ptr->clear();
 			for (const auto& element : json)
 			{
 				T* value{};
-				Serialize(&value, element, pIGameObjectFinder);
-				ptr->push_back(*value);
+				Serialize(&value, element, iGameObjectFinder);
+				ptr->push_back(Ref{ *value });
 			}
 		}
 
@@ -242,7 +242,7 @@ namespace Systems
 		/* 静的変数 */
 
 		// パラメータを設定する関数リスト
-		static std::unordered_map<std::type_index, std::function<void(void*, const nlohmann::ordered_json&, IGameObjectFinder*)>> s_methods;
+		static std::unordered_map<std::type_index, std::function<void(void*, const nlohmann::ordered_json&, Ref<IGameObjectFinder>)>> s_methods;
 
 
 		/* メンバ変数 */
@@ -251,7 +251,7 @@ namespace Systems
 		std::unordered_map<std::string, Parameter> m_parameters;
 
 		// ゲームオブジェクト検索インタフェースのポインタ
-		IGameObjectFinder* m_pIGameObjectFinder;
+		Ref<IGameObjectFinder> m_refIGameObjectFinder;
 
 	};
 }

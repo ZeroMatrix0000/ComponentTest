@@ -29,7 +29,7 @@
  // コンストラクタ
 GamePlayScene::GamePlayScene(const ComponentDesc& desc)
 	: Scene{ desc }
-	, m_internals{}
+	, m_internals{ GetGameObjects(), GetContext() }
 	, m_currentState{}
 	, m_Initializer{}
 {
@@ -38,11 +38,8 @@ GamePlayScene::GamePlayScene(const ComponentDesc& desc)
 // 初期化処理
 void GamePlayScene::Initialize(const SceneTransitionData& data)
 {
-	// 内部データを初期化
-	m_internals = std::make_unique<GamePlaySceneInternals>(GetPGameObjects(), GetContext());
-
 	// 初期化
-	m_Initializer(m_internals.get());
+	m_Initializer(&m_internals);
 
 	// 現在の状態を初期化
 	SetState(std::make_unique<GamePlaySceneStateField>());
@@ -52,15 +49,15 @@ void GamePlayScene::Initialize(const SceneTransitionData& data)
 void GamePlayScene::Update(float elapsedTime)
 {
 	// シーン切り替え中なら何もしない
-	if (GetContext().GetPISceneManager()->IsChanging())
+	if (GetContext()->GetPISceneManager()->IsChanging())
 	{
 		return;
 	}
 
 	// F5でシーン移動
-	if (GetContext().GetPIInput()->GetKeyDown(KeyName::F5))
+	if (GetContext()->GetPIInput()->GetKeyDown(KeyName::F5))
 	{
-		GetContext().GetPISceneManager()->SetNextScene<GamePlayScene>();
+		GetContext()->GetPISceneManager()->SetNextScene<GamePlayScene>();
 		return;
 	}
 
@@ -72,13 +69,13 @@ void GamePlayScene::Update(float elapsedTime)
 	}
 
 	// 状態ごとの処理
-	m_currentState->Update(m_internals.get(), elapsedTime);
+	m_currentState->Update(&m_internals, elapsedTime);
 
 	// シェーダにプレイヤーの座標を設定
-	Renderings::ConstantBuffer* pConstantBuffer = m_internals->pGroundModel->GetPModelSource()->GetPPixelShader()->GetConstantBuffer();
-	pConstantBuffer->SetVariable("ShadowPosition", m_internals->pPlayer->GetPosition() + Math::Vector3::Down * m_internals->pPlayer->GetBox().size.y / 2.0f);
+	Renderings::ConstantBuffer* pConstantBuffer = m_internals.pGroundModel->GetPModelSource()->GetPPixelShader()->GetConstantBuffer();
+	pConstantBuffer->SetVariable("ShadowPosition", m_internals.pPlayer->GetPosition() + Math::Vector3::Down * m_internals.pPlayer->GetBox().size.y / 2.0f);
 	// NPC の当たり判定
-	const auto nPCBoxes = m_internals->pNPCManager->GetPBoxes();
+	const auto nPCBoxes = m_internals.pNPCManager->GetPBoxes();
 	for (size_t i = 0; i < nPCBoxes.size(); i++)
 	{
 		pConstantBuffer->SetVariable("ShadowPosition", nPCBoxes.at(i)->position + Math::Vector3::Down * nPCBoxes.at(i)->size.y / 2.0f, 16 * (i + 1));
@@ -89,7 +86,7 @@ void GamePlayScene::Update(float elapsedTime)
 void GamePlayScene::Finalize()
 {
 	// マウスをループ解除
-	GetContext().GetPIInput()->SetMousePositionLoop(true);
+	GetContext()->GetPIInput()->SetMousePositionLoop(true);
 }
 
 // メッセージを受け取る
@@ -98,16 +95,16 @@ void GamePlayScene::AcceptMessage(const std::string& message)
 	if (message == "WindowSizeChanged")
 	{
 		// 出力サイズ
-		const Math::Vector2& outputSize = GetContext().GetPIWindowController()->GetOutputSize();
+		const Math::Vector2& outputSize = GetContext()->GetPIWindowController()->GetOutputSize();
 		// プロジェクション行列を設定
-		m_internals->pCameraScreen->SetProjectionMatrix(outputSize);
+		m_internals.pCameraScreen->SetProjectionMatrix(outputSize);
 		// キャンバスのサイズを設定
-		m_internals->pCanvas->SetSize(outputSize);
+		m_internals.pCanvas->SetSize(outputSize);
 
 		// UIの設定
-		m_internals->pNPCManager->SetCursor(*m_internals->pCameraScreen);
-		m_internals->pZ2Talk->SetPosition(m_internals->pPlayer->GetBox(), *m_internals->pCameraScreen);
-		m_internals->pBlackBelt->SetWidth(m_internals->pCanvas->GetSize().x);
+		m_internals.pNPCManager->SetCursor(*m_internals.pCameraScreen);
+		m_internals.pZ2Talk->SetPosition(m_internals.pPlayer->GetBox(), *m_internals.pCameraScreen);
+		m_internals.pBlackBelt->SetWidth(m_internals.pCanvas->GetSize().x);
 	}
 }
 
@@ -116,8 +113,8 @@ void GamePlayScene::SetState(std::unique_ptr<Systems::State<GamePlaySceneInterna
 {
 	if (m_currentState != nullptr)
 	{
-		m_currentState->Exit(m_internals.get());
+		m_currentState->Exit(&m_internals);
 	}
 	m_currentState = std::move(state);
-	m_currentState->Enter(m_internals.get());
+	m_currentState->Enter(&m_internals);
 }

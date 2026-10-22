@@ -1,7 +1,7 @@
 /*
  * FileName:     MeshCollider.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/22
  *
  * メッシュの当たり判定
  */
@@ -23,7 +23,7 @@ Colliders::MeshCollider::MeshCollider(const ComponentDesc& desc, Renderings::ICo
 	, m_color{ DirectX::Colors::LightGreen }
 	, m_worldMesh{}
 	, m_pMesh{}
-	, m_refTransform{ GetOwner().GetNullReferences<Transform>() }
+	, m_refTransform{ GetOwner()->GetNullReference<Transform>() }
 	, m_pICameraScreens{}
 	, m_pIColliderRenderer{ pIColliderRenderer }
 	, m_pIResources{ pIResources }
@@ -40,13 +40,13 @@ Colliders::MeshCollider::~MeshCollider()
 }
 
 // 初期化処理
-void Colliders::MeshCollider::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+void Colliders::MeshCollider::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 {
-	m_refTransform = GetOwner().GetComponent<Transform>();
+	m_refTransform = GetOwner()->GetComponent<Transform>();
 
 	std::string meshName{};
 
-	Systems::JsonSerializer serializer{ pIGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinder };
 	serializer.AddParameter(&meshName, "MeshName");
 	serializer.AddParameter(&m_color, "Color");
 	serializer.AddParameter(&m_pICameraScreens, "CameraScreens");

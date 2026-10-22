@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "GamePlaySceneInternals.h"
 #include "Scripts/Commons/Scenes/Scene.h"
 #include "GamePlaySceneInitializer.h"
 
@@ -27,7 +28,6 @@ namespace Systems
 }
 class SceneTransitionData;
 class GameContext;
-struct GamePlaySceneInternals;
 class Player;
 class PlayerCamera;
 class NPCManager;
@@ -70,7 +70,7 @@ private:
 	/* メンバ変数 */
 
 	// 内部データ
-	std::unique_ptr<GamePlaySceneInternals> m_internals;
+	GamePlaySceneInternals m_internals;
 
 	// 状態
 	std::unique_ptr<Systems::State<GamePlaySceneInternals>> m_currentState;

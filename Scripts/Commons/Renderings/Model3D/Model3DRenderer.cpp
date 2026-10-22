@@ -133,7 +133,7 @@ void Renderings::Model3DRenderer::Render(bool isInstance)
 			for (const auto* pModel : renderObjects.pModels)
 			{
 				// モデルの所有者のトランスフォーム
-				const Transform& transform = pModel->GetConstOwner().GetConstComponent<Transform>();
+				const Transform& transform = pModel->GetConstOwner()->GetConstComponent<Transform>();
 
 				// 入力要素リストに追加
 				InputElement& inputElement = inputElements.emplace_back();

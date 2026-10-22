@@ -1,7 +1,7 @@
 /*
  * FileName:     ActionManager.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/22
  *
  * アクション管理
  */
@@ -26,9 +26,9 @@ ActionManager::ActionManager(const ComponentDesc& desc, Systems::IResources* pIR
 }
 
 // 初期化処理
-void ActionManager::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+void ActionManager::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 {
-	m_pIGameObjectFinder = pIGameObjectFinder;
+	m_pIGameObjectFinder = &iGameObjectFinder.Get();
 }
 
 // 更新処理
@@ -83,32 +83,32 @@ void ActionManager::InitializeCurrentAction()
 	auto it = eventList.find("ActionType");
 	if (it == eventList.end())
 	{
-		m_pCurrentAction = &GetOwner().GetComponent<Action>();
+		m_pCurrentAction = &GetOwner()->GetComponent<Action>().Get();
 	}
 	else
 	{
 		if (it.value() == "OpenMessageWindow")
 		{
-			m_pCurrentAction = &GetOwner().GetComponent<ActionOpenMessageWindow>();
+			m_pCurrentAction = &GetOwner()->GetComponent<ActionOpenMessageWindow>().Get();
 		}
 		else if (it.value() == "CloseMessageWindow")
 		{
-			m_pCurrentAction = &GetOwner().GetComponent<ActionCloseMessageWindow>();
+			m_pCurrentAction = &GetOwner()->GetComponent<ActionCloseMessageWindow>().Get();
 		}
 		else if (it.value() == "SetMessageWindowText")
 		{
-			m_pCurrentAction = &GetOwner().GetComponent<ActionSetMessageWindowText>();
+			m_pCurrentAction = &GetOwner()->GetComponent<ActionSetMessageWindowText>().Get();
 		}
 		else
 		{
-			m_pCurrentAction = &GetOwner().GetComponent<Action>();
+			m_pCurrentAction = &GetOwner()->GetComponent<Action>().Get();
 		}
 	}
 
 	it = eventList.find("Params");
 	if (it != eventList.end())
 	{
-		m_pCurrentAction->SetParams(*it, m_pIGameObjectFinder);
+		m_pCurrentAction->SetParams(*it, Ref{ *m_pIGameObjectFinder });
 	}
 
 	m_pCurrentAction->Enter();

@@ -28,23 +28,23 @@ Player::Player(const ComponentDesc& desc)
 	: Component{ desc }
 	, m_internals{}
 {
-	m_internals.P_CAMERA_SCREEN = &GetOwner().GetNullReferences<Renderings::CameraScreen<Camera::EulerTargetCamera>>();
-	m_internals.pTransform = &GetOwner().GetNullReferences<Transform>();
-	m_internals.pBoxCollider = &GetOwner().GetNullReferences<Colliders::BoxCollider>();
-	m_internals.pParticleManager = &GetOwner().GetNullReferences<Renderings::ParticleManager>();
-	m_internals.pModel = &GetOwner().GetNullReferences<PlayerModel>();
-	m_internals.pWire = &GetOwner().GetNullReferences<PlayerWire>();
+	m_internals.P_CAMERA_SCREEN = &GetOwner()->GetNullReference<Renderings::CameraScreen<Camera::EulerTargetCamera>>().Get();
+	m_internals.pTransform = &GetOwner()->GetNullReference<Transform>().Get();
+	m_internals.pBoxCollider = &GetOwner()->GetNullReference<Colliders::BoxCollider>().Get();
+	m_internals.pParticleManager = &GetOwner()->GetNullReference<Renderings::ParticleManager>().Get();
+	m_internals.pModel = &GetOwner()->GetNullReference<PlayerModel>().Get();
+	m_internals.pWire = &GetOwner()->GetNullReference<PlayerWire>().Get();
 
 	// 現在の状態を初期化
 	SetState(std::make_unique<PlayerStateOnGround>());
 }
 
 // 初期化処理
-void Player::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+void Player::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 {
-	m_internals.pTransform = &GetOwner().GetComponent<Transform>();
-	m_internals.pBoxCollider = &GetOwner().GetComponent<Colliders::BoxCollider>();
-	m_internals.pParticleManager = &GetOwner().GetComponent<Renderings::ParticleManager>();
+	m_internals.pTransform = &GetOwner()->GetComponent<Transform>().Get();
+	m_internals.pBoxCollider = &GetOwner()->GetComponent<Colliders::BoxCollider>().Get();
+	m_internals.pParticleManager = &GetOwner()->GetComponent<Renderings::ParticleManager>().Get();
 
 	m_internals.rotation.SetValue(m_internals.pTransform->GetRotation());
 
@@ -52,7 +52,7 @@ void Player::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pI
 	float fallMaxSpeed = m_internals.fallSpeed.GetMax();
 	float coyoteTime = m_internals.fallCoyoteTime.GetMax();
 
-	Systems::JsonSerializer serializer{ pIGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinder };
 	serializer.AddParameter(&moveMaxSpeed, "MoveMaxSpeed");
 	serializer.AddParameter(&m_internals.MOVE_ACCELERATION, "MoveAcceleration");
 	serializer.AddParameter(&m_internals.DASH_RATIO, "DashRatio");
@@ -75,27 +75,27 @@ void Player::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pI
 	m_internals.pBoxCollider->ApplyTransform();
 
 	// モデルの生成
-	if (m_internals.pModel == &GetOwner().GetNullReferences<PlayerModel>())
+	if (m_internals.pModel == &GetOwner()->GetNullReference<PlayerModel>().Get())
 	{
 		GameObject& obj = Instantiate("Prefab_PlayerModel");
-		m_internals.pModel = &obj.GetComponent<PlayerModel>();
+		m_internals.pModel = &obj.GetComponent<PlayerModel>().Get();
 		m_internals.pModel->SetParticleManager(m_internals.pParticleManager);
 	}
 
 	// 糸の生成
-	if (m_internals.pWire == &GetOwner().GetNullReferences<PlayerWire>())
+	if (m_internals.pWire == &GetOwner()->GetNullReference<PlayerWire>().Get())
 	{
 		GameObject& obj = Instantiate("Prefab_PlayerWire");
-		m_internals.pWire = &obj.GetComponent<PlayerWire>();
+		m_internals.pWire = &obj.GetComponent<PlayerWire>().Get();
 	}
 
 	// カメラを設定
-	if (m_internals.P_CAMERA_SCREEN != &GetOwner().GetNullReferences<Renderings::CameraScreen<Camera::EulerTargetCamera>>())
+	if (m_internals.P_CAMERA_SCREEN != &GetOwner()->GetNullReference<Renderings::CameraScreen<Camera::EulerTargetCamera>>().Get())
 	{
-		m_internals.pBoxCollider->AddICameraScreen(*m_internals.P_CAMERA_SCREEN);
-		m_internals.pParticleManager->AddICameraScreen(*m_internals.P_CAMERA_SCREEN);
-		m_internals.pModel->AddICameraScreen(*m_internals.P_CAMERA_SCREEN);
-		m_internals.pWire->AddICameraScreen(*m_internals.P_CAMERA_SCREEN);
+		m_internals.pBoxCollider->AddICameraScreen(Ref{ *m_internals.P_CAMERA_SCREEN }.Cast<const Renderings::ICameraScreen>());
+		m_internals.pParticleManager->AddICameraScreen(Ref{ *m_internals.P_CAMERA_SCREEN }.Cast<const Renderings::ICameraScreen>());
+		m_internals.pModel->AddICameraScreen(Ref{ *m_internals.P_CAMERA_SCREEN }.Cast<const Renderings::ICameraScreen>());
+		m_internals.pWire->AddICameraScreen(Ref{ *m_internals.P_CAMERA_SCREEN }.Cast<const Renderings::ICameraScreen>());
 	}
 }
 

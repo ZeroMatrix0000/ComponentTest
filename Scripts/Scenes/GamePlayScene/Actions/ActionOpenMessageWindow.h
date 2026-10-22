@@ -25,10 +25,10 @@ public:
 	ActionOpenMessageWindow(const ComponentDesc& desc);
 
 	// 初期化処理
-	void Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder) override;
+	void Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder) override;
 
 	// パラメータを設定
-	void SetParams(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder) override;
+	void SetParams(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder) override;
 
 	// 開始処理
 	void Enter() override;

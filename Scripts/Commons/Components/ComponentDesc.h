@@ -25,7 +25,7 @@ namespace Components
 		/* メンバ関数 */
 
 		// コンストラクタ
-		ComponentDesc(Ref<GameObject> owner, Ref<IGameObjectInstantiator> iGameObjectInstantiator, Ref<const ComponentCreatePermit>)
+		ComponentDesc(Ref<GameObject> owner, Ref<IGameObjectInstantiator> iGameObjectInstantiator, const ComponentCreatePermit&)
 			: refOwner{ owner }
 			, refIGameObjectInstantiator{ iGameObjectInstantiator }
 		{

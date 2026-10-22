@@ -20,27 +20,27 @@ BlackBelt::BlackBelt(const ComponentDesc& desc)
 	, m_moveTime{}
 	, m_height{}
 	, m_moveRate{}
-	, m_refTopImageTransform{ GetOwner().GetNullReferences<RectTransform>() }
-	, m_refTopImage{ GetOwner().GetNullReferences<Renderings::Image>() }
-	, m_refBottomImageTransform{ GetOwner().GetNullReferences<RectTransform>() }
-	, m_refBottomImage{ GetOwner().GetNullReferences<Renderings::Image>() }
+	, m_refTopImageTransform{ GetOwner()->GetNullReference<RectTransform>() }
+	, m_refTopImage{ GetOwner()->GetNullReference<Renderings::Image>() }
+	, m_refBottomImageTransform{ GetOwner()->GetNullReference<RectTransform>() }
+	, m_refBottomImage{ GetOwner()->GetNullReference<Renderings::Image>() }
 {
 }
 
 // 初期化処理
-void BlackBelt::Initalize(const nlohmann::ordered_json& json, IGameObjectFinder* pIGameObjectFinder)
+void BlackBelt::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 {
 	m_moveRate.SetMovement(0.0f, 0.0f);
 
 	const Renderings::Canvas* pCanvas = nullptr;
 
-	Systems::JsonSerializer serializer{ pIGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinder };
 	serializer.AddParameter(&m_moveTime, "MoveTime");
 	serializer.AddParameter(&pCanvas, "Canvas");
 	serializer.Load(json);
 
 	// 画像を生成
-	if (m_refTopImageTransform == GetOwner().GetNullReferences<RectTransform>())
+	if (m_refTopImageTransform == GetOwner()->GetNullReference<RectTransform>())
 	{
 		Ref<GameObject> refObj = Instantiate("Prefab_BlackBeltImage");
 		m_refTopImageTransform = refObj->GetComponent<RectTransform>();
