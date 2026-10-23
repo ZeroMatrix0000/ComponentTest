@@ -23,8 +23,8 @@ Colliders::MeshCollider::MeshCollider(const ComponentDesc& desc, Renderings::ICo
 	: Component{ desc }
 	, m_color{ DirectX::Colors::LightGreen }
 	, m_worldMesh{}
-	, m_pMesh{}
-	, m_refTransform{ GetOwner()->GetNullReference<Transform>() }
+	, m_meshRef{ pIResources->GetNullMesh()}
+	, m_transformRef{ GetOwner()->GetNullReference<Transform>() }
 	, m_pICameraScreens{}
 	, m_pIColliderRenderer{ pIColliderRenderer }
 	, m_pIResources{ pIResources }
@@ -43,7 +43,7 @@ Colliders::MeshCollider::~MeshCollider()
 // 初期化処理
 void Colliders::MeshCollider::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
 {
-	m_refTransform = GetOwner()->GetComponent<Transform>();
+	m_transformRef = GetOwner()->GetComponent<Transform>();
 
 	std::string meshName{};
 
@@ -62,7 +62,7 @@ void Colliders::MeshCollider::Initalize(const nlohmann::ordered_json& json, Ref<
 // メッシュを設定
 void Colliders::MeshCollider::SetMesh(const std::string& meshName)
 {
-	m_pMesh = m_pIResources->GetMesh(meshName);
+	m_meshRef = m_pIResources->GetMesh(meshName);
 }
 
 // 映るカメラ画面を追加
@@ -87,11 +87,6 @@ void Colliders::MeshCollider::RemoveICameraScreen(const Renderings::ICameraScree
 // トランスフォームを適用
 void Colliders::MeshCollider::ApplyTransform()
 {
-	if (!m_pMesh)
-	{
-		return;
-	}
-
-	m_worldMesh = *m_pMesh;
-	m_worldMesh.ApplyMatrix(m_refTransform->GetWorldMatrix());
+	m_worldMesh = m_meshRef.Get();
+	m_worldMesh.ApplyMatrix(m_transformRef->GetWorldMatrix());
 }

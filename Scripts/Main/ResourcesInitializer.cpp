@@ -105,8 +105,8 @@ void ResourcesInitializer::InitializeResources
 	resources->LoadPixelShaders(device, L"Resources\\Shaders\\PixelShaders");
 
 	// シェーダを適用
-	resources->GetEditableModelSource("NewGrounds")->SetPixelShader(resources->GetPixelShader("PlayerShadow"));
-	resources->GetEditableModelSource("PlayerSilhouette")->SetPixelShader(resources->GetPixelShader("PlayerSilhouette"));
+	resources->GetEditableModelSource("NewGrounds")->SetPixelShader(&resources->GetPixelShader("PlayerShadow").Get());
+	resources->GetEditableModelSource("PlayerSilhouette")->SetPixelShader(&resources->GetPixelShader("PlayerSilhouette").Get());
 
 	// 描画順を設定
 	resources->GetEditableModelSource("PlayerSilhouette")->SetDrawingOrder(1000);

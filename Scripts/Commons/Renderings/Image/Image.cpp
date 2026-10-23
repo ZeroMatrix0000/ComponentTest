@@ -1,7 +1,7 @@
 /*
  * FileName:     Image.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/22
  *
  * 画像
  */
@@ -19,8 +19,8 @@ Renderings::Image::Image(const ComponentDesc& desc, IImageRenderer* pIImageRende
 	: Component{ desc }
 	, m_color{ DirectX::Colors::White }
 	, m_orderInLayer{}
-	, m_pImageSource{ pIResources->GetNullImageSource() }
-	, m_pPixelShader{ pIResources->GetNullPixelShader() }
+	, m_imageSourceRef{ pIResources->GetNullImageSource() }
+	, m_pixelShaderRef{ pIResources->GetNullPixelShader() }
 	, m_pCanvas{}
 	, m_pIImageRenderer{ pIImageRenderer }
 	, m_pIResources{ pIResources }
@@ -66,13 +66,13 @@ void Renderings::Image::Initalize(const nlohmann::ordered_json& json, Ref<IGameO
 // 画像ソースを設定
 void Renderings::Image::SetImageSource(const std::string& imageSourceName)
 {
-	m_pImageSource = m_pIResources->GetImageSource(imageSourceName);
+	m_imageSourceRef = m_pIResources->GetImageSource(imageSourceName);
 }
 
 // ピクセルシェーダを設定
 void Renderings::Image::SetPixelShader(const std::string& pixelShaderName)
 {
-	m_pPixelShader = m_pIResources->GetPixelShader(pixelShaderName);
+	m_pixelShaderRef = m_pIResources->GetPixelShader(pixelShaderName);
 }
 
 // 画像サイズを取得

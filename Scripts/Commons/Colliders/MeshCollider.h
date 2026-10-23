@@ -79,11 +79,11 @@ namespace Colliders
 		// ワールドメッシュ
 		Mesh m_worldMesh;
 
-		// メッシュのポインタ
-		const Mesh* m_pMesh;
+		// メッシュの参照
+		Ref<const Mesh> m_meshRef;
 
 		// トランスフォームの参照
-		Ref<Transform> m_refTransform;
+		Ref<Transform> m_transformRef;
 
 		// 映るカメラ画面のポインタリスト
 		std::vector<const Renderings::ICameraScreen*> m_pICameraScreens;

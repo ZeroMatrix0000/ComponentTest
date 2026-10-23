@@ -1,7 +1,7 @@
 /*
  * FileName:     Image.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/23
  *
  * 画像
  */
@@ -61,9 +61,9 @@ namespace Renderings
 		int GetOrderInLayer() const { return m_orderInLayer; }
 
 		// 画像ソース名を取得
-		const ImageSource* GetPImageSource() const { return m_pImageSource; }
+		Ref<const ImageSource> GetImageSourceRef() const { return m_imageSourceRef; }
 		// ピクセルシェーダ名を取得
-		const PixelShader* GetPPixelShader() const { return m_pPixelShader; }
+		Ref<const PixelShader> GetPixelShaderRef() const { return m_pixelShaderRef; }
 
 		// キャンバスのポインタを取得
 		const Canvas* GetPCanvas() const { return m_pCanvas; }
@@ -83,10 +83,10 @@ namespace Renderings
 		// レイヤー順
 		int m_orderInLayer;
 
-		// 画像ソース
-		const ImageSource* m_pImageSource;
-		// ピクセルシェーダ
-		const PixelShader* m_pPixelShader;
+		// 画像ソースの参照
+		Ref<const ImageSource> m_imageSourceRef;
+		// ピクセルシェーダの参照
+		Ref<const PixelShader> m_pixelShaderRef;
 
 		// キャンバスのポインタ
 		const Canvas* m_pCanvas;

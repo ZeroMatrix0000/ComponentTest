@@ -1,7 +1,7 @@
 /*
  * FileName:     Particle.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/23
  *
  * パーティクル
  */
@@ -65,7 +65,7 @@ void Renderings::Particle::SetModelSource(const std::string& modelSourceName, Re
 	{
 		m_pIModelRenderer->RemovePParticle(pICameraScreen, pRenderElement);
 	}
-	pRenderElement->pModelSource = m_pIResources->GetModelSource(modelSourceName);
+	pRenderElement->modelSourceRef = m_pIResources->GetModelSource(modelSourceName);
 	// 描画者にパーティクルを追加
 	for (const auto* pICameraScreen : m_pICameraScreens)
 	{
@@ -109,10 +109,17 @@ void Renderings::Particle::AddElement(UpdateElement** ppUpdateElement, RenderEle
 	}
 
 	auto& renderElement = m_renderElements.emplace_back();
-	renderElement = std::make_unique<RenderElement>();
-	renderElement->pModelSource = m_pIResources->GetNullModelSource();
+	renderElement = std::make_unique<RenderElement>(m_pIResources);
 	if (ppRenderElement)
 	{
 		*ppRenderElement = renderElement.get();
 	}
+}
+
+// コンストラクタ
+Renderings::Particle::RenderElement::RenderElement(Systems::IResources* pIResources)
+	: matrix{ Math::Matrix::Identity }
+	, color{ DirectX::Colors::White }
+	, modelSourceRef{ pIResources->GetNullModelSource() }
+{
 }

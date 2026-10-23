@@ -53,8 +53,8 @@ void Renderings::ImageRenderer::Begin()
 void Renderings::ImageRenderer::Draw(const Image* pImage)
 {
 	// 画像ソース
-	const ImageSource* pImageSource = pImage->GetPImageSource();
-	if (!pImageSource->IsInitialized())
+	Ref<const ImageSource> imageSource = pImage->GetImageSourceRef();
+	if (!imageSource->IsInitialized())
 	{
 		return;
 	}
@@ -71,7 +71,7 @@ void Renderings::ImageRenderer::Draw(const Image* pImage)
 
 	// テクスチャの詳細
 	D3D11_TEXTURE2D_DESC textureDesc;
-	pImageSource->GetResource()->GetDesc(&textureDesc);
+	imageSource->GetResource()->GetDesc(&textureDesc);
 
 	// テクスチャの中心
 	Math::Vector2 origin = Math::Vector2
@@ -162,8 +162,8 @@ void Renderings::ImageRenderer::Draw(const Image* pImage)
 	rect.size *= canvasRatio;
 
 	// ピクセルシェーダ
-	const Renderings::PixelShader* pPixelShader = pImage->GetPPixelShader();
-	
+	Ref<const Renderings::PixelShader> pPixelShader = pImage->GetPixelShaderRef();
+
 	if (pPixelShader->IsInitialized())
 	{
 		// ピクセルシェーダを設定
@@ -175,7 +175,7 @@ void Renderings::ImageRenderer::Draw(const Image* pImage)
 	// 描画
 	m_spriteBatch->Draw
 	(
-		pImageSource->GetTexture(),
+		imageSource->GetTexture(),
 		RECT
 		{
 			Math::RoundInt(rect.position.x),
@@ -187,7 +187,7 @@ void Renderings::ImageRenderer::Draw(const Image* pImage)
 		pImage->GetColor(),
 		Math::Deg2Rad(rectTransform->GetAngle()),
 		origin
-	);
+		);
 
 	if (pPixelShader->IsInitialized())
 	{
@@ -222,15 +222,15 @@ void Renderings::ImageRenderer::RemovePImage(const Image* pImage)
 Math::Vector2 Renderings::ImageRenderer::GetImageSize(const Image* pImage) const
 {
 	// 画像ソース
-	const ImageSource* pImageSource = pImage->GetPImageSource();
-	if (!pImageSource->IsInitialized())
+	Ref<const ImageSource> imageSource = pImage->GetImageSourceRef();
+	if (!imageSource->IsInitialized())
 	{
 		return Math::Vector2::Zero;
 	}
 
 	// テクスチャの詳細
 	D3D11_TEXTURE2D_DESC textureDesc;
-	pImageSource->GetResource()->GetDesc(&textureDesc);
+	imageSource->GetResource()->GetDesc(&textureDesc);
 
 	return Math::Vector2
 	{

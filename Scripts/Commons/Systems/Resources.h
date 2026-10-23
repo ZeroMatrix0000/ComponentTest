@@ -1,7 +1,7 @@
 /*
  * FileName:     Resources.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/23
  *
  * リソース管理
  */
@@ -49,44 +49,44 @@ namespace Systems
 		void LoadPixelShaders(ID3D11Device5* device, const std::wstring& directoryPath);
 
 		// モデルの取得
-		const Renderings::Model3DSource* GetModelSource(const std::string& modelName)   override;
+		Ref<const Renderings::Model3DSource> GetModelSource(const std::string& modelName)   override;
 		// 画像の取得
-		const Renderings::ImageSource*   GetImageSource(const std::string& imageName)   override;
+		Ref<const Renderings::ImageSource>   GetImageSource(const std::string& imageName)   override;
 		// Jsonの取得
-		const nlohmann::ordered_json*    GetJson(const std::string& jsonName)           override;
+		Ref<const nlohmann::ordered_json>    GetJson(const std::string& jsonName)           override;
 		// メッシュの取得
-		const Mesh*                      GetMesh(const std::string& meshName)           override;
+		Ref<const Mesh>                      GetMesh(const std::string& meshName)           override;
 		// 頂点シェーダの取得
-		const Renderings::VertexShader*  GetVertexShader(const std::string& shaderName) override;
+		Ref<const Renderings::VertexShader>  GetVertexShader(const std::string& shaderName) override;
 		// ピクセルシェーダの取得
-		const Renderings::PixelShader*   GetPixelShader(const std::string& shaderName)  override;
+		Ref<const Renderings::PixelShader>   GetPixelShader(const std::string& shaderName)  override;
 
 		// モデルの取得
-		const Renderings::Model3DSource* GetNullModelSource()  override { return &m_nullModelSource; }
+		Ref<const Renderings::Model3DSource> GetNullModelSource()  override { return Ref{ m_nullModelSource }.Const(); }
 		// 画像の取得
-		const Renderings::ImageSource*   GetNullImageSource()  override { return &m_nullImageSource; }
+		Ref<const Renderings::ImageSource>   GetNullImageSource()  override { return Ref{ m_nullImageSource }.Const(); }
 		// Jsonの取得
-		const nlohmann::ordered_json*    GetNullJson()         override { return &m_nullJson; };
+		Ref<const nlohmann::ordered_json>    GetNullJson()         override { return Ref{ m_nullJson }.Const(); }
 		// メッシュの取得
-		const Mesh*                      GetNullMesh()         override { return &m_nullMesh; }
+		Ref<const Mesh>                      GetNullMesh()         override { return Ref{ m_nullMesh }.Const(); }
 		// 頂点シェーダの取得
-		const Renderings::VertexShader*  GetNullVertexShader() override { return &m_nullVertexShader; }
+		Ref<const Renderings::VertexShader>  GetNullVertexShader() override { return Ref{ m_nullVertexShader }.Const(); }
 		// ピクセルシェーダの取得
-		const Renderings::PixelShader*   GetNullPixelShader()  override { return &m_nullPixelShader; }
+		Ref<const Renderings::PixelShader>   GetNullPixelShader()  override { return Ref{ m_nullPixelShader }.Const(); }
 		
 
 		// モデルの取得
-		Renderings::Model3DSource* GetEditableModelSource(const std::string& modelName);
+		Ref<Renderings::Model3DSource> GetEditableModelSource(const std::string& modelName);
 		// 画像の取得
-		Renderings::ImageSource*   GetEditableImageSource(const std::string& imageName);
+		Ref<Renderings::ImageSource>   GetEditableImageSource(const std::string& imageName);
 		// Jsonの取得
-		nlohmann::ordered_json*    GetEditableJson(const std::string& jsonName);
+		Ref<nlohmann::ordered_json>    GetEditableJson(const std::string& jsonName);
 		// メッシュの取得
-		Mesh*                      GetEditableMesh(const std::string& meshName);
+		Ref<Mesh>                      GetEditableMesh(const std::string& meshName);
 		// 頂点シェーダの取得
-		Renderings::VertexShader*  GetEditableVertexShader(const std::string& shaderName);
+		Ref<Renderings::VertexShader>  GetEditableVertexShader(const std::string& shaderName);
 		// ピクセルシェーダの取得
-		Renderings::PixelShader*   GetEditablePixelShader(const std::string& shaderName);
+		Ref<Renderings::PixelShader>   GetEditablePixelShader(const std::string& shaderName);
 
 
 	private:

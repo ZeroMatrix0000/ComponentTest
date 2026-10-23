@@ -1,7 +1,7 @@
 /*
  * FileName:     Model3D.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/23
  *
  * 3Dモデル
  */
@@ -19,7 +19,7 @@
 Renderings::Model3D::Model3D(const ComponentDesc& desc, IModel3DRenderer* pIModelRenderer, Systems::IResources* pIResources)
 	: Component{ desc }
 	, m_color{ DirectX::Colors::White }
-	, m_pModelSource{ pIResources->GetNullModelSource() }
+	, m_modelSourceRef{ pIResources->GetNullModelSource() }
 	, m_pICameraScreens{}
 	, m_pIModelRenderer{ pIModelRenderer }
 	, m_pIResources{ pIResources }
@@ -61,7 +61,7 @@ void Renderings::Model3D::SetModelSource(const std::string& modelSourceName)
 	{
 		m_pIModelRenderer->RemovePModel(pICameraScreen, this);
 	}
-	m_pModelSource = m_pIResources->GetModelSource(modelSourceName);
+	m_modelSourceRef = m_pIResources->GetModelSource(modelSourceName);
 	// 描画者にモデルを追加
 	for (const auto* pICameraScreen : m_pICameraScreens)
 	{

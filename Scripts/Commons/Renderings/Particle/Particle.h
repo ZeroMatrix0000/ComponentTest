@@ -1,7 +1,7 @@
 /*
  * FileName:     Particle.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/23
  *
  * パーティクル
  */
@@ -49,12 +49,15 @@ namespace Renderings
 		// 描画情報
 		struct RenderElement
 		{
+			// コンストラクタ
+			RenderElement(Systems::IResources* pIResources);
+
 			// ワールド行列
-			Math::Matrix matrix{ Math::Matrix::Identity };
+			Math::Matrix matrix;
 			// 色
-			Math::Color color{ DirectX::Colors::White };
-			// モデルソース
-			const Model3DSource* pModelSource{};
+			Math::Color color;
+			// モデルソースの参照
+			Ref<const Model3DSource> modelSourceRef;
 		};
 
 
