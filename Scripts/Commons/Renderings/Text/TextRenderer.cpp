@@ -148,7 +148,7 @@ void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 	}
 
 	// テキストの所有者の2Dトランスフォーム
-	const RectTransform& rectTransform = pText->GetConstOwner()->GetConstComponent<RectTransform>();
+	Ref<const RectTransform> rectTransform = pText->GetConstOwner()->GetConstComponent<RectTransform>();
 
 	// テキストが映るキャンバス
 	const Canvas* pCanvas = pText->GetPCanvas();
@@ -165,9 +165,9 @@ void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 	(
 		pCanvas->GetSize(),
 		canvasRatio,
-		rectTransform.GetRect(),
-		rectTransform.GetPivot(),
-		rectTransform.GetAnchor()
+		rectTransform->GetRect(),
+		rectTransform->GetPivot(),
+		rectTransform->GetAnchor()
 	);
 
 	// フォントサイズ
@@ -279,9 +279,9 @@ void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 		m_compositeEffect->SetInput(1, floodImage.Get());
 
 		// 角度
-		float angle = rectTransform.GetAngle();
+		float angle = rectTransform->GetAngle();
 		// 回転の中心を取得
-		Math::Vector2 origin = m_helper.GetRotateOrigin(transformRect, rectTransform.GetPivot());
+		Math::Vector2 origin = m_helper.GetRotateOrigin(transformRect, rectTransform->GetPivot());
 		// 描画ターゲットを回転
 		if (angle != 0.0f)
 		{
@@ -338,9 +338,9 @@ void Renderings::TextRenderer::Draw(const Text* pText, bool isDebug)
 	else
 	{
 		// 角度
-		float angle = rectTransform.GetAngle();
+		float angle = rectTransform->GetAngle();
 		// 回転の中心を取得
-		Math::Vector2 origin = m_helper.GetRotateOrigin(transformRect, rectTransform.GetPivot());
+		Math::Vector2 origin = m_helper.GetRotateOrigin(transformRect, rectTransform->GetPivot());
 		// 描画ターゲットを回転
 		if (angle != 0.0f)
 		{

@@ -30,7 +30,7 @@
  // コンストラクタ
 GamePlayScene::GamePlayScene(const ComponentDesc& desc)
 	: Scene{ desc }
-	, m_internals{ GetGameObjects(), GetContext() }
+	, m_internals{ GetGameObjects(), GetContext(), GetOwner() }
 	, m_currentState{}
 	, m_Initializer{}
 {
@@ -73,10 +73,14 @@ void GamePlayScene::Update(float elapsedTime)
 	m_currentState->Update(&m_internals, elapsedTime);
 
 	// シェーダにプレイヤーの座標を設定
-	Renderings::ConstantBuffer* pConstantBuffer = m_internals.pGroundModel->GetPModelSource()->GetPPixelShader()->GetConstantBuffer();
-	pConstantBuffer->SetVariable("ShadowPosition", m_internals.pPlayer->GetPosition() + Math::Vector3::Down * m_internals.pPlayer->GetBox().size.y / 2.0f);
+	Renderings::ConstantBuffer* pConstantBuffer = m_internals.groundModelRef->GetPModelSource()->GetPPixelShader()->GetConstantBuffer();
+	pConstantBuffer->SetVariable
+	(
+		"ShadowPosition",
+		m_internals.playerRef->GetPosition() + Math::Vector3::Down * m_internals.playerRef->GetBox().size.y / 2.0f
+	);
 	// NPC の当たり判定
-	const auto nPCBoxes = m_internals.pNPCManager->GetPBoxes();
+	const auto nPCBoxes = m_internals.nPCManagerRef->GetPBoxes();
 	for (size_t i = 0; i < nPCBoxes.size(); i++)
 	{
 		pConstantBuffer->SetVariable("ShadowPosition", nPCBoxes.at(i)->position + Math::Vector3::Down * nPCBoxes.at(i)->size.y / 2.0f, 16 * (i + 1));
@@ -98,14 +102,14 @@ void GamePlayScene::AcceptMessage(const std::string& message)
 		// 出力サイズ
 		const Math::Vector2& outputSize = GetContext()->GetPIWindowController()->GetOutputSize();
 		// プロジェクション行列を設定
-		m_internals.pCameraScreen->SetProjectionMatrix(outputSize);
+		m_internals.iCameraScreenRef->SetProjectionMatrix(outputSize);
 		// キャンバスのサイズを設定
-		m_internals.pCanvas->SetSize(outputSize);
+		m_internals.canvasRef->SetSize(outputSize);
 
 		// UIの設定
-		m_internals.pNPCManager->SetCursor(*m_internals.pCameraScreen);
-		m_internals.pZ2Talk->SetPosition(m_internals.pPlayer->GetBox(), *m_internals.pCameraScreen);
-		m_internals.pBlackBelt->SetWidth(m_internals.pCanvas->GetSize().x);
+		m_internals.nPCManagerRef->SetCursor(m_internals.iCameraScreenRef.Get());
+		m_internals.z2TalkRef->SetPosition(m_internals.playerRef->GetBox(), m_internals.iCameraScreenRef.Get());
+		m_internals.blackBeltRef->SetWidth(m_internals.canvasRef->GetSize().x);
 	}
 }
 

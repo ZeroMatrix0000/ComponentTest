@@ -1,7 +1,7 @@
 /*
  * FileName:     GamePlaySceneInternals.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/22
+ * Last Updated: 2026/10/23
  *
  * ゲームプレイシーンの内部データ
  */
@@ -42,67 +42,57 @@ struct GamePlaySceneInternals
 	/* メンバ関数 */
 
 	// コンストラクタ
-	GamePlaySceneInternals(Ref<std::vector<std::unique_ptr<GameObject>>> refGameObjects, Ref<const GameContext> refGameContext)
-		: refGameObjects{ refGameObjects }
-		, refGameContext{ refGameContext }
-		, pPlayer{}
-		, pPlayerCamera{}
-		, pNPCManager{}
-		, pGroundMesh{}
-		, pGroundModel{}
-		, pReticle{}
-		, pZ2Talk{}
-		, pBlackBelt{}
-		, pMessageWindow{}
-		, pTargetPoint{}
-		, pCameraScreen{}
-		, pCanvas{}
-		, pActionManager{}
-	{
-	}
+	GamePlaySceneInternals
+	(
+		Ref<std::vector<std::unique_ptr<GameObject>>> gameObjectsRef,
+		Ref<const GameContext> gameContextRef,
+		Ref<GameObject> ownerRef
+	);
 
 
 	/* メンバ変数 */
 
-	// ゲームオブジェクトリスト
-	Ref<std::vector<std::unique_ptr<GameObject>>> refGameObjects;
-	// ゲームコンテキスト
-	Ref<const GameContext> refGameContext;
+	// ゲームオブジェクトリストの参照
+	Ref<std::vector<std::unique_ptr<GameObject>>> gameObjectsRef;
+	// ゲームコンテキストの参照
+	Ref<const GameContext> gameContextRef;
+	// 所有者の参照
+	Ref<GameObject> ownerRef;
 
 	// プレイヤー
-	Player* pPlayer;
+	Ref<Player> playerRef;
 	// プレイヤーカメラ
-	PlayerCamera* pPlayerCamera;
+	Ref<PlayerCamera> playerCameraRef;
 
 	// NPC管理
-	NPCManager* pNPCManager;
+	Ref<NPCManager> nPCManagerRef;
 
 	// 地面
-	Colliders::MeshCollider* pGroundMesh;
-	Renderings::Model3D* pGroundModel;
+	Ref<Colliders::MeshCollider> groundMeshRef;
+	Ref<Renderings::Model3D> groundModelRef;
 
 	// レティクル
-	Renderings::Image* pReticle;
+	Ref<Renderings::Image> reticleRef;
 
 	// Z: はなす
-	Z2Talk* pZ2Talk;
+	Ref<Z2Talk> z2TalkRef;
 
 	// 上下の黒帯
-	BlackBelt* pBlackBelt;
+	Ref<BlackBelt> blackBeltRef;
 
 	// メッセージウィンドウ
-	MessageWindow* pMessageWindow;
+	Ref<MessageWindow> messageWindowRef;
 
 	// ターゲット照準
-	TargetPoint* pTargetPoint;
+	Ref<TargetPoint> targetPointRef;
 
 	// カメラ画面
-	Renderings::ICameraScreen* pCameraScreen;
+	Ref<Renderings::ICameraScreen> iCameraScreenRef;
 
 	// キャンバス
-	Renderings::Canvas* pCanvas;
+	Ref<Renderings::Canvas> canvasRef;
 
 	// アクション管理
-	ActionManager* pActionManager;
+	Ref<ActionManager> actionManagerRef;
 
 };

@@ -57,7 +57,7 @@ namespace Renderings
 				particle->AddICameraScreen(*pICameraScreen);
 			}
 			// 初期化処理
-			particle->Initalize(m_refTransform);
+			particle->Initalize(m_refTransform.Get());
 		}
 
 

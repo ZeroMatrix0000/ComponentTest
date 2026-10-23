@@ -12,15 +12,6 @@
 #include "Scripts/Commons/Scenes/Scene.h"
 #include "GamePlaySceneInitializer.h"
 
-namespace Renderings
-{
-	class ICameraScreen;
-	class Canvas;
-}
-namespace Colliders
-{
-	class MeshCollider;
-}
 namespace Systems
 {
 	template<typename TInternals>
@@ -28,9 +19,6 @@ namespace Systems
 }
 class SceneTransitionData;
 class GameContext;
-class Player;
-class PlayerCamera;
-class NPCManager;
 
 // ゲームプレイシーン
 class GamePlayScene : public Scenes::Scene<SceneTransitionData, GameContext>

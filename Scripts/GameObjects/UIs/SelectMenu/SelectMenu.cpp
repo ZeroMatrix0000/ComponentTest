@@ -38,9 +38,9 @@ void SelectMenu::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFi
 {
 	if (m_refCursorImage == GetOwner()->GetNullReference<Renderings::Image>())
 	{
-		GameObject& obj = Instantiate("Prefab_SelectMenuCursor");
-		m_refCursorImage = obj.GetComponent<Renderings::Image>();
-		m_refCursorRectTransform = obj.GetComponent<RectTransform>();
+		Ref obj = Instantiate("Prefab_SelectMenuCursor");
+		m_refCursorImage = obj->GetComponent<Renderings::Image>();
+		m_refCursorRectTransform = obj->GetComponent<RectTransform>();
 	}
 
 	// 選択番号を初期化

@@ -51,7 +51,7 @@ namespace Libraries
 			return *this;
 		}
 
-		operator T& () const { return *m_ptr; }
+		explicit operator T& () const { return *m_ptr; }
 
 
 	private:

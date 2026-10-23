@@ -65,8 +65,8 @@ void Game::Initialize(const HWND& hWindow)
 	// リソースの初期化
 	ResourcesInitializer::InitializeResources
 	(
-		Ref{ m_deviceResources },
-		Ref{ m_renderingResources },
+		m_deviceResources,
+		m_renderingResources,
 		Ref{ m_resources }
 	);
 

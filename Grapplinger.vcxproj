@@ -239,6 +239,7 @@
     <ClCompile Include="Scripts\Scenes\GamePlayScene\Actions\ActionSetMessageWindowText.cpp" />
     <ClCompile Include="Scripts\Scenes\GamePlayScene\GamePlayScene.cpp" />
     <ClCompile Include="Scripts\Scenes\GamePlayScene\GamePlaySceneInitializer.cpp" />
+    <ClCompile Include="Scripts\Scenes\GamePlayScene\GamePlaySceneInternals.cpp" />
     <ClCompile Include="Scripts\Scenes\GamePlayScene\States\GamePlaySceneStateEvent.cpp" />
     <ClCompile Include="Scripts\Scenes\GamePlayScene\States\GamePlaySceneStateField.cpp" />
     <ClCompile Include="Scripts\Scenes\SampleScene\SampleScene.cpp" />
@@ -275,7 +276,6 @@
     <ClInclude Include="Scripts\Commons\Colliders\SphereCollider.h" />
     <ClInclude Include="Scripts\Commons\Components\ComponentDesc.h" />
     <ClInclude Include="Scripts\Commons\Components\ComponentManager.h" />
-    <ClInclude Include="Scripts\Commons\Components\ComponentsFwd.h" />
     <ClInclude Include="Scripts\Commons\Components\IComponentManager.h" />
     <ClInclude Include="Scripts\Commons\GameObjects\IGameObjectFinder.h" />
     <ClInclude Include="Scripts\Commons\GameObjects\IGameObjectInstantiator.h" />

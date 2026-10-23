@@ -57,8 +57,8 @@ void PlayerModel::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectF
 	// シルエットを生成
 	if (m_refSilhouette == GetOwner()->GetNullReference<Transform>())
 	{
-		GameObject& obj = Instantiate("Prefab_PlayerSilhouette");
-		m_refSilhouette = obj.GetComponent<Transform>();
+		Ref obj = Instantiate("Prefab_PlayerSilhouette");
+		m_refSilhouette = obj->GetComponent<Transform>();
 	}
 }
 
@@ -180,8 +180,8 @@ void PlayerModel::Scaling(float elapsedTime, const Player& player)
 // 映るカメラ画面を追加
 void PlayerModel::AddICameraScreen(Ref<const Renderings::ICameraScreen> iCameraScreen)
 {
-	GetOwner()->GetComponent<Renderings::Model3D>()->AddICameraScreen(iCameraScreen);
-	m_refSilhouette->GetOwner()->GetComponent<Renderings::Model3D>()->AddICameraScreen(iCameraScreen);
+	GetOwner()->GetComponent<Renderings::Model3D>()->AddICameraScreen(iCameraScreen.Get());
+	m_refSilhouette->GetOwner()->GetComponent<Renderings::Model3D>()->AddICameraScreen(iCameraScreen.Get());
 }
 
 // トランスフォームを設定

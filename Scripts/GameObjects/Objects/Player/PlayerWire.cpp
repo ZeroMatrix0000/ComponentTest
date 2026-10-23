@@ -69,9 +69,9 @@ void PlayerWire::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFi
 	// パーティクル管理生成
 	if (m_refParticleManager == GetOwner()->GetNullReference<Renderings::ParticleManager>())
 	{
-		GameObject& obj = Instantiate("Prefab_PlayerWireParticleManager");
-		m_refParticleManager = obj.GetComponent<Renderings::ParticleManager>();
-		m_refParticleManagerTransform = obj.GetComponent<Transform>();
+		Ref obj = Instantiate("Prefab_PlayerWireParticleManager");
+		m_refParticleManager = obj->GetComponent<Renderings::ParticleManager>();
+		m_refParticleManagerTransform = obj->GetComponent<Transform>();
 	}
 }
 
@@ -196,8 +196,8 @@ void PlayerWire::Scaling(float elapsedTime)
 // 映るカメラ画面を追加
 void PlayerWire::AddICameraScreen(Ref<const Renderings::ICameraScreen> iCameraScreen)
 {
-	GetOwner()->GetComponent<Renderings::Model3D>()->AddICameraScreen(iCameraScreen);
-	m_refParticleManager->AddICameraScreen(iCameraScreen);
+	GetOwner()->GetComponent<Renderings::Model3D>()->AddICameraScreen(iCameraScreen.Get());
+	m_refParticleManager->AddICameraScreen(iCameraScreen.Get());
 }
 
 // ターゲットを設定

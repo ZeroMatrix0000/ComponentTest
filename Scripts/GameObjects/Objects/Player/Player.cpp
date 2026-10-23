@@ -1,7 +1,7 @@
 /*
  * FileName:     Player.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/23
  * 
  *
  * プレイヤー
@@ -78,23 +78,23 @@ void Player::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder
 	// モデルの生成
 	if (m_internals.pModel == &GetOwner()->GetNullReference<PlayerModel>().Get())
 	{
-		GameObject& obj = Instantiate("Prefab_PlayerModel");
-		m_internals.pModel = &obj.GetComponent<PlayerModel>().Get();
+		Ref obj = Instantiate("Prefab_PlayerModel");
+		m_internals.pModel = &obj->GetComponent<PlayerModel>().Get();
 		m_internals.pModel->SetParticleManager(m_internals.pParticleManager);
 	}
 
 	// 糸の生成
 	if (m_internals.pWire == &GetOwner()->GetNullReference<PlayerWire>().Get())
 	{
-		GameObject& obj = Instantiate("Prefab_PlayerWire");
-		m_internals.pWire = &obj.GetComponent<PlayerWire>().Get();
+		Ref obj = Instantiate("Prefab_PlayerWire");
+		m_internals.pWire = &obj->GetComponent<PlayerWire>().Get();
 	}
 
 	// カメラを設定
 	if (m_internals.P_CAMERA_SCREEN != &GetOwner()->GetNullReference<Renderings::CameraScreen<Camera::EulerTargetCamera>>().Get())
 	{
 		m_internals.pBoxCollider->AddICameraScreen(Ref{ *m_internals.P_CAMERA_SCREEN }.Cast<const Renderings::ICameraScreen>());
-		m_internals.pParticleManager->AddICameraScreen(Ref{ *m_internals.P_CAMERA_SCREEN }.Cast<const Renderings::ICameraScreen>());
+		m_internals.pParticleManager->AddICameraScreen(*m_internals.P_CAMERA_SCREEN);
 		m_internals.pModel->AddICameraScreen(Ref{ *m_internals.P_CAMERA_SCREEN }.Cast<const Renderings::ICameraScreen>());
 		m_internals.pWire->AddICameraScreen(Ref{ *m_internals.P_CAMERA_SCREEN }.Cast<const Renderings::ICameraScreen>());
 	}
