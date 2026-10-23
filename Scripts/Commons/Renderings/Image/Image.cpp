@@ -10,11 +10,9 @@
 #include "Image.h"
 
 #include "IImageRenderer.h"
-#include "Scripts/Commons/GameObjects/IGameObjectFinder.h"
-#include "Scripts/Commons/GameObjects/GameObject.h"
-#include "Scripts/Commons/Renderings/Canvas.h"
 #include "Scripts/Commons/Systems/IResources.h"
 #include "Scripts/Commons/Systems/JsonSerializer.h"
+#include "Scripts/Commons/Systems/IsDerivedRegister.h"
 
 // コンストラクタ
 Renderings::Image::Image(const ComponentDesc& desc, IImageRenderer* pIImageRenderer, Systems::IResources* pIResources)
@@ -43,6 +41,9 @@ void Renderings::Image::Initalize(const nlohmann::ordered_json& json, Ref<IGameO
 {
 	std::string imageSourceName{};
 	std::string pixelShaderName{};
+
+	Component* a{};
+	Renderings::Canvas* b{};
 
 	Systems::JsonSerializer serializer{ iGameObjectFinder };
 	serializer.AddParameter(&imageSourceName, "ImageSourceName");

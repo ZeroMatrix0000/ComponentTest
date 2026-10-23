@@ -28,7 +28,7 @@ namespace GameObjects
 		/* メンバ関数 */
 
 		// コンストラクタ
-		GameObject(IComponentManager* pIComponentManager);
+		GameObject(Ref<IComponentManager> refIComponentManager);
 
 		// 名前を設定
 		void SetName(const std::string& name) { m_name = name; }
@@ -42,52 +42,52 @@ namespace GameObjects
 		template<typename TComponent> requires IsDerived<TComponent, Component>
 		Ref<TComponent> GetComponent()
 		{
-			auto it = m_pComponents.find(typeid(TComponent));
-			if (it == m_pComponents.end())
+			auto it = m_refComponents.find(typeid(Ref<TComponent>));
+			if (it == m_refComponents.end())
 			{
-				return m_pIComponentManager->GetNullReference<TComponent>(true);
+				return m_refIComponentManager->GetNullReference<TComponent>(true);
 			}
-			return Ref{ *it->second }.Cast<TComponent>();
+			return it->second.ReinterpretCast<TComponent>();
 		}
 		// 変更不可コンポーネントを取得
 		template<typename TComponent> requires IsDerived<TComponent, Component>
 		Ref<const TComponent> GetConstComponent() const
 		{
-			auto it = m_pComponents.find(typeid(TComponent));
-			if (it == m_pComponents.end())
+			auto it = m_refComponents.find(typeid(Ref<TComponent>));
+			if (it == m_refComponents.end())
 			{
-				return m_pIComponentManager->GetNullReference<TComponent>(true).Const();
+				return m_refIComponentManager->GetNullReference<TComponent>(true).Const();
 			}
-			return Ref{ *it->second }.Cast<TComponent>().Const();
+			return it->second.ReinterpretCast<TComponent>().Const();
 		}
 
 		// コンポーネントを追加
 		template<typename TComponent> requires IsDerived<TComponent, Component>
 		Ref<TComponent> AddComponent()
 		{
-			auto it = m_pComponents.find(typeid(TComponent));
-			if (it != m_pComponents.end())
+			auto it = m_refComponents.find(typeid(Ref<TComponent>));
+			if (it != m_refComponents.end())
 			{
-				return Ref{ *it->second }.Cast<TComponent>();
+				return it->second.ReinterpretCast<TComponent>();
 			}
 
 			// コンポーネントを生成
-			auto component = m_pIComponentManager->Create<TComponent>(Ref{ *this });
-			auto pComponent = component.get();
+			auto component = m_refIComponentManager->Create<TComponent>(Ref{ *this });
+			Ref refComponent{ *component.get() };
 
 			// コンポーネントを追加
-			m_components.emplace(pComponent, std::move(component));
+			m_components.emplace(refComponent, std::move(component));
 			// 取得用リストに追加
-			AddPComponent<TComponent>(pComponent);
+			AddRefComponent<TComponent>(refComponent);
 
-			return Ref{ *pComponent }.Cast<TComponent>();
+			return refComponent.ReinterpretCast<TComponent>();
 		}
 
 		// 未参照コンポーネントを取得
 		template<typename TComponent> requires IsDerived<TComponent, Component>
 		Ref<TComponent> GetNullReference()
 		{
-			return m_pIComponentManager->GetNullReference<TComponent>();
+			return m_refIComponentManager->GetNullReference<TComponent>();
 		}
 
 
@@ -98,15 +98,15 @@ namespace GameObjects
 
 		// コンポーネントを取得用リストに追加
 		template<typename TComponent> requires IsDerived<TComponent, Component>
-		void AddPComponent(Component* pComponent)
+		void AddRefComponent(Ref<Component> component)
 		{
-			m_pComponents.emplace(typeid(TComponent), pComponent);
+			m_refComponents.emplace(typeid(Ref<TComponent>), component);
 			// 親コンポーネントが見つかったら
 			if constexpr (requires{ typename TComponent::Base; })
 			{
 				using Base = TComponent::Base;
 
-				AddPComponent<Base>(pComponent);
+				AddRefComponent<Base>(component);
 			}
 		}
 
@@ -117,13 +117,13 @@ namespace GameObjects
 		std::string m_name;
 
 		// コンポーネント
-		std::unordered_map<Component*, std::unique_ptr<Component>> m_components;
+		std::unordered_map<Ref<Component>, std::unique_ptr<Component>> m_components;
 
 		// コンポーネントの取得用
-		std::unordered_map<std::type_index, Component*> m_pComponents;
+		std::unordered_map<std::type_index, Ref<Component>> m_refComponents;
 
 		// コンポーネント管理のポインタ
-		IComponentManager* m_pIComponentManager;
+		Ref<IComponentManager> m_refIComponentManager;
 
 	};
 }

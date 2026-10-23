@@ -1,7 +1,7 @@
 /*
  * FileName:     SelectMenu.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/22
+ * Last Updated: 2026/10/23
  *
  * 選択メニュー
  */
@@ -16,6 +16,7 @@
 #include "Scripts/Commons/Components/RectTransform.h"
 #include "Scripts/Commons/GameObjects/IGameObjectFinder.h"
 #include "Scripts/Commons/Systems/JsonSerializer.h"
+#include "Scripts/Commons/Systems/IsDerivedRegister.h"
 
 // コンストラクタ
 SelectMenu::SelectMenu(const ComponentDesc& desc)

@@ -14,6 +14,7 @@
 #include "Scripts/Commons/Renderings/Image/Image.h"
 #include "Scripts/Commons/Renderings/Text/Text.h"
 #include "Scripts/Commons/Systems/JsonSerializer.h"
+#include "Scripts/Commons/Systems/IsDerivedRegister.h"
 
 // コンストラクタ
 MessageWindow::MessageWindow(const ComponentDesc& desc)

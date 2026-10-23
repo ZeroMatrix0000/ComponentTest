@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerModel.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/22
+ * Last Updated: 2026/10/23
  *
  * プレイヤーのモデル
  */
@@ -11,6 +11,7 @@
 
 #include "Player.h"
 #include "States/PlayerStates.h"
+#include "Scripts/Main/IsDerivedRegister.h"
 #include "Scripts/Commons/Components/Transform.h"
 #include "Scripts/Commons/GameObjects/GameObject.h"
 #include "Scripts/Commons/Renderings/Model3D/Model3D.h"

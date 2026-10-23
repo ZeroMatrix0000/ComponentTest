@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerStateOnGround.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/16
+ * Last Updated: 2026/10/23
  *
  * プレイヤーの地面にいる状態
  */
@@ -11,6 +11,7 @@
 
 #include "../PlayerInternals.h"
 #include "../PlayerWire.h"
+#include "Scripts/Main/IsDerivedRegister.h"
 #include "Scripts/Commons/Components/Transform.h"
 #include "Scripts/Commons/Colliders/BoxCollider.h"
 #include "Scripts/Commons/Renderings/Particle/ParticleManager.h"

@@ -36,7 +36,7 @@ namespace Components
 		template<typename TComponent> requires IsDerived<TComponent, Component>
 		void RegisterCreate(const std::function<std::unique_ptr<Component>(const ComponentDesc&)>& CreateComponent)
 		{
-			m_CreateComponentList.emplace(typeid(TComponent), CreateComponent);
+			m_CreateComponentList.emplace(typeid(TComponent*), CreateComponent);
 		}
 
 

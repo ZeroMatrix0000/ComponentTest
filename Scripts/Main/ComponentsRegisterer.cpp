@@ -25,6 +25,7 @@
 #include "../Scenes/Scenes.h"
 #include "../Scenes/GamePlayScene/Actions/Actions.h"
 #include "../Scenes/GamePlayScene/Actions/ActionManager.h"
+#include "IsDerivedRegister.h"
 #include "../Commons/Components/Transform.h"
 #include "../Commons/Components/RectTransform.h"
 #include "../Commons/Components/ComponentManager.h"
@@ -48,7 +49,6 @@ componentManager->RegisterCreate<T>([](const ComponentDesc& desc) { return std::
 gameObjectManager->Register<T>(U)
 #define REGISTER_GAMEOBJECT_MANAGER_ONLY(T, U) \
 gameObjectManager->Register<T>(U)
-
 
 // コンポーネント登録
 void ComponentsRegisterer::RegisterComponents

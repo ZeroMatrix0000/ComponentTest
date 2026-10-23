@@ -1,7 +1,7 @@
 /*
  * FileName:     ActionOpenMessageWindow.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/23
  *
  * メッセージウィンドウ開アクション
  */
@@ -9,6 +9,7 @@
 #include "Pch.h"
 #include "ActionOpenMessageWindow.h"
 
+#include "Scripts/Main/IsDerivedRegister.h"
 #include "Scripts/GameObjects/UIs/MessageWindow/MessageWindow.h"
 #include "Scripts/Commons/Systems/JsonSerializer.h"
 

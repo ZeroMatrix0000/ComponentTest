@@ -11,6 +11,7 @@
 
 #include "../GamePlaySceneInternals.h"
 #include "GamePlaySceneStates.h"
+#include "Scripts/Main/IsDerivedRegister.h"
 #include "Scripts/GameObjects/Objects/Player/Player.h"
 #include "Scripts/GameObjects/Objects/Player/PlayerCamera.h"
 #include "Scripts/GameObjects/Objects/Player/States/PlayerStates.h"

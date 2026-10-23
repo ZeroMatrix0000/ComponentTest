@@ -1,7 +1,7 @@
 /*
  * FileName:     SphereCollider.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/22
+ * Last Updated: 2026/10/23
  *
  * 球の当たり判定
  */
@@ -15,6 +15,7 @@
 #include "../Renderings/ColliderRenderer.h"
 #include "../Renderings/ICameraScreen.h"
 #include "../Systems/JsonSerializer.h"
+#include "../Systems/IsDerivedRegister.h"
 
 // コンストラクタ
 Colliders::SphereCollider::SphereCollider(const ComponentDesc& desc, Renderings::IColliderRenderer* pIColliderRenderer)

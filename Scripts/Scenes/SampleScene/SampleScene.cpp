@@ -1,7 +1,7 @@
 /*
  * FileName:     SampleScene.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/22
+ * Last Updated: 2026/10/23
  *
  * サンプルシーン
  */
@@ -9,6 +9,8 @@
 #include "Pch.h"
 #include "SampleScene.h"
 
+#include "Scripts/Main/GameContext.h"
+#include "Scripts/Main/IsDerivedRegister.h"
 #include "Scripts/Commons/Systems/IWindowController.h"
 #include "Scripts/Commons/Systems/IInput.h"
 #include "Scripts/Commons/Scenes/ISceneManager.h"
@@ -22,7 +24,6 @@
 #include "Scripts/Commons/Colliders/SphereCollider.h"
 #include "Scripts/Commons/Colliders/MeshCollider.h"
 #include "Scripts/GameObjects/Objects/DebugCamera/DebugCamera.h"
-#include "Scripts/Main/GameContext.h"
 
 // コンストラクタ
 SampleScene::SampleScene(const ComponentDesc& desc)
@@ -48,7 +49,7 @@ void SampleScene::Initialize(const SceneTransitionData& data)
 	// ゲームオブジェクト管理
 	auto* pIGameObjectManager = gameContext->GetPIGameObjectManager();
 
-	pIGameObjectManager->SetPGameObjects(&GetGameObjects().Get());
+	pIGameObjectManager->SetGameObjectsRef(GetGameObjects());
 	pIGameObjectManager->Load("Scene_Sample");
 
 	// デバッグカメラを取得

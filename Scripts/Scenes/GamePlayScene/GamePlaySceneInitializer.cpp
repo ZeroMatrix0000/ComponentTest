@@ -10,6 +10,7 @@
 #include "GamePlaySceneInitializer.h"
 
 #include "GamePlaySceneInternals.h"
+#include "Scripts/Main/IsDerivedRegister.h"
 #include "Scripts/GameObjects/Objects/Player/Player.h"
 #include "Scripts/GameObjects/Objects/Player/PlayerCamera.h"
 #include "Scripts/GameObjects/Objects/NPC/NPCManager.h"
@@ -41,7 +42,7 @@ void GamePlaySceneInitializer::operator()(GamePlaySceneInternals* pInternals) co
 	// ゲームオブジェクト管理
 	auto* pIGameObjectManager = pInternals->refGameContext->GetPIGameObjectManager();
 
-	pIGameObjectManager->SetPGameObjects(&pInternals->refGameObjects.Get());
+	pIGameObjectManager->SetGameObjectsRef(pInternals->refGameObjects);
 	pIGameObjectManager->Load("Scene_GamePlay");
 
 	// プレイヤーを取得
@@ -74,7 +75,6 @@ void GamePlaySceneInitializer::operator()(GamePlaySceneInternals* pInternals) co
 
 	// はなすを取得
 	pInternals->pZ2Talk = &pIGameObjectManager->Find("Z2Talk")->GetComponent<Z2Talk>().Get();
-
 	// 上下の黒帯取得
 	pInternals->pBlackBelt = &pIGameObjectManager->Find("BlackBelt")->GetComponent<BlackBelt>().Get();
 	pInternals->pBlackBelt->SetWidth(pInternals->pCanvas->GetSize().x);

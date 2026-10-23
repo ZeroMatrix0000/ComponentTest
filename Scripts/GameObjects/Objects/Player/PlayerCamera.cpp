@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerCamera.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/23
  *
  * プレイヤーカメラ
  */
@@ -10,6 +10,7 @@
 #include "PlayerCamera.h"
 
 #include "Scripts/Commons/GameObjects/GameObject.h"
+#include "Scripts/Commons/Systems/IsDerivedRegister.h"
 
 // コンストラクタ
 PlayerCamera::PlayerCamera(const ComponentDesc& desc)

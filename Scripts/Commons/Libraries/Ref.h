@@ -1,7 +1,7 @@
 /*
  * FileName:     Ref.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/22
+ * Last Updated: 2026/10/23
  *
  * 自作参照型（参照先変更可能・nullptr禁止）
  */
@@ -36,6 +36,10 @@ namespace Libraries
 		template<typename U>
 		Ref<U> Cast() const { return Ref<U>{ *static_cast<U*>(m_ptr) }; }
 
+		// 強制キャスト
+		template<typename U>
+		Ref<U> ReinterpretCast() const { return Ref<U>{ *reinterpret_cast<U*>(m_ptr) }; }
+
 		
 		/* 演算子オーバーロード */
 
@@ -62,4 +66,19 @@ namespace Libraries
 
 	template<typename T>
 	bool operator==(const Ref<T>& a, const Ref<T>& b) { return &a.Get() == &b.Get(); }
+
+	// ハッシュ関数
+	
+}
+
+namespace std
+{
+	template<typename T>
+	struct hash<Libraries::Ref<T>>
+	{
+		size_t operator()(const Libraries::Ref<T>& ref) const
+		{
+			return hash<T*>()(&ref.Get());
+		}
+	};
 }

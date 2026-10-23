@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerWire.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/22
+ * Last Updated: 2026/10/23
  *
  * プレイヤーの糸
  */
@@ -12,6 +12,7 @@
 #include "Scripts/GameObjects/Particles/PoppingParticle.h"
 #include "Scripts/GameObjects/Particles/SparklingParticle.h"
 #include "Scripts/GameObjects/Particles/WindCutParticle.h"
+#include "Scripts/Main/IsDerivedRegister.h"
 #include "Scripts/Commons/Components/Transform.h"
 #include "Scripts/Commons/GameObjects/GameObject.h"
 #include "Scripts/Commons/Renderings/Model3D/Model3D.h"

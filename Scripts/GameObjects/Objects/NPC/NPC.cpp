@@ -1,7 +1,7 @@
 /*
  * FileName:     NPC.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/23
  *
  * NPC
  */
@@ -16,6 +16,7 @@
 #include "Scripts/Commons/Colliders/SphereCollider.h"
 #include "Scripts/Commons/Renderings/Text/Text.h"
 #include "Scripts/Commons/Systems/JsonSerializer.h"
+#include "Scripts/Commons/Systems/IsDerivedRegister.h"
 
 // コンストラクタ
 NPC::NPC(const ComponentDesc& desc)

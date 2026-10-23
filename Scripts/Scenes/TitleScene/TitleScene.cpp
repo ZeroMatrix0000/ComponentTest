@@ -1,7 +1,7 @@
 /*
  * FileName:     TitleScene.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/22
+ * Last Updated: 2026/10/23
  *
  * タイトルシーン
  */
@@ -10,6 +10,9 @@
 #include "TitleScene.h"
 
 #include "../Scenes.h"
+#include "Scripts/GameObjects/UIs/SelectMenu/SelectMenu.h"
+#include "Scripts/Main/GameContext.h"
+#include "Scripts/Main/IsDerivedRegister.h"
 #include "Scripts/Commons/Systems/IWindowController.h"
 #include "Scripts/Commons/Systems/IInput.h"
 #include "Scripts/Commons/Scenes/ISceneManager.h"
@@ -24,8 +27,6 @@
 #include "Scripts/Commons/GameObjects/GameObject.h"
 #include "Scripts/Commons/GameObjects/IGameObjectManager.h"
 #include "Scripts/Commons/Colliders/MeshCollider.h"
-#include "Scripts/Main/GameContext.h"
-#include "Scripts/GameObjects/UIs/SelectMenu/SelectMenu.h"
 
 // コンストラクタ
 TitleScene::TitleScene(const ComponentDesc& desc)
@@ -52,7 +53,7 @@ void TitleScene::Initialize(const SceneTransitionData& data)
 	// ゲームオブジェクト管理
 	auto* pIGameObjectManager = gameContext->GetPIGameObjectManager();
 
-	pIGameObjectManager->SetPGameObjects(&GetGameObjects().Get());
+	pIGameObjectManager->SetGameObjectsRef(GetGameObjects());
 	pIGameObjectManager->Load("Scene_Title");
 
 	// カメラ画面を取得

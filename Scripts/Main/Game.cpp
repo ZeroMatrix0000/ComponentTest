@@ -1,7 +1,7 @@
 /*
  * FileName:     Game.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/13
+ * Last Updated: 2026/10/23
  *
  * ゲーム
  */
@@ -11,6 +11,7 @@
 
 #include "ResourcesInitializer.h"
 #include "ComponentsRegisterer.h"
+#include "IsDerivedRegister.h"
 #include "Scripts/Scenes/Scenes.h"
 
 // コンストラクタ
@@ -27,7 +28,7 @@ Game::Game()
 	, m_input{}
 	, m_errorMessage{}
 	, m_componentManager{ Ref<IGameObjectInstantiator>{ m_gameObjectManager } }
-	, m_gameObjectManager{ &m_resources }
+	, m_gameObjectManager{ Ref<IComponentManager>{ m_componentManager }, Ref<Systems::IResources>{ m_resources } }
 	, m_sceneManager{ Ref{ m_context }.Const() }
 	, m_gameInput{ m_input }
 	, m_context{}
@@ -90,9 +91,6 @@ void Game::Initialize(const HWND& hWindow)
 	m_windowController.Initialize(hWindow);
 	// 入力の初期化
 	m_input.Initialize(hWindow);
-
-	// ゲームオブジェクト管理の初期化
-	m_gameObjectManager.Initialize(&m_componentManager);
 
 	// コンポーネントの登録
 	ComponentsRegisterer::RegisterComponents

@@ -1,7 +1,7 @@
 /*
  * FileName:     ErrorMessage.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/22
+ * Last Updated: 2026/10/23
  *
  * エラーメッセージ
  */
@@ -14,6 +14,7 @@
 #include "../Renderings/Text/Text.h"
 #include "../Renderings/Canvas.h"
 #include "../GameObjects/IGameObjectInstantiator.h"
+#include "../Systems/IsDerivedRegister.h"
 
 // コンストラクタ
 Systems::ErrorMessage::ErrorMessage()

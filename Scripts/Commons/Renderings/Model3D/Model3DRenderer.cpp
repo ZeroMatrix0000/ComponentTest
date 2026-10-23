@@ -1,7 +1,7 @@
 /*
  * FileName:     Model3DRenderer.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/23
  *
  * 3Dモデル描画
  */
@@ -18,6 +18,7 @@
 #include "Scripts/Commons/GameObjects/GameObject.h"
 #include "Scripts/Commons/Components/Transform.h"
 #include "Scripts/Commons/Systems/IResources.h"
+#include "Scripts/Commons/Systems/IsDerivedRegister.h"
 
  // コンストラクタ
 Renderings::Model3DRenderer::Model3DRenderer()

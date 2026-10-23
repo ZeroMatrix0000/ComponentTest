@@ -1,7 +1,7 @@
 /*
  * FileName:     GamePlayScene.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/12
+ * Last Updated: 2026/10/23
  *
  * ゲームプレイシーン
  */
@@ -12,6 +12,7 @@
 #include "GamePlaySceneInternals.h"
 #include "States/GamePlaySceneStateField.h"
 #include "Scripts/Main/GameContext.h"
+#include "Scripts/Main/IsDerivedRegister.h"
 #include "Scripts/GameObjects/Objects/Player/Player.h"
 #include "Scripts/GameObjects/Objects/Player/PlayerCamera.h"
 #include "Scripts/GameObjects/Objects/NPC/NPCManager.h"

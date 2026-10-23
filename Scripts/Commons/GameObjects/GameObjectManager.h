@@ -1,7 +1,7 @@
 /*
  * FileName:     GameObjectManager.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/22
+ * Last Updated: 2026/10/23
  *
  * ゲームオブジェクト管理
  */
@@ -28,13 +28,10 @@ namespace GameObjects
 		/* メンバ関数 */
 
 		// コンストラクタ
-		GameObjectManager(Systems::IResources* pIResources);
+		GameObjectManager(Ref<IComponentManager> iComponentManager, Ref<Systems::IResources> iResources);
 
-		// 初期化処理
-		void Initialize(IComponentManager* pIComponentManager);
-
-		// 管理するゲームオブジェクトのポインタを設定
-		void SetPGameObjects(std::vector<std::unique_ptr<GameObject>>* pGameObjects) override;
+		// 管理するゲームオブジェクトの参照を設定
+		void SetGameObjectsRef(Ref<std::vector<std::unique_ptr<GameObject>>> gameObjects) override;
 
 		// ゲームオブジェクトを読み込む
 		void Load(const std::string& jsonName) override;
@@ -82,17 +79,17 @@ namespace GameObjects
 		// 未参照ゲームオブジェクト
 		std::unique_ptr<GameObject> m_nullReference;
 
-		// 管理するゲームオブジェクトリストのポインタ
-		std::vector<std::unique_ptr<GameObject>>* m_pGameObjects;
-
 		// シーンをまたいでも消えないゲームオブジェクトリスト
 		std::vector<std::unique_ptr<GameObject>> m_dontDestroyOnLoadGameObjects;
 
-		// コンポーネント管理のポインタ
-		IComponentManager* m_pIComponentManager;
+		// 管理するゲームオブジェクトリストの参照
+		Ref<std::vector<std::unique_ptr<GameObject>>> m_refGameObjects;
 
-		// リソースのインタフェースのポインタ
-		Systems::IResources* m_pIResources;
+		// コンポーネント管理の参照
+		Ref<IComponentManager> m_refIComponentManager;
+
+		// リソースのインタフェースの参照
+		Ref<Systems::IResources> m_refIResources;
 
 	};
 }

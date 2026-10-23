@@ -1,7 +1,7 @@
 /*
  * FileName:     TextRenderer.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/23
  *
  * テキスト描画
  */
@@ -16,6 +16,7 @@
 #include "Scripts/Commons/GameObjects/GameObject.h"
 #include "Scripts/Commons/Components/RectTransform.h"
 #include "Scripts/Commons/Systems/IErrorMessage.h"
+#include "Scripts/Commons/Systems/IsDerivedRegister.h"
 
 // コンストラクタ
 Renderings::TextRenderer::TextRenderer()

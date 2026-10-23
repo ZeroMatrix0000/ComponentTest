@@ -1,7 +1,7 @@
 /*
  * FileName:     BoxCollider.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/22
+ * Last Updated: 2026/10/23
  *
  * 長方形の当たり判定
  */
@@ -15,6 +15,7 @@
 #include "../Renderings/ColliderRenderer.h"
 #include "../Renderings/ICameraScreen.h"
 #include "../Systems/JsonSerializer.h"
+#include "../Systems/IsDerivedRegister.h"
 
 // コンストラクタ
 Colliders::BoxCollider::BoxCollider(const ComponentDesc& desc, Ref<Renderings::IColliderRenderer> iColliderRenderer)

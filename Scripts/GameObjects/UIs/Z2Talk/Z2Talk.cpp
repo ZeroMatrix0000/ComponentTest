@@ -16,6 +16,7 @@
 #include "Scripts/Commons/Renderings/Canvas.h"
 #include "Scripts/Commons/Renderings/Text/Text.h"
 #include "Scripts/Commons/Systems/JsonSerializer.h"
+#include "Scripts/Commons/Systems/IsDerivedRegister.h"
 
 // コンストラクタ
 Z2Talk::Z2Talk(const ComponentDesc& desc)

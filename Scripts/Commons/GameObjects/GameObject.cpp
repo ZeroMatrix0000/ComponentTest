@@ -1,7 +1,7 @@
 /*
  * FileName:     GameObject.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/14
+ * Last Updated: 2026/10/23
  *
  * ゲームオブジェクト
  */
@@ -12,11 +12,11 @@
 #include "../Components/Component.h"
 
 // コンストラクタ
-GameObjects::GameObject::GameObject(IComponentManager* pIComponentManager)
+GameObjects::GameObject::GameObject(Ref<IComponentManager> refIComponentManager)
 	: m_name{}
 	, m_components{}
-	, m_pComponents{}
-	, m_pIComponentManager{ pIComponentManager }
+	, m_refComponents{}
+	, m_refIComponentManager{ refIComponentManager }
 {
 }
 

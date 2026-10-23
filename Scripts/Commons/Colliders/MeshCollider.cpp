@@ -1,7 +1,7 @@
 /*
  * FileName:     MeshCollider.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/22
+ * Last Updated: 2026/10/23
  *
  * メッシュの当たり判定
  */
@@ -16,6 +16,7 @@
 #include "../Renderings/ICameraScreen.h"
 #include "../Systems/IResources.h"
 #include "../Systems/JsonSerializer.h"
+#include "../Systems/IsDerivedRegister.h"
 
 // コンストラクタ
 Colliders::MeshCollider::MeshCollider(const ComponentDesc& desc, Renderings::IColliderRenderer* pIColliderRenderer, Systems::IResources* pIResources)

@@ -1,7 +1,7 @@
 /*
  * FileName:     NPCManager.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/22
+ * Last Updated: 2026/10/23
  *
  * NPC管理
  */
@@ -12,6 +12,7 @@
 #include "NPC.h"
 #include "../Player/Player.h"
 #include "../Player/States/PlayerStates.h"
+#include "Scripts/Main/IsDerivedRegister.h"
 #include "Scripts/Commons/Components/RectTransform.h"
 #include "Scripts/Commons/Renderings/ICameraScreen.h"
 #include "Scripts/Commons/Renderings/Canvas.h"

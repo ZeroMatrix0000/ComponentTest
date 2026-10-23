@@ -275,6 +275,7 @@
     <ClInclude Include="Scripts\Commons\Colliders\SphereCollider.h" />
     <ClInclude Include="Scripts\Commons\Components\ComponentDesc.h" />
     <ClInclude Include="Scripts\Commons\Components\ComponentManager.h" />
+    <ClInclude Include="Scripts\Commons\Components\ComponentsFwd.h" />
     <ClInclude Include="Scripts\Commons\Components\IComponentManager.h" />
     <ClInclude Include="Scripts\Commons\GameObjects\IGameObjectFinder.h" />
     <ClInclude Include="Scripts\Commons\GameObjects\IGameObjectInstantiator.h" />
@@ -318,6 +319,7 @@
     <ClInclude Include="Scripts\Commons\Systems\IInput.h" />
     <ClInclude Include="Scripts\Commons\Systems\Input.h" />
     <ClInclude Include="Scripts\Commons\Systems\IResources.h" />
+    <ClInclude Include="Scripts\Commons\Systems\IsDerivedRegister.h" />
     <ClInclude Include="Scripts\Commons\Systems\ITimer.h" />
     <ClInclude Include="Scripts\Commons\Systems\IWindowController.h" />
     <ClInclude Include="Scripts\Commons\Systems\JsonSerializer.h" />
@@ -352,6 +354,7 @@
     <ClInclude Include="Scripts\Main\ComponentsRegisterer.h" />
     <ClInclude Include="Scripts\Main\GameInput.h" />
     <ClInclude Include="Scripts\Main\IGameInput.h" />
+    <ClInclude Include="Scripts\Main\IsDerivedRegister.h" />
     <ClInclude Include="Scripts\Main\ResourcesInitializer.h" />
     <ClInclude Include="Scripts\Scenes\GamePlayScene\Actions\Action.h" />
     <ClInclude Include="Scripts\Scenes\GamePlayScene\Actions\ActionCloseMessageWindow.h" />

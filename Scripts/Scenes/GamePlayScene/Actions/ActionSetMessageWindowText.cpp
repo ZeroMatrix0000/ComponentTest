@@ -1,7 +1,7 @@
 /*
  * FileName:     ActionSetMessageWindowText.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/09/21
+ * Last Updated: 2026/10/23
  *
  * メッセージウィンドウ開アクション
  */
@@ -9,6 +9,7 @@
 #include "Pch.h"
 #include "ActionSetMessageWindowText.h"
 
+#include "Scripts/Main/IsDerivedRegister.h"
 #include "Scripts/Main/IGameInput.h"
 #include "Scripts/GameObjects/UIs/MessageWindow/MessageWindow.h"
 #include "Scripts/Commons/Systems/JsonSerializer.h"

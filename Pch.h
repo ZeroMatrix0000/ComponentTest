@@ -33,6 +33,10 @@
 
 // コンセプト
 #include <concepts>
+// 型特性
+#include <type_traits>
+// 関数オブジェクト
+#include <functional>
 // アルゴリズム
 #include <algorithm>
 // ファイルシステム
@@ -84,9 +88,13 @@
 
 #include "Audio.h"
 
+// TがUを継承しているかどうかの登録用
+template<typename T, typename U>
+struct IsDerivedTrait : std::false_type {};
+
 // TがUを継承しているかどうか
 template<typename T, typename U>
-concept IsDerived = std::derived_from<T, U> && !std::same_as<T, U>;
+concept IsDerived = IsDerivedTrait<T, U>::value;
 
 // TがArgsのどれかと型が一致しているか
 template<typename T, typename... Args>

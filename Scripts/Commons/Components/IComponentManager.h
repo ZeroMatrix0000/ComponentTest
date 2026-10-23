@@ -34,14 +34,14 @@ namespace Components
 		template<typename TComponent> requires IsDerived<TComponent, Component>
 		std::unique_ptr<Component> Create(Ref<GameObject> owner)
 		{
-			return Create(typeid(TComponent), owner);
+			return Create(typeid(TComponent*), owner);
 		};
 
 		// 未参照コンポーネントを取得
 		template<typename TComponent> requires IsDerived<TComponent, Component>
 		Ref<TComponent> GetNullReference(bool addErrorMessage = false)
 		{
-			return GetNullReference(typeid(TComponent), addErrorMessage).Cast<TComponent>();
+			return GetNullReference(typeid(TComponent*), addErrorMessage).ReinterpretCast<TComponent>();
 		};
 
 

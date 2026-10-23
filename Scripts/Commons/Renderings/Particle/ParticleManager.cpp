@@ -1,7 +1,7 @@
 /*
  * FileName:     ParticleManager.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/23
  *
  * パーティクル管理
  */
@@ -16,6 +16,7 @@
 #include "Scripts/Commons/Renderings/CameraScreen.h"
 #include "Scripts/Commons/Systems/IResources.h"
 #include "Scripts/Commons/Systems/JsonSerializer.h"
+#include "Scripts/Commons/Systems/IsDerivedRegister.h"
 
 Renderings::ParticleManager::ParticleManager(const ComponentDesc& desc, IModel3DRenderer* pIModelRenderer, Systems::IResources* pIResources)
 	: Component{ desc }

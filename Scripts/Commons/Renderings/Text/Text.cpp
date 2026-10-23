@@ -14,6 +14,7 @@
 #include "Scripts/Commons/GameObjects/IGameObjectFinder.h"
 #include "Scripts/Commons/Renderings/Canvas.h"
 #include "Scripts/Commons/Systems/JsonSerializer.h"
+#include "Scripts/Commons/Systems/IsDerivedRegister.h"
 
 // コンストラクタ
 Renderings::Text::Text(const ComponentDesc& desc, ITextRenderer* pITextRenderer)

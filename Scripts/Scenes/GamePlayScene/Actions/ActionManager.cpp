@@ -1,7 +1,7 @@
 /*
  * FileName:     ActionManager.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/22
+ * Last Updated: 2026/10/23
  *
  * アクション管理
  */
@@ -10,6 +10,7 @@
 #include "ActionManager.h"
 
 #include "Actions.h"
+#include "Scripts/Main/IsDerivedRegister.h"
 #include "Scripts/Commons/GameObjects/GameObject.h"
 #include "Scripts/Commons/Systems/IResources.h"
 

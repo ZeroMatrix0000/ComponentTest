@@ -1,7 +1,7 @@
 /*
  * FileName:     DebugCamera.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/23
  *
  * デバッグ用カメラ
  */
@@ -11,6 +11,7 @@
 
 #include "State/DebugCameraStateIdle.h"
 #include "Scripts/Commons/GameObjects/GameObject.h"
+#include "Scripts/Commons/Systems/IsDerivedRegister.h"
 
 // コンストラクタ
 DebugCamera::DebugCamera(const ComponentDesc& desc)

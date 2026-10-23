@@ -18,6 +18,7 @@
 #include "Scripts/Commons/Renderings/Image/Image.h"
 #include "Scripts/Commons/Renderings/Canvas.h"
 #include "Scripts/Commons/Systems/JsonSerializer.h"
+#include "Scripts/Commons/Systems/IsDerivedRegister.h"
 
 // コンストラクタ
 TargetPoint::TargetPoint(const ComponentDesc& desc)

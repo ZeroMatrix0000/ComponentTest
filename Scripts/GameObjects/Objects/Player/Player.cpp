@@ -13,6 +13,7 @@
 #include "PlayerModel.h"
 #include "PlayerWire.h"
 #include "States/PlayerStates.h"
+#include "Scripts/Main/IsDerivedRegister.h"
 #include "Scripts/Commons/GameObjects/GameObject.h"
 #include "Scripts/Commons/GameObjects/IGameObjectFinder.h"
 #include "Scripts/Commons/Renderings/Model3D/Model3D.h"

@@ -1,7 +1,7 @@
 /*
  * FileName:     PlayerStateStick.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/19
+ * Last Updated: 2026/10/23
  *
  * プレイヤーの張り付き状態
  */
@@ -12,6 +12,7 @@
 #include "PlayerStates.h"
 #include "../PlayerWire.h"
 #include "../PlayerInternals.h"
+#include "Scripts/Main/IsDerivedRegister.h"
 #include "Scripts/GameObjects/Particles/LandingParticle.h"
 #include "Scripts/GameObjects/Particles/JumpingParticle.h"
 #include "Scripts/Commons/Components/Transform.h"

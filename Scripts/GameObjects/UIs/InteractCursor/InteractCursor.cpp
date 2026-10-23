@@ -1,7 +1,7 @@
 /*
  * FileName:     InteractCursor.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/23
  *
  * 話しかける・調べる際のカーソル
  */
@@ -15,6 +15,7 @@
 #include "Scripts/Commons/Renderings/Text/Text.h"
 #include "Scripts/Commons/Renderings/Image/Image.h"
 #include "Scripts/Commons/Systems/JsonSerializer.h"
+#include "Scripts/Commons/Systems/IsDerivedRegister.h"
 
 // コンストラクタ
 InteractCursor::InteractCursor(const ComponentDesc& desc)
