@@ -1,7 +1,7 @@
 /*
  * FileName:     ActionManager.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/23
+ * Last Updated: 2026/10/24
  *
  * アクション管理
  */
@@ -54,7 +54,7 @@ void ActionManager::Update(float elapsedTime, const IGameInput& iGameInput)
 // イベントを設定
 void ActionManager::LoadEvent(const std::string& eventName)
 {
-	m_pEvent = m_pIResources->GetJson(eventName);
+	m_pEvent = &m_pIResources->GetJson(eventName).Get();
 
 	m_eventCount = m_pEvent->size();
 	m_eventIndex = 0;

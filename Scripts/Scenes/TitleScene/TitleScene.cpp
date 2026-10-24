@@ -1,7 +1,7 @@
 /*
  * FileName:     TitleScene.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/23
+ * Last Updated: 2026/10/24
  *
  * タイトルシーン
  */
@@ -78,7 +78,7 @@ void TitleScene::Initialize(const SceneTransitionData& data)
 	Ref<GameObject> title = pIGameObjectManager->Find("Title");
 	m_pTitle = &title->GetComponent<RectTransform>().Get();
 	m_pTitleImage = &title->GetComponent<Renderings::Image>().Get();
-	m_pTitleImage->GetPPixelShader()->GetConstantBuffer()->SetVariable("TextureSize", m_pTitleImage->GetSize());
+	m_pTitleImage->GetPixelShaderRef()->GetConstantBuffer()->SetVariable("TextureSize", m_pTitleImage->GetSize());
 	m_titlePosition = m_pTitle->GetRect().position;
 	m_titleSway.Initialize(0.0f, 0.0f, 360.0f);
 }
@@ -115,7 +115,7 @@ void TitleScene::Update(float elapsedTime)
 	// タイトルの更新
 	m_titleSway += 90.0f * elapsedTime;
 	m_pTitle->SetPosition(m_titlePosition + Math::Vector2::UnitY * Math::Sin(Math::Deg2Rad(m_titleSway)) * 50.0f);
-	auto* buffer = m_pTitleImage->GetPPixelShader()->GetConstantBuffer();
+	auto* buffer = m_pTitleImage->GetPixelShaderRef()->GetConstantBuffer();
 	buffer->SetVariable("Time", buffer->GetVariable<float>("Time") + elapsedTime);
 	//buffer->SetVariable("timer", buffer->GetVariable<float>("time") + elapsedTime);
 

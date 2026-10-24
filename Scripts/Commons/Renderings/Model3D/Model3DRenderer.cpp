@@ -270,7 +270,7 @@ void Renderings::Model3DRenderer::AddPModel(const ICameraScreen* pICameraScreen,
 	auto modelIt = cameraIt->second.find(&modelSource.Get());
 	if (modelIt == cameraIt->second.end())
 	{
-		cameraIt->second.emplace(modelSource, RenderObjects{});
+		cameraIt->second.emplace(&modelSource.Get(), RenderObjects{});
 		modelIt = cameraIt->second.find(&modelSource.Get());
 	}
 
@@ -340,7 +340,7 @@ void Renderings::Model3DRenderer::AddPParticle(const ICameraScreen* pICameraScre
 	auto modelIt = cameraIt->second.find(&modelSource.Get());
 	if (modelIt == cameraIt->second.end())
 	{
-		cameraIt->second.emplace(modelSource, RenderObjects{});
+		cameraIt->second.emplace(&modelSource.Get(), RenderObjects{});
 		modelIt = cameraIt->second.find(&modelSource.Get());
 	}
 
