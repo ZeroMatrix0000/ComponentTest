@@ -23,15 +23,15 @@ Z2Talk::Z2Talk(const ComponentDesc& desc)
 	: Component{ desc }
 	, m_alpha{}
 	, m_alphaVelocity{}
-	, m_refRectTransform{ GetOwner()->GetNullReference<RectTransform>() }
-	, m_refText{ GetOwner()->GetNullReference<Renderings::Text>() }
+	, m_refRectTransform{ GetOwner()->GetNullComponent<RectTransform>() }
+	, m_refText{ GetOwner()->GetNullComponent<Renderings::Text>() }
 {
 }
 
 // 初期化処理
-void Z2Talk::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
+void Z2Talk::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinderRef)
 {
-	Systems::JsonSerializer serializer{ iGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinderRef };
 	serializer.AddParameter(&m_alphaVelocity, "AlphaVelocity");
 	serializer.Load(json);
 

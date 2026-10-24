@@ -1,7 +1,7 @@
 /*
  * FileName:     ImageRenderer.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/23
+ * Last Updated: 2026/10/24
  *
  * 画像描画
  */
@@ -16,13 +16,14 @@
 #include "Scripts/Commons/Systems/IResources.h"
 #include "Scripts/Commons/GameObjects/GameObject.h"
 #include "Scripts/Commons/Components/RectTransform.h"
+#include "Scripts/Commons/Systems/IErrorMessage.h"
 #include "Scripts/Commons/Systems/IsDerivedRegister.h"
 
 // コンストラクタ
 Renderings::ImageRenderer::ImageRenderer()
 	: IImageRenderer{}
 	, m_spriteBatch{}
-	, m_pImages{}
+	, m_imageRefs{}
 	, m_pDevice{}
 	, m_pContext{}
 	, m_pCommonStates{}
@@ -30,12 +31,17 @@ Renderings::ImageRenderer::ImageRenderer()
 }
 
 // 初期化処理
-void Renderings::ImageRenderer::Initialize(ID3D11Device5* pDevice, ID3D11DeviceContext4* pContext, const DirectX::CommonStates& commonStates)
+void Renderings::ImageRenderer::Initialize
+(
+	Ref<ID3D11Device5> deviceRef,
+	Ref<ID3D11DeviceContext4> contextRef,
+	Ref<const DirectX::CommonStates> commonStatesRef
+)
 {
-	m_pDevice = pDevice;
-	m_pContext = pContext;
-	m_pCommonStates = &commonStates;
-	m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(pContext);
+	m_pDevice = &deviceRef.Get();
+	m_pContext = &contextRef.Get();
+	m_pCommonStates = &commonStatesRef.Get();
+	m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(m_pContext);
 }
 
 // 描画開始
@@ -50,22 +56,51 @@ void Renderings::ImageRenderer::Begin()
 }
 
 // 描画処理
-void Renderings::ImageRenderer::Draw(const Image* pImage)
+void Renderings::ImageRenderer::Draw(Ref<const Image> imageRef)
 {
-	// 画像ソース
-	Ref<const ImageSource> imageSource = pImage->GetImageSourceRef();
-	if (!imageSource->IsInitialized())
+	// 所有者
+	Ref owner = imageRef->GetConstOwner();
+	if (owner == imageRef->GetNullGameObject().Const())
 	{
 		return;
 	}
 
+	// 画像ソース
+	Ref<const ImageSource> imageSource = imageRef->GetImageSource();
+	if (!imageSource->IsInitialized())
+	{
+		// エラーメッセージを追加
+		Systems::IErrorMessage::GetInstance()->AddMessage(Utility::FormatWString
+		(
+			L"ImageSource が設定されていません。 | %s",
+			Utility::string2wstring(imageRef->GetConstOwner()->GetName()).c_str()
+		));
+		return;
+	}
+
 	// 画像の所有者の2Dトランスフォーム
-	Ref rectTransform{ pImage->GetConstOwner()->GetConstComponent<RectTransform>() };
+	Ref rectTransform{ imageRef->GetConstOwner()->GetConstComponent<RectTransform>() };
+	if (rectTransform == imageRef->GetConstOwner()->GetNullComponent<RectTransform>().Const())
+	{
+		// エラーメッセージを追加
+		Systems::IErrorMessage::GetInstance()->AddMessage(Utility::FormatWString
+		(
+			L"RectTransform コンポーネントが見つかりません。 | %s",
+			Utility::string2wstring(imageRef->GetConstOwner()->GetName()).c_str()
+		));
+		return;
+	}
 
 	// 画像が映るキャンバス
-	const Canvas* pCanvas = pImage->GetPCanvas();
-	if (!pCanvas)
+	Ref canvasRef = imageRef->GetCanvasRef();
+	if (canvasRef == imageRef->GetConstOwner()->GetNullComponent<Renderings::Canvas>().Const())
 	{
+		// エラーメッセージを追加
+		Systems::IErrorMessage::GetInstance()->AddMessage(Utility::FormatWString
+		(
+			L"Canvas が設定されていません。 | %s",
+			Utility::string2wstring(imageRef->GetConstOwner()->GetName()).c_str()
+		));
 		return;
 	}
 
@@ -118,7 +153,7 @@ void Renderings::ImageRenderer::Draw(const Image* pImage)
 	// 長方形
 	Math::Rect rect = rectTransform->GetRect();
 	// キャンバスサイズ
-	Math::Vector2 canvasSize = pCanvas->GetSize();
+	Math::Vector2 canvasSize = canvasRef->GetSize();
 
 	// アンカーに合わせて画像を移動
 	switch (rectTransform->GetAnchor())
@@ -156,20 +191,20 @@ void Renderings::ImageRenderer::Draw(const Image* pImage)
 	}
 
 	// キャンバスの表示倍率
-	float canvasRatio = pCanvas->GetRatio();
+	float canvasRatio = canvasRef->GetRatio();
 	// 表示倍率を適用
 	rect.position *= canvasRatio;
 	rect.size *= canvasRatio;
 
 	// ピクセルシェーダ
-	Ref<const Renderings::PixelShader> pPixelShader = pImage->GetPixelShaderRef();
+	Ref<const Renderings::PixelShader> pixelShader = imageRef->GetPixelShader();
 
-	if (pPixelShader->IsInitialized())
+	if (pixelShader->IsInitialized())
 	{
 		// ピクセルシェーダを設定
-		m_pContext->PSSetShader(pPixelShader->GetD3DShader(), nullptr, 0);
+		m_pContext->PSSetShader(pixelShader->GetD3DShader(), nullptr, 0);
 		// 定数バッファを設定
-		pPixelShader->SetConstantBuffer(m_pDevice, m_pContext, 0);
+		pixelShader->SetConstantBuffer(m_pDevice, m_pContext, 0);
 	}
 
 	// 描画
@@ -184,12 +219,12 @@ void Renderings::ImageRenderer::Draw(const Image* pImage)
 			Math::RoundInt(rect.position.y + rect.size.y),
 		},
 		nullptr,
-		pImage->GetColor(),
+		imageRef->GetColor(),
 		Math::Deg2Rad(rectTransform->GetAngle()),
 		origin
 		);
 
-	if (pPixelShader->IsInitialized())
+	if (pixelShader->IsInitialized())
 	{
 		m_pContext->PSSetShader(nullptr, nullptr, 0);
 	}
@@ -203,26 +238,26 @@ void Renderings::ImageRenderer::End()
 }
 
 // 画像のポインタを追加
-void Renderings::ImageRenderer::AddPImage(const Image* pImage)
+void Renderings::ImageRenderer::AddImageRef(Ref<const Image> imageRef)
 {
-	m_pImages.push_back(pImage);
+	m_imageRefs.push_back(imageRef);
 }
 
 // 画像のポインタを削除
-void Renderings::ImageRenderer::RemovePImage(const Image* pImage)
+void Renderings::ImageRenderer::RemoveImageRef(Ref<const Image> imageRef)
 {
-	auto it = std::ranges::find(m_pImages, pImage);
-	if (it != m_pImages.end())
+	auto it = std::ranges::find(m_imageRefs, imageRef);
+	if (it != m_imageRefs.end())
 	{
-		m_pImages.erase(it);
+		m_imageRefs.erase(it);
 	}
 }
 
 // 画像の大きさを取得
-Math::Vector2 Renderings::ImageRenderer::GetImageSize(const Image* pImage) const
+Math::Vector2 Renderings::ImageRenderer::GetImageSize(Ref<const Image> imageRef) const
 {
 	// 画像ソース
-	Ref<const ImageSource> imageSource = pImage->GetImageSourceRef();
+	Ref<const ImageSource> imageSource = imageRef->GetImageSource();
 	if (!imageSource->IsInitialized())
 	{
 		return Math::Vector2::Zero;
@@ -243,5 +278,5 @@ Math::Vector2 Renderings::ImageRenderer::GetImageSize(const Image* pImage) const
 void Renderings::ImageRenderer::SortPImages()
 {
 	// レイヤー順にソート
-	std::ranges::sort(m_pImages, [](const Image* p1, const Image* p2) {return p1->GetOrderInLayer() < p2->GetOrderInLayer(); });
+	std::ranges::sort(m_imageRefs, [](Ref<const Image> ref1, Ref<const Image> ref2) {return ref1->GetOrderInLayer() < ref2->GetOrderInLayer(); });
 }

@@ -17,22 +17,22 @@
 ActionCloseMessageWindow::ActionCloseMessageWindow(const ComponentDesc& desc)
 	: Action{ desc }
 	, m_isWait{}
-	, m_refMessageWindow{ GetOwner()->GetNullReference<MessageWindow>() }
+	, m_refMessageWindow{ GetOwner()->GetNullComponent<MessageWindow>() }
 {
 }
 
 // 初期化処理
-void ActionCloseMessageWindow::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
+void ActionCloseMessageWindow::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinderRef)
 {
-	Systems::JsonSerializer serializer{ iGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinderRef };
 	serializer.AddParameter(&m_refMessageWindow, "MessageWindow");
 	serializer.Load(json);
 }
 
 // パラメータを設定
-void ActionCloseMessageWindow::SetParams(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
+void ActionCloseMessageWindow::SetParams(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinderRef)
 {
-	Systems::JsonSerializer serializer{ iGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinderRef };
 	serializer.AddParameter(&m_isWait, "IsWait");
 	serializer.Load(json);
 }

@@ -1,7 +1,7 @@
 /*
  * FileName:     Ref.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/23
+ * Last Updated: 2026/10/24
  *
  * 自作参照型（参照先変更可能・nullptr禁止）
  */
@@ -50,8 +50,6 @@ namespace Libraries
 			m_ptr = &ref;
 			return *this;
 		}
-
-		explicit operator T& () const { return *m_ptr; }
 
 
 	private:

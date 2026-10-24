@@ -1,7 +1,7 @@
 /*
  * FileName:     InteractCursor.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/23
+ * Last Updated: 2026/10/24
  *
  * 話しかける・調べる際のカーソル
  */
@@ -22,30 +22,30 @@ InteractCursor::InteractCursor(const ComponentDesc& desc)
 	: Component{ desc }
 	, m_alphaVelocity{}
 	, m_alpha{}
-	, m_refTextTransform{ GetOwner()->GetNullReference<RectTransform>() }
-	, m_refText{ GetOwner()->GetNullReference<Renderings::Text>() }
-	, m_refImageTransform{ GetOwner()->GetNullReference<RectTransform>() }
-	, m_refImage{ GetOwner()->GetNullReference<Renderings::Image>() }
+	, m_refTextTransform{ GetOwner()->GetNullComponent<RectTransform>() }
+	, m_refText{ GetOwner()->GetNullComponent<Renderings::Text>() }
+	, m_refImageTransform{ GetOwner()->GetNullComponent<RectTransform>() }
+	, m_refImage{ GetOwner()->GetNullComponent<Renderings::Image>() }
 {
 }
 
 // 初期化処理
-void InteractCursor::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
+void InteractCursor::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinderRef)
 {
-	Systems::JsonSerializer serializer{ iGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinderRef };
 	serializer.AddParameter(&m_alphaVelocity, "AlphaVelocity");
 	serializer.Load(json);
 
 	m_alpha.Initialize(0.0f, 0.0f, 1.0f);
 
-	if (m_refTextTransform == GetOwner()->GetNullReference<RectTransform>())
+	if (m_refTextTransform == GetOwner()->GetNullComponent<RectTransform>())
 	{
-		Ref<GameObject> refObj = Instantiate("Prefab_InteractCursorText");
-		m_refTextTransform = refObj->GetComponent<RectTransform>();
-		m_refText = refObj->GetComponent<Renderings::Text>();
-		refObj = Instantiate("Prefab_InteractCursorImage");
-		m_refImageTransform = refObj->GetComponent<RectTransform>();
-		m_refImage = refObj->GetComponent<Renderings::Image>();
+		Ref<GameObject> objRef = Instantiate("Prefab_InteractCursorText");
+		m_refTextTransform = objRef->GetComponent<RectTransform>();
+		m_refText = objRef->GetComponent<Renderings::Text>();
+		objRef = Instantiate("Prefab_InteractCursorImage");
+		m_refImageTransform = objRef->GetComponent<RectTransform>();
+		m_refImage = objRef->GetComponent<Renderings::Image>();
 	}
 }
 
@@ -74,7 +74,7 @@ void InteractCursor::SetName(const std::wstring& name)
 void InteractCursor::SetCanvas(const Renderings::Canvas& canvas)
 {
 	m_refText->SetCanvas(canvas);
-	m_refImage->SetCanvas(canvas);
+	m_refImage->SetCanvasRef(Ref{ canvas });
 }
 
 // 座標を設定

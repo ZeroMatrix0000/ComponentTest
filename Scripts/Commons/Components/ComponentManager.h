@@ -1,7 +1,7 @@
 /*
  * FileName:     ComponentManager.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/23
+ * Last Updated: 2026/10/24
  *
  * コンポーネント管理
  */
@@ -30,13 +30,13 @@ namespace Components
 		/* メンバ関数 */
 
 		// コンストラクタ
-		ComponentManager(Ref<IGameObjectInstantiator> iGameObjectInstantiator);
+		ComponentManager(Ref<IGameObjectInstantiator> iGameObjectInstantiatorRef);
 
 		// コンポーネント作成関数を追加
 		template<typename TComponent> requires IsDerived<TComponent, Component>
 		void RegisterCreate(const std::function<std::unique_ptr<Component>(const ComponentDesc&)>& CreateComponent)
 		{
-			m_CreateComponentList.emplace(typeid(TComponent*), CreateComponent);
+			m_CreateComponentList.emplace(typeid(Ref<TComponent>), CreateComponent);
 		}
 
 
@@ -49,7 +49,7 @@ namespace Components
 		std::unique_ptr<Component> Create(const std::type_index& index, Ref<GameObject> owner) override;
 
 		// 未参照コンポーネントを取得
-		Ref<Component> GetNullReference(const std::type_index& index, bool addErrorMessage) override;
+		Ref<Component> GetNullComponent(const std::type_index& index, bool addErrorMessage) override;
 
 
 		/* メンバ変数 */
@@ -64,7 +64,7 @@ namespace Components
 		std::unordered_map<std::type_index, std::unique_ptr<Component>> m_nullReferences;
 
 		// ゲームオブジェクト生成インタフェースの参照
-		Ref<IGameObjectInstantiator> m_refIGameObjectInstantiator;
+		Ref<IGameObjectInstantiator> m_iGameObjectInstantiatorRef;
 
 	};
 }

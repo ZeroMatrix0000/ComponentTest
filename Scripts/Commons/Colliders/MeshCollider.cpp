@@ -1,7 +1,7 @@
 /*
  * FileName:     MeshCollider.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/23
+ * Last Updated: 2026/10/24
  *
  * メッシュの当たり判定
  */
@@ -13,44 +13,48 @@
 #include "../GameObjects/IGameObjectFinder.h"
 #include "../Components/Transform.h"
 #include "../Renderings/ColliderRenderer.h"
-#include "../Renderings/ICameraScreen.h"
 #include "../Systems/IResources.h"
 #include "../Systems/JsonSerializer.h"
 #include "../Systems/IsDerivedRegister.h"
 
 // コンストラクタ
-Colliders::MeshCollider::MeshCollider(const ComponentDesc& desc, Renderings::IColliderRenderer* pIColliderRenderer, Systems::IResources* pIResources)
+Colliders::MeshCollider::MeshCollider
+(
+	const ComponentDesc& desc,
+	Ref<Renderings::IColliderRenderer> iColliderRendererRef,
+	Ref<Systems::IResources> iResourcesRef
+)
 	: Component{ desc }
 	, m_color{ DirectX::Colors::LightGreen }
 	, m_worldMesh{}
-	, m_meshRef{ pIResources->GetNullMesh()}
-	, m_transformRef{ GetOwner()->GetNullReference<Transform>() }
-	, m_pICameraScreens{}
-	, m_pIColliderRenderer{ pIColliderRenderer }
-	, m_pIResources{ pIResources }
+	, m_meshRef{ iResourcesRef->GetNullMesh() }
+	, m_transformRef{ GetOwner()->GetNullComponent<Transform>() }
+	, m_iCameraScreenRefs{}
+	, m_iColliderRendererRef{ iColliderRendererRef }
+	, m_iResourcesRef{ iResourcesRef }
 {
 	// 描画者に長方形を追加
-	m_pIColliderRenderer->AddPMeshCollider(this);
+	m_iColliderRendererRef->AddPMeshCollider(this);
 }
 
 // デストラクタ
 Colliders::MeshCollider::~MeshCollider()
 {
 	// 描画者から長方形を削除
-	m_pIColliderRenderer->RemovePMeshCollider(this);
+	m_iColliderRendererRef->RemovePMeshCollider(this);
 }
 
 // 初期化処理
-void Colliders::MeshCollider::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
+void Colliders::MeshCollider::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinderRef)
 {
 	m_transformRef = GetOwner()->GetComponent<Transform>();
 
 	std::string meshName{};
 
-	Systems::JsonSerializer serializer{ iGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinderRef };
 	serializer.AddParameter(&meshName, "MeshName");
 	serializer.AddParameter(&m_color, "Color");
-	serializer.AddParameter(&m_pICameraScreens, "CameraScreens");
+	serializer.AddParameter(&m_iCameraScreenRefs, "CameraScreens");
 	serializer.Load(json);
 
 	if (!meshName.empty())
@@ -62,25 +66,25 @@ void Colliders::MeshCollider::Initalize(const nlohmann::ordered_json& json, Ref<
 // メッシュを設定
 void Colliders::MeshCollider::SetMesh(const std::string& meshName)
 {
-	m_meshRef = m_pIResources->GetMesh(meshName);
+	m_meshRef = m_iResourcesRef->GetMesh(meshName);
 }
 
 // 映るカメラ画面を追加
-void Colliders::MeshCollider::AddICameraScreen(const Renderings::ICameraScreen& iCameraScreen)
+void Colliders::MeshCollider::AddICameraScreenRef(Ref<const Renderings::ICameraScreen> iCameraScreenRef)
 {
-	if (std::ranges::find(m_pICameraScreens, &iCameraScreen) == m_pICameraScreens.end())
+	if (std::ranges::find(m_iCameraScreenRefs, iCameraScreenRef) == m_iCameraScreenRefs.end())
 	{
-		m_pICameraScreens.push_back(&iCameraScreen);
+		m_iCameraScreenRefs.push_back(iCameraScreenRef);
 	}
 }
 
 // 映るカメラ画面を削除
-void Colliders::MeshCollider::RemoveICameraScreen(const Renderings::ICameraScreen& iCameraScreen)
+void Colliders::MeshCollider::RemoveICameraScreenRef(Ref<const Renderings::ICameraScreen> iCameraScreenRef)
 {
-	auto it = std::ranges::find(m_pICameraScreens, &iCameraScreen);
-	if (it != m_pICameraScreens.end())
+	auto it = std::ranges::find(m_iCameraScreenRefs, iCameraScreenRef);
+	if (it != m_iCameraScreenRefs.end())
 	{
-		m_pICameraScreens.erase(it);
+		m_iCameraScreenRefs.erase(it);
 	}
 }
 

@@ -1,7 +1,7 @@
 /*
  * FileName:     TargetPoint.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/16
+ * Last Updated: 2026/10/24
  *
  * ターゲット照準
  */
@@ -28,22 +28,22 @@ TargetPoint::TargetPoint(const ComponentDesc& desc)
 	, m_brightInterval{}
 	, m_brightTimer{}
 	, m_info{}
-	, m_refTransform{ GetOwner()->GetNullReference<RectTransform>() }
-	, m_refImage{ GetOwner()->GetNullReference<Renderings::Image>() }
-	, m_refPlayer{ GetOwner()->GetNullReference<Colliders::BoxCollider>() }
-	, m_refICameraScreen{ GetOwner()->GetNullReference<Renderings::ICameraScreen>() }
+	, m_refTransform{ GetOwner()->GetNullComponent<RectTransform>() }
+	, m_refImage{ GetOwner()->GetNullComponent<Renderings::Image>() }
+	, m_refPlayer{ GetOwner()->GetNullComponent<Colliders::BoxCollider>() }
+	, m_refICameraScreen{ GetOwner()->GetNullComponent<Renderings::ICameraScreen>() }
 	, m_pTargetObjects{}
 	, m_pGrounds{}
 {
 }
 
 // 初期化処理
-void TargetPoint::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
+void TargetPoint::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinderRef)
 {
 	m_refImage = GetOwner()->GetComponent<Renderings::Image>();
 	m_refTransform = GetOwner()->GetComponent<RectTransform>();
 
-	Systems::JsonSerializer serializer{ iGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinderRef };
 	serializer.AddParameter(&m_targetDistance, "TargetDistance");
 	serializer.AddParameter(&m_rayLength, "RayLength");
 	serializer.AddParameter(&m_brightInterval, "BrightInterval");
@@ -118,7 +118,7 @@ void TargetPoint::Update(float elapsedTime)
 			m_info.position,
 			m_refICameraScreen->GetViewMatrix(),
 			m_refICameraScreen->GetProjectionMatrix(),
-			m_refImage->GetPCanvas()->GetSize()
+			m_refImage->GetCanvasRef()->GetSize()
 		);
 
 		m_refTransform->SetPosition(screenPosition);
@@ -164,7 +164,7 @@ void TargetPoint::Update(float elapsedTime)
 	// ターゲットが地面なら
 	if (m_info.type == Type::Ground)
 	{
-		m_refTransform->SetPosition(m_refImage->GetPCanvas()->GetSize() / 2.0f);
+		m_refTransform->SetPosition(m_refImage->GetCanvasRef()->GetSize() / 2.0f);
 		return;
 	}
 

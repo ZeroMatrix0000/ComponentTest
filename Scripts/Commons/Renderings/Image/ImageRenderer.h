@@ -1,7 +1,7 @@
 /*
  * FileName:     ImageRenderer.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/24
+ * Last Updated: 2026/10/24
  *
  * 画像描画
  */
@@ -30,28 +30,33 @@ namespace Renderings
 		ImageRenderer();
 
 		// 初期化処理
-		void Initialize(ID3D11Device5* pDevice, ID3D11DeviceContext4* pContext, const DirectX::CommonStates& commonStates);
+		void Initialize
+		(
+			Ref<ID3D11Device5> deviceRef,
+			Ref<ID3D11DeviceContext4> contextRef,
+			Ref<const DirectX::CommonStates> commonStatesRef
+		);
 
 		// 描画開始
 		void Begin();
 		// 描画処理
-		void Draw(const Image* pImage);
+		void Draw(Ref<const Image> imageRef);
 		// 描画終了
 		void End();
 
-		// 画像のポインタを追加
-		void AddPImage(const Image* pImage) override;
-		// 画像のポインタを削除
-		void RemovePImage(const Image* pImage) override;
+		// 画像の参照を追加
+		void AddImageRef(Ref<const Image> imageRef) override;
+		// 画像の参照を削除
+		void RemoveImageRef(Ref<const Image> imageRef) override;
 
 		// 画像の大きさを取得
-		Math::Vector2 GetImageSize(const Image* pImage) const override;
+		Math::Vector2 GetImageSize(Ref<const Image> imageRef) const override;
 
 		// 画像のポインタリストのソート
 		void SortPImages();
 
-		// 画像のポインタリストを取得
-		const std::vector<const Image*> GetPImages() const { return m_pImages; }
+		// 画像の参照リストを取得
+		const std::vector<Ref<const Image>> GetImageRefs() const { return m_imageRefs; }
 
 
 	private:
@@ -62,8 +67,8 @@ namespace Renderings
 		// スプライトバッチ
 		std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
 
-		// 画像のポインタリスト
-		std::vector<const Image*> m_pImages;
+		// 画像の参照リスト
+		std::vector<Ref<const Image>> m_imageRefs;
 
 		// デバイス
 		ID3D11Device5* m_pDevice;

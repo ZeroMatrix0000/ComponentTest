@@ -29,19 +29,19 @@ Player::Player(const ComponentDesc& desc)
 	: Component{ desc }
 	, m_internals{}
 {
-	m_internals.P_CAMERA_SCREEN = &GetOwner()->GetNullReference<Renderings::CameraScreen<Camera::EulerTargetCamera>>().Get();
-	m_internals.pTransform = &GetOwner()->GetNullReference<Transform>().Get();
-	m_internals.pBoxCollider = &GetOwner()->GetNullReference<Colliders::BoxCollider>().Get();
-	m_internals.pParticleManager = &GetOwner()->GetNullReference<Renderings::ParticleManager>().Get();
-	m_internals.pModel = &GetOwner()->GetNullReference<PlayerModel>().Get();
-	m_internals.pWire = &GetOwner()->GetNullReference<PlayerWire>().Get();
+	m_internals.P_CAMERA_SCREEN = &GetOwner()->GetNullComponent<Renderings::CameraScreen<Camera::EulerTargetCamera>>().Get();
+	m_internals.pTransform = &GetOwner()->GetNullComponent<Transform>().Get();
+	m_internals.pBoxCollider = &GetOwner()->GetNullComponent<Colliders::BoxCollider>().Get();
+	m_internals.pParticleManager = &GetOwner()->GetNullComponent<Renderings::ParticleManager>().Get();
+	m_internals.pModel = &GetOwner()->GetNullComponent<PlayerModel>().Get();
+	m_internals.pWire = &GetOwner()->GetNullComponent<PlayerWire>().Get();
 
 	// 現在の状態を初期化
 	SetState(std::make_unique<PlayerStateOnGround>());
 }
 
 // 初期化処理
-void Player::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
+void Player::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinderRef)
 {
 	m_internals.pTransform = &GetOwner()->GetComponent<Transform>().Get();
 	m_internals.pBoxCollider = &GetOwner()->GetComponent<Colliders::BoxCollider>().Get();
@@ -53,7 +53,7 @@ void Player::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder
 	float fallMaxSpeed = m_internals.fallSpeed.GetMax();
 	float coyoteTime = m_internals.fallCoyoteTime.GetMax();
 
-	Systems::JsonSerializer serializer{ iGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinderRef };
 	serializer.AddParameter(&moveMaxSpeed, "MoveMaxSpeed");
 	serializer.AddParameter(&m_internals.MOVE_ACCELERATION, "MoveAcceleration");
 	serializer.AddParameter(&m_internals.DASH_RATIO, "DashRatio");
@@ -76,7 +76,7 @@ void Player::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder
 	m_internals.pBoxCollider->ApplyTransform();
 
 	// モデルの生成
-	if (m_internals.pModel == &GetOwner()->GetNullReference<PlayerModel>().Get())
+	if (m_internals.pModel == &GetOwner()->GetNullComponent<PlayerModel>().Get())
 	{
 		Ref obj = Instantiate("Prefab_PlayerModel");
 		m_internals.pModel = &obj->GetComponent<PlayerModel>().Get();
@@ -84,16 +84,16 @@ void Player::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder
 	}
 
 	// 糸の生成
-	if (m_internals.pWire == &GetOwner()->GetNullReference<PlayerWire>().Get())
+	if (m_internals.pWire == &GetOwner()->GetNullComponent<PlayerWire>().Get())
 	{
 		Ref obj = Instantiate("Prefab_PlayerWire");
 		m_internals.pWire = &obj->GetComponent<PlayerWire>().Get();
 	}
 
 	// カメラを設定
-	if (m_internals.P_CAMERA_SCREEN != &GetOwner()->GetNullReference<Renderings::CameraScreen<Camera::EulerTargetCamera>>().Get())
+	if (m_internals.P_CAMERA_SCREEN != &GetOwner()->GetNullComponent<Renderings::CameraScreen<Camera::EulerTargetCamera>>().Get())
 	{
-		m_internals.pBoxCollider->AddICameraScreen(Ref{ *m_internals.P_CAMERA_SCREEN }.Cast<const Renderings::ICameraScreen>());
+		m_internals.pBoxCollider->AddICameraScreenRef(Ref{ *m_internals.P_CAMERA_SCREEN }.Cast<const Renderings::ICameraScreen>());
 		m_internals.pParticleManager->AddICameraScreen(*m_internals.P_CAMERA_SCREEN);
 		m_internals.pModel->AddICameraScreen(Ref{ *m_internals.P_CAMERA_SCREEN }.Cast<const Renderings::ICameraScreen>());
 		m_internals.pWire->AddICameraScreen(Ref{ *m_internals.P_CAMERA_SCREEN }.Cast<const Renderings::ICameraScreen>());

@@ -1,7 +1,7 @@
 /*
  * FileName:     ColliderRenderer.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/14
+ * Last Updated: 2026/10/24
  *
  * 当たり判定描画
  */
@@ -60,9 +60,9 @@ void Renderings::ColliderRenderer::Render()
 	for (const auto* pBoxCollider : m_pBoxColliders)
 	{
 		// カメラ画面
-		for (const auto& pICameraScreen : pBoxCollider->GetRefICameraScreens())
+		for (Ref iCameraScreenRef : pBoxCollider->GetICameraScreenRefs())
 		{
-			m_basicEffect->SetMatrices(Math::Matrix::Identity, pICameraScreen->GetViewMatrix(), pICameraScreen->GetProjectionMatrix());
+			m_basicEffect->SetMatrices(Math::Matrix::Identity, iCameraScreenRef->GetViewMatrix(), iCameraScreenRef->GetProjectionMatrix());
 			m_basicEffect->Apply(m_pContext);
 			DrawBox(pBoxCollider->GetWorldBox(), pBoxCollider->GetColor());
 		}
@@ -71,20 +71,20 @@ void Renderings::ColliderRenderer::Render()
 	for (const auto* pSphereCollider : m_pSphereColliders)
 	{
 		// カメラ画面
-		for (const auto* pICameraScreen : pSphereCollider->GetPICameraScreens())
+		for (Ref iCameraScreenRef : pSphereCollider->GetICameraScreenRefs())
 		{
-			m_basicEffect->SetMatrices(Math::Matrix::Identity, pICameraScreen->GetViewMatrix(), pICameraScreen->GetProjectionMatrix());
+			m_basicEffect->SetMatrices(Math::Matrix::Identity, iCameraScreenRef->GetViewMatrix(), iCameraScreenRef->GetProjectionMatrix());
 			m_basicEffect->Apply(m_pContext);
-			DrawSphere(pSphereCollider->GetWorldSphere(), pSphereCollider->GetColor(), pICameraScreen->GetEyePosition(), 48);
+			DrawSphere(pSphereCollider->GetWorldSphere(), pSphereCollider->GetColor(), iCameraScreenRef->GetEyePosition(), 48);
 		}
 	}
 	// メッシュ
 	for (const auto* pMeshCollider : m_pMeshColliders)
 	{
 		// カメラ画面
-		for (const auto* pICameraScreen : pMeshCollider->GetPICameraScreens())
+		for (Ref iCameraScreenRef : pMeshCollider->GetICameraScreenRefs())
 		{
-			m_basicEffect->SetMatrices(Math::Matrix::Identity, pICameraScreen->GetViewMatrix(), pICameraScreen->GetProjectionMatrix());
+			m_basicEffect->SetMatrices(Math::Matrix::Identity, iCameraScreenRef->GetViewMatrix(), iCameraScreenRef->GetProjectionMatrix());
 			m_basicEffect->Apply(m_pContext);
 			DrawMesh(pMeshCollider->GetWorldMesh(), pMeshCollider->GetColor());
 		}

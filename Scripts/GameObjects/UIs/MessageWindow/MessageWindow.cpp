@@ -1,7 +1,7 @@
 /*
  * FileName:     MessageWindow.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/24
  *
  * メッセージウィンドウ
  */
@@ -29,28 +29,28 @@ MessageWindow::MessageWindow(const ComponentDesc& desc)
 	, m_moveRate{}
 	, m_text{}
 	, m_textCount{}
-	, m_refBackgroundTransform{ GetOwner()->GetNullReference<RectTransform>() }
-	, m_refBackground{ GetOwner()->GetNullReference<Renderings::Image>() }
-	, m_refTextTransform{ GetOwner()->GetNullReference<RectTransform>() }
-	, m_refText{ GetOwner()->GetNullReference<Renderings::Text>() }
-	, m_refCharacterTransform{ GetOwner()->GetNullReference<RectTransform>() }
-	, m_refCharacter{ GetOwner()->GetNullReference<Renderings::Text>() }
+	, m_refBackgroundTransform{ GetOwner()->GetNullComponent<RectTransform>() }
+	, m_refBackground{ GetOwner()->GetNullComponent<Renderings::Image>() }
+	, m_refTextTransform{ GetOwner()->GetNullComponent<RectTransform>() }
+	, m_refText{ GetOwner()->GetNullComponent<Renderings::Text>() }
+	, m_refCharacterTransform{ GetOwner()->GetNullComponent<RectTransform>() }
+	, m_refCharacter{ GetOwner()->GetNullComponent<Renderings::Text>() }
 {
 }
 
 // 初期化処理
-void MessageWindow::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
+void MessageWindow::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinderRef)
 {
-	const Renderings::Canvas* pCanvas = nullptr;
+	Ref canvasRef{ GetOwner()->GetNullComponent<Renderings::Canvas>().Const() };
 
-	Systems::JsonSerializer serializer{ iGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinderRef };
 	serializer.AddParameter(&m_moveTime, "MoveTime");
 	serializer.AddParameter(&m_textVelocity, "TextVelocity");
-	serializer.AddParameter(&pCanvas, "Canvas");
+	serializer.AddParameter(&canvasRef, "Canvas");
 	serializer.Load(json);
 
 	// メッセージウィンドウを生成
-	if (m_refBackgroundTransform == GetOwner()->GetNullReference<RectTransform>())
+	if (m_refBackgroundTransform == GetOwner()->GetNullComponent<RectTransform>())
 	{
 		Ref<GameObject> refObj = Instantiate("Prefab_MessageWindowBackGround");
 		m_refBackgroundTransform = refObj->GetComponent<RectTransform>();
@@ -64,12 +64,9 @@ void MessageWindow::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjec
 	}
 
 	// キャンバスを設定
-	if (pCanvas)
-	{
-		m_refBackground->SetCanvas(*pCanvas);
-		m_refCharacter->SetCanvas(*pCanvas);
-		m_refText->SetCanvas(*pCanvas);
-	}
+	m_refBackground->SetCanvasRef(canvasRef);
+	m_refCharacter->SetCanvas(canvasRef.Get());
+	m_refText->SetCanvas(canvasRef.Get());
 
 	// 移動率を初期化
 	m_moveRate.SetMovement(0.0f, 0.0f);

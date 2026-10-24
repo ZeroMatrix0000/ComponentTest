@@ -24,7 +24,7 @@ DebugCamera::DebugCamera(const ComponentDesc& desc)
 }
 
 // 初期化処理
-void DebugCamera::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
+void DebugCamera::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinderRef)
 {
 	SetPCameraScreen();
 }

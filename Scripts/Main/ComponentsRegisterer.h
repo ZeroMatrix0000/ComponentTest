@@ -1,7 +1,7 @@
 /*
  * FileName:     ComponentsRegisterer.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/23
+ * Last Updated: 2026/10/24
  *
  * コンポーネント登録者
  */
@@ -34,12 +34,12 @@ namespace ComponentsRegisterer
 	// コンポーネント登録
 	void RegisterComponents
 	(
-		Ref<ComponentManager>              componentManager,
-		Ref<GameObjectManager>             gameObjectManager,
-		Ref<Renderings::IModel3DRenderer>  iModelRenderer,
-		Ref<Renderings::IImageRenderer>    iimageRenderer,
-		Ref<Renderings::ITextRenderer>     iTextRenderer,
-		Ref<Renderings::IColliderRenderer> iColliderRenderer,
-		Ref<Systems::IResources>           iResources
+		Ref<ComponentManager>              componentManagerRef,
+		Ref<GameObjectManager>             gameObjectManagerRef,
+		Ref<Renderings::IModel3DRenderer>  iModelRendererRef,
+		Ref<Renderings::IImageRenderer>    iimageRendererRef,
+		Ref<Renderings::ITextRenderer>     iTextRendererRef,
+		Ref<Renderings::IColliderRenderer> iColliderRendererRef,
+		Ref<Systems::IResources>           iResourcesRef
 	);
 }

@@ -1,7 +1,7 @@
 /*
  * FileName:     SceneTransitionAnimation.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/23
+ * Last Updated: 2026/10/24
  *
  * シーン遷移時のアニメーション
  */
@@ -41,7 +41,7 @@ void Scenes::SceneTransitionAnimation::Initialize(const Math::Vector2& outputSiz
 	m_pCanvas->Initialize(Renderings::Canvas::FixedSize::None, outputSize);
 
 	// キャンバスに画像を映す
-	image->SetCanvas(*m_pCanvas);
+	image->SetCanvasRef(Ref{ *m_pCanvas }.Const());
 
 	m_angle = m_pImageRectTransform->GetAngle();
 

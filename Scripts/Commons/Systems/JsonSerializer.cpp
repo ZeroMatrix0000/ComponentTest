@@ -14,9 +14,9 @@
 std::unordered_map<std::type_index, std::function<void(void*, const nlohmann::ordered_json&, Ref<IGameObjectFinder>)>> Systems::JsonSerializer::s_methods{};
 
 // コンストラクタ
-Systems::JsonSerializer::JsonSerializer(Ref<IGameObjectFinder> iGameObjectFinder)
+Systems::JsonSerializer::JsonSerializer(Ref<IGameObjectFinder> iGameObjectFinderRef)
 	: m_parameters{}
-	, m_refIGameObjectFinder{ iGameObjectFinder }
+	, m_refIGameObjectFinder{ iGameObjectFinderRef }
 {
 }
 

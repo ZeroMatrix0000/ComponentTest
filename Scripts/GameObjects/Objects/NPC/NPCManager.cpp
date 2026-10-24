@@ -32,11 +32,11 @@ NPCManager::NPCManager(const ComponentDesc& desc)
 }
 
 // 初期化処理
-void NPCManager::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
+void NPCManager::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinderRef)
 {
 	const Renderings::Canvas* pCanvas = nullptr;
 
-	Systems::JsonSerializer serializer{ iGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinderRef };
 	serializer.AddParameter(&m_pNPCList, "NPCList");
 	serializer.AddParameter(&pCanvas, "Canvas");
 	serializer.Load(json);

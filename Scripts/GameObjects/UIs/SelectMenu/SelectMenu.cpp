@@ -1,7 +1,7 @@
 /*
  * FileName:     SelectMenu.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/23
+ * Last Updated: 2026/10/24
  *
  * 選択メニュー
  */
@@ -28,15 +28,15 @@ SelectMenu::SelectMenu(const ComponentDesc& desc)
 	, m_pTexts{}
 	, m_Processes{}
 	, m_fontSizes{}
-	, m_refCursorImage{ GetOwner()->GetNullReference<Renderings::Image>() }
-	, m_refCursorRectTransform{ GetOwner()->GetNullReference<RectTransform>() }
+	, m_refCursorImage{ GetOwner()->GetNullComponent<Renderings::Image>() }
+	, m_refCursorRectTransform{ GetOwner()->GetNullComponent<RectTransform>() }
 {
 }
 
 // 初期化処理
-void SelectMenu::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
+void SelectMenu::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinderRef)
 {
-	if (m_refCursorImage == GetOwner()->GetNullReference<Renderings::Image>())
+	if (m_refCursorImage == GetOwner()->GetNullComponent<Renderings::Image>())
 	{
 		Ref obj = Instantiate("Prefab_SelectMenuCursor");
 		m_refCursorImage = obj->GetComponent<Renderings::Image>();
@@ -49,9 +49,9 @@ void SelectMenu::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFi
 	m_cursorDelayY.SetMovement(0.0f, 0.0f);
 
 	float cursorSwayTime = m_cursorSwayTimer.GetMax();
-	const Renderings::Canvas* pCanvas = m_refCursorImage->GetPCanvas();
+	Ref canvasRef = m_refCursorImage->GetCanvasRef();
 
-	Systems::JsonSerializer serializer{ iGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinderRef };
 	serializer.AddParameter(&m_params.width, "Width");
 	serializer.AddParameter(&m_params.height, "Height");
 	serializer.AddParameter(&m_params.interval, "Interval");
@@ -63,11 +63,11 @@ void SelectMenu::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFi
 	serializer.AddParameter(&m_params.cursorSwaySize, "CursorSwaySize");
 	serializer.AddParameter(&m_params.fontSizeBegin, "FontSizeBegin");
 	serializer.AddParameter(&m_params.fontSizeEnd, "FontSizeEnd");
-	serializer.AddParameter(&pCanvas, "Canvas");
+	serializer.AddParameter(&canvasRef, "Canvas");
 	serializer.Load(json);
 
 	m_cursorSwayTimer.Initialize(0.0f, 0.0f, cursorSwayTime);
-	m_refCursorImage->SetCanvas(*pCanvas);
+	m_refCursorImage->SetCanvasRef(canvasRef);
 }
 
 // 更新処理
@@ -105,7 +105,7 @@ void SelectMenu::AddOption(const std::wstring& str, const std::function<void()>&
 	Ref<GameObject> refObj = Instantiate("Prefab_SelectMenuText");
 	Ref text = refObj->AddComponent<Renderings::Text>();
 	text->SetStr(str);
-	text->SetCanvas(*m_refCursorImage->GetPCanvas());
+	text->SetCanvas(m_refCursorImage->GetCanvasRef().Get());
 	text->SetFontSize(m_params.fontSizeBegin);
 	Ref rectTransform = refObj->AddComponent<RectTransform>();
 	rectTransform->SetPosition(m_params.basePosition + Math::Vector2{ 0.0f, m_params.height + m_params.interval } * static_cast<float>(m_Processes.size()));

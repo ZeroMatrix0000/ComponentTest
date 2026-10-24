@@ -1,7 +1,7 @@
 /*
  * FileName:     MeshCollider.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/24
  *
  * メッシュの当たり判定
  */
@@ -36,12 +36,17 @@ namespace Colliders
 		/* メンバ関数 */
 
 		// コンストラクタ
-		MeshCollider(const ComponentDesc& desc, Renderings::IColliderRenderer* pIColliderRenderer, Systems::IResources* pIResources);
+		MeshCollider
+		(
+			const ComponentDesc& desc,
+			Ref<Renderings::IColliderRenderer> iColliderRendererRef,
+			Ref<Systems::IResources> iResourcesRef
+		);
 		// デストラクタ
 		~MeshCollider();
 
 		// 初期化処理
-		void Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder) override;
+		void Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinderRef) override;
 
 		// 色を設定
 		void SetColor(const Math::Color& color) { m_color = color; }
@@ -51,10 +56,10 @@ namespace Colliders
 		// メッシュを設定
 		void SetMesh(const std::string& meshName);
 
-		// 映るカメラ画面を追加
-		void AddICameraScreen(const Renderings::ICameraScreen& iCameraScreen);
-		// 映るカメラ画面を削除
-		void RemoveICameraScreen(const Renderings::ICameraScreen& iCameraScreen);
+		// 映るカメラ画面の参照を追加
+		void AddICameraScreenRef(Ref<const Renderings::ICameraScreen> iCameraScreenRef);
+		// 映るカメラ画面の参照を削除
+		void RemoveICameraScreenRef(Ref<const Renderings::ICameraScreen> iCameraScreenRef);
 
 		// トランスフォームを適用
 		void ApplyTransform();
@@ -65,8 +70,8 @@ namespace Colliders
 		// 色を取得
 		const Math::Color& GetColor() const { return m_color; }
 
-		// 映るカメラ画面のポインタリストを取得
-		const std::vector<const Renderings::ICameraScreen*>& GetPICameraScreens() const { return m_pICameraScreens; }
+		// 映るカメラ画面の参照リストを取得
+		const std::vector<Ref<const Renderings::ICameraScreen>>& GetICameraScreenRefs() const { return m_iCameraScreenRefs; }
 
 	private:
 
@@ -85,14 +90,14 @@ namespace Colliders
 		// トランスフォームの参照
 		Ref<Transform> m_transformRef;
 
-		// 映るカメラ画面のポインタリスト
-		std::vector<const Renderings::ICameraScreen*> m_pICameraScreens;
+		// 映るカメラ画面の参照リスト
+		std::vector<Ref<const Renderings::ICameraScreen>> m_iCameraScreenRefs;
 
-		// 当たり判定描画インタフェースのポインタ
-		Renderings::IColliderRenderer* m_pIColliderRenderer;
+		// 当たり判定描画インタフェースの参照
+		Ref<Renderings::IColliderRenderer> m_iColliderRendererRef;
 
-		// リソース管理のポインタ
-		Systems::IResources* m_pIResources;
+		// リソース管理の参照
+		Ref<Systems::IResources> m_iResourcesRef;
 
 	};
 }

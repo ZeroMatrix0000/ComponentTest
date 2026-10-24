@@ -27,9 +27,9 @@ ActionManager::ActionManager(const ComponentDesc& desc, Systems::IResources* pIR
 }
 
 // 初期化処理
-void ActionManager::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
+void ActionManager::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinderRef)
 {
-	m_pIGameObjectFinder = &iGameObjectFinder.Get();
+	m_pIGameObjectFinder = &iGameObjectFinderRef.Get();
 }
 
 // 更新処理

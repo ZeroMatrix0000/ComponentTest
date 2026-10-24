@@ -31,18 +31,18 @@ PlayerModel::PlayerModel(const ComponentDesc& desc)
 	, m_scaling{}
 	, m_dashAngle{}
 	, m_wireAngle{}
-	, m_refTransform{ GetOwner()->GetNullReference<Transform>() }
-	, m_refSilhouette{ GetOwner()->GetNullReference<Transform>() }
+	, m_refTransform{ GetOwner()->GetNullComponent<Transform>() }
+	, m_refSilhouette{ GetOwner()->GetNullComponent<Transform>() }
 	, m_pParticleManager{}
 {
 }
 
 // 初期化処理
-void PlayerModel::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
+void PlayerModel::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinderRef)
 {
 	float bounceTime = m_bounceTime.GetMax();
 
-	Systems::JsonSerializer serializer{ iGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinderRef };
 	serializer.AddParameter(&bounceTime, "BounceTime");
 	serializer.AddParameter(&m_bounceHeight, "BounceHeight");
 	serializer.AddParameter(&m_fallSpeedCoefficient, "FallSpeedCoefficient");
@@ -55,7 +55,7 @@ void PlayerModel::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectF
 	m_refTransform = GetOwner()->GetComponent<Transform>();
 
 	// シルエットを生成
-	if (m_refSilhouette == GetOwner()->GetNullReference<Transform>())
+	if (m_refSilhouette == GetOwner()->GetNullComponent<Transform>())
 	{
 		Ref obj = Instantiate("Prefab_PlayerSilhouette");
 		m_refSilhouette = obj->GetComponent<Transform>();

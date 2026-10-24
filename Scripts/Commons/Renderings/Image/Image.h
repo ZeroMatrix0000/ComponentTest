@@ -1,7 +1,7 @@
 /*
  * FileName:     Image.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/23
+ * Last Updated: 2026/10/24
  *
  * 画像
  */
@@ -32,12 +32,12 @@ namespace Renderings
 		/* メンバ関数 */
 
 		// コンストラクタ
-		Image(const ComponentDesc& desc, IImageRenderer* pIImageRenderer, Systems::IResources* pIResources);
+		Image(const ComponentDesc& desc, Ref<IImageRenderer> iImageRendererRef, Ref<Systems::IResources> iResources);
 		// デストラクタ
 		~Image();
 
 		// 初期化処理
-		void Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder) override;
+		void Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinderRef) override;
 
 		// 色を設定
 		void SetColor(const Math::Color& color) { m_color = color; }
@@ -52,21 +52,21 @@ namespace Renderings
 		// ピクセルシェーダを設定
 		void SetPixelShader(const std::string& pixelShaderName);
 
-		// キャンバスを設定
-		void SetCanvas(const Canvas& canvas) { m_pCanvas = &canvas; }
+		// キャンバスの参照を設定
+		void SetCanvasRef(Ref<const Canvas> canvasRef) { m_canvasRef = canvasRef; }
 		// 色を取得
 		const Math::Color& GetColor() const { return m_color; }
 
 		// レイヤー順を取得
 		int GetOrderInLayer() const { return m_orderInLayer; }
 
-		// 画像ソース名を取得
-		Ref<const ImageSource> GetImageSourceRef() const { return m_imageSourceRef; }
-		// ピクセルシェーダ名を取得
-		Ref<const PixelShader> GetPixelShaderRef() const { return m_pixelShaderRef; }
+		// 画像ソースを取得
+		Ref<const ImageSource> GetImageSource() const { return m_imageSource; }
+		// ピクセルシェーダを取得
+		Ref<const PixelShader> GetPixelShader() const { return m_pixelShader; }
 
-		// キャンバスのポインタを取得
-		const Canvas* GetPCanvas() const { return m_pCanvas; }
+		// キャンバスの参照を取得
+		Ref<const Canvas> GetCanvasRef() const { return m_canvasRef; }
 
 		// 画像サイズを取得
 		Math::Vector2 GetSize() const;
@@ -83,19 +83,19 @@ namespace Renderings
 		// レイヤー順
 		int m_orderInLayer;
 
-		// 画像ソースの参照
-		Ref<const ImageSource> m_imageSourceRef;
-		// ピクセルシェーダの参照
-		Ref<const PixelShader> m_pixelShaderRef;
+		// 画像ソース
+		Ref<const ImageSource> m_imageSource;
+		// ピクセルシェーダ
+		Ref<const PixelShader> m_pixelShader;
 
-		// キャンバスのポインタ
-		const Canvas* m_pCanvas;
+		// キャンバスの参照
+		Ref<const Canvas> m_canvasRef;
 
-		// 画像描画インタフェースのポインタ
-		IImageRenderer* m_pIImageRenderer;
+		// 画像描画インタフェースの参照
+		Ref<IImageRenderer> m_iImageRendererRef;
 
-		// リソース管理のポインタ
-		Systems::IResources* m_pIResources;
+		// リソース管理の参照
+		Ref<Systems::IResources> m_iResourcesRef;
 
 	};
 }

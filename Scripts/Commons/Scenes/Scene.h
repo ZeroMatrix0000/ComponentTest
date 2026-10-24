@@ -30,7 +30,7 @@ namespace Scenes
 		}
 
 		// 初期化処理
-		void Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder) override {};
+		void Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinderRef) override {};
 		// 初期化処理
 		virtual void Initialize(const TTransitionData& data) = 0;
 		// 更新処理

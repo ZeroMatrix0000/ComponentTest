@@ -1,7 +1,7 @@
 /*
  * FileName:     ImageSource.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/21
+ * Last Updated: 2026/10/24
  *
  * 画像ソース
  */
@@ -23,7 +23,7 @@ namespace Renderings
 		ImageSource();
 
 		// 初期化処理
-		void Initialize(ID3D11Device5* device, const std::wstring& filePath);
+		void Initialize(Ref<ID3D11Device5> deviceRef, const std::wstring& filePath);
 
 		// シェーダーリソースビューを取得
 		auto* GetTexture()  const { return m_texture.Get(); }
@@ -37,7 +37,7 @@ namespace Renderings
 		/* 静的関数 */
 
 		// 生成
-		static ImageSource Create(ID3D11Device5* device, const std::wstring& filePath);
+		static ImageSource Create(Ref<ID3D11Device5> deviceRef, const std::wstring& filePath);
 
 
 	private:

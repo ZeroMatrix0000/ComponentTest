@@ -1,7 +1,7 @@
 /*
  * FileName:     BlackBelt.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/23
+ * Last Updated: 2026/10/24
  *
  * 上下の黒帯
  */
@@ -21,27 +21,27 @@ BlackBelt::BlackBelt(const ComponentDesc& desc)
 	, m_moveTime{}
 	, m_height{}
 	, m_moveRate{}
-	, m_refTopImageTransform{ GetOwner()->GetNullReference<RectTransform>() }
-	, m_refTopImage{ GetOwner()->GetNullReference<Renderings::Image>() }
-	, m_refBottomImageTransform{ GetOwner()->GetNullReference<RectTransform>() }
-	, m_refBottomImage{ GetOwner()->GetNullReference<Renderings::Image>() }
+	, m_refTopImageTransform{ GetOwner()->GetNullComponent<RectTransform>() }
+	, m_refTopImage{ GetOwner()->GetNullComponent<Renderings::Image>() }
+	, m_refBottomImageTransform{ GetOwner()->GetNullComponent<RectTransform>() }
+	, m_refBottomImage{ GetOwner()->GetNullComponent<Renderings::Image>() }
 {
 }
 
 // 初期化処理
-void BlackBelt::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
+void BlackBelt::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinderRef)
 {
 	m_moveRate.SetMovement(0.0f, 0.0f);
 
-	const Renderings::Canvas* pCanvas = nullptr;
+	Ref canvasRef{ GetOwner()->GetNullComponent<Renderings::Canvas>().Const() };
 
-	Systems::JsonSerializer serializer{ iGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinderRef };
 	serializer.AddParameter(&m_moveTime, "MoveTime");
-	serializer.AddParameter(&pCanvas, "Canvas");
+	serializer.AddParameter(&canvasRef, "Canvas");
 	serializer.Load(json);
 
 	// 画像を生成
-	if (m_refTopImageTransform == GetOwner()->GetNullReference<RectTransform>())
+	if (m_refTopImageTransform == GetOwner()->GetNullComponent<RectTransform>())
 	{
 		Ref<GameObject> refObj = Instantiate("Prefab_BlackBeltImage");
 		m_refTopImageTransform = refObj->GetComponent<RectTransform>();
@@ -56,12 +56,8 @@ void BlackBelt::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFin
 		m_height = m_refTopImageTransform->GetRect().size.y;
 	}
 
-	// キャンバスを設定
-	if (pCanvas)
-	{
-		m_refTopImage->SetCanvas(*pCanvas);
-		m_refBottomImage->SetCanvas(*pCanvas);
-	}
+	m_refTopImage->SetCanvasRef(canvasRef);
+	m_refBottomImage->SetCanvasRef(canvasRef);
 }
 
 // 更新処理

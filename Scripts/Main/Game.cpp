@@ -216,20 +216,20 @@ void Game::InitializeSceneManager()
 	// コンポーネント管理のインタフェース
 	Ref iComponentManager = Ref<IComponentManager>{ m_componentManager };
 	// 未参照オブジェクト
-	Ref nullReference = m_gameObjectManager.GetNullReference();
+	Ref nullGameObject = m_gameObjectManager.GetNullGameObject();
 
 	// シーンの追加
-	m_sceneManager.AddScene<SampleScene>([iComponentManager, nullReference]
+	m_sceneManager.AddScene<SampleScene>([iComponentManager, nullGameObject]
 		{
-			return std::unique_ptr<SampleScene>{ static_cast<SampleScene*>(iComponentManager->Create<SampleScene>(nullReference).release()) };
+			return std::unique_ptr<SampleScene>{ static_cast<SampleScene*>(iComponentManager->Create<SampleScene>(nullGameObject).release()) };
 		});
-	m_sceneManager.AddScene<TitleScene>([iComponentManager, nullReference]
+	m_sceneManager.AddScene<TitleScene>([iComponentManager, nullGameObject]
 		{
-			return std::unique_ptr<TitleScene>{ static_cast<TitleScene*>(iComponentManager->Create<TitleScene>(nullReference).release()) };
+			return std::unique_ptr<TitleScene>{ static_cast<TitleScene*>(iComponentManager->Create<TitleScene>(nullGameObject).release()) };
 		});
-	m_sceneManager.AddScene<GamePlayScene>([iComponentManager, nullReference]
+	m_sceneManager.AddScene<GamePlayScene>([iComponentManager, nullGameObject]
 		{
-			return std::unique_ptr<GamePlayScene>{ static_cast<GamePlayScene*>(iComponentManager->Create<GamePlayScene>(nullReference).release()) };
+			return std::unique_ptr<GamePlayScene>{ static_cast<GamePlayScene*>(iComponentManager->Create<GamePlayScene>(nullGameObject).release()) };
 		});
 	// シーン管理の初期化
 	m_sceneManager.Initialize(m_windowController.GetOutputSize(), &m_gameObjectManager);

@@ -31,7 +31,7 @@ namespace Renderings
 		~Text();
 
 		// 初期化処理
-		void Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder) override;
+		void Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinderRef) override;
 
 		// 文字列を設定
 		void SetStr(const std::wstring& str) { m_str.SetStr(str); }

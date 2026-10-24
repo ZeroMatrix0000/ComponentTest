@@ -1,7 +1,7 @@
 /*
  * FileName:     ComponentsRegisterer.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/23
+ * Last Updated: 2026/10/24
  *
  * コンポーネント登録者
  */
@@ -9,6 +9,7 @@
 #include "Pch.h"
 #include "ComponentsRegisterer.h"
 
+#include "IsDerivedRegister.h"
 #include "../GameObjects/Objects/DebugCamera/DebugCamera.h"
 #include "../GameObjects/Objects/Player/Player.h"
 #include "../GameObjects/Objects/Player/PlayerModel.h"
@@ -25,7 +26,6 @@
 #include "../Scenes/Scenes.h"
 #include "../Scenes/GamePlayScene/Actions/Actions.h"
 #include "../Scenes/GamePlayScene/Actions/ActionManager.h"
-#include "IsDerivedRegister.h"
 #include "../Commons/Components/Transform.h"
 #include "../Commons/Components/RectTransform.h"
 #include "../Commons/Components/ComponentManager.h"
@@ -45,67 +45,67 @@
 #include "../Commons/Systems/IResources.h"
 
 #define REGISTER(T, U) \
-componentManager->RegisterCreate<T>([](const ComponentDesc& desc) { return std::make_unique<T>(desc); }); \
-gameObjectManager->Register<T>(U)
+componentManagerRef->RegisterCreate<T>([](const ComponentDesc& desc) { return std::make_unique<T>(desc); }); \
+gameObjectManagerRef->Register<T>(U)
 #define REGISTER_GAMEOBJECT_MANAGER_ONLY(T, U) \
-gameObjectManager->Register<T>(U)
+gameObjectManagerRef->Register<T>(U)
 
 // コンポーネント登録
 void ComponentsRegisterer::RegisterComponents
 (
-	Ref<ComponentManager>              componentManager,
-	Ref<GameObjectManager>             gameObjectManager,
-	Ref<Renderings::IModel3DRenderer>  iModelRenderer,
-	Ref<Renderings::IImageRenderer>    iImageRenderer,
-	Ref<Renderings::ITextRenderer>     iTextRenderer,
-	Ref<Renderings::IColliderRenderer> iColliderRenderer,
-	Ref<Systems::IResources>           iResources
+	Ref<ComponentManager>              componentManagerRef,
+	Ref<GameObjectManager>             gameObjectManagerRef,
+	Ref<Renderings::IModel3DRenderer>  iModelRendererRef,
+	Ref<Renderings::IImageRenderer>    iImageRendererRef,
+	Ref<Renderings::ITextRenderer>     iTextRendererRef,
+	Ref<Renderings::IColliderRenderer> iColliderRendererRef,
+	Ref<Systems::IResources>           iResourcesRef
 )
 {
 	// 長方形の当たり判定
-	componentManager->RegisterCreate<Colliders::BoxCollider>([iColliderRenderer](const ComponentDesc& desc)
+	componentManagerRef->RegisterCreate<Colliders::BoxCollider>([iColliderRendererRef](const ComponentDesc& desc)
 		{
-			return std::make_unique<Colliders::BoxCollider>(desc, iColliderRenderer);
+			return std::make_unique<Colliders::BoxCollider>(desc, iColliderRendererRef);
 		});
 	// 球の当たり判定
-	componentManager->RegisterCreate<Colliders::SphereCollider>([iColliderRenderer](const ComponentDesc& desc)
+	componentManagerRef->RegisterCreate<Colliders::SphereCollider>([iColliderRendererRef](const ComponentDesc& desc)
 		{
-			return std::make_unique<Colliders::SphereCollider>(desc, &iColliderRenderer.Get());
+			return std::make_unique<Colliders::SphereCollider>(desc, iColliderRendererRef);
 		});
 	// メッシュの当たり判定
-	componentManager->RegisterCreate<Colliders::MeshCollider>([iColliderRenderer, iResources](const ComponentDesc& desc)
+	componentManagerRef->RegisterCreate<Colliders::MeshCollider>([iColliderRendererRef, iResourcesRef](const ComponentDesc& desc)
 		{
-			return std::make_unique<Colliders::MeshCollider>(desc, &iColliderRenderer.Get(), &iResources.Get());
+			return std::make_unique<Colliders::MeshCollider>(desc, iColliderRendererRef, iResourcesRef);
 		});
 	// 3Dモデル
-	componentManager->RegisterCreate<Renderings::Model3D>([iModelRenderer, iResources](const ComponentDesc& desc)
+	componentManagerRef->RegisterCreate<Renderings::Model3D>([iModelRendererRef, iResourcesRef](const ComponentDesc& desc)
 		{
-			return std::make_unique<Renderings::Model3D>(desc, &iModelRenderer.Get(), &iResources.Get());
+			return std::make_unique<Renderings::Model3D>(desc, &iModelRendererRef.Get(), &iResourcesRef.Get());
 		});
 	// 画像
-	componentManager->RegisterCreate<Renderings::Image>([iImageRenderer, iResources](const ComponentDesc& desc)
+	componentManagerRef->RegisterCreate<Renderings::Image>([iImageRendererRef, iResourcesRef](const ComponentDesc& desc)
 		{
-			return std::make_unique<Renderings::Image>(desc, &iImageRenderer.Get(), &iResources.Get());
+			return std::make_unique<Renderings::Image>(desc, iImageRendererRef, iResourcesRef);
 		});
 	// テキスト
-	componentManager->RegisterCreate<Renderings::Text>([iTextRenderer](const ComponentDesc& desc)
+	componentManagerRef->RegisterCreate<Renderings::Text>([iTextRendererRef](const ComponentDesc& desc)
 		{
-			return std::make_unique<Renderings::Text>(desc, &iTextRenderer.Get());
+			return std::make_unique<Renderings::Text>(desc, &iTextRendererRef.Get());
 		});
 	// パーティクル管理
-	componentManager->RegisterCreate<Renderings::ParticleManager>([iModelRenderer, iResources](const ComponentDesc& desc)
+	componentManagerRef->RegisterCreate<Renderings::ParticleManager>([iModelRendererRef, iResourcesRef](const ComponentDesc& desc)
 		{
-			return std::make_unique<Renderings::ParticleManager>(desc, &iModelRenderer.Get(), &iResources.Get());
+			return std::make_unique<Renderings::ParticleManager>(desc, &iModelRendererRef.Get(), &iResourcesRef.Get());
 		});
 	// カメラ
-	componentManager->RegisterCreate<Renderings::ICameraScreen>([](const ComponentDesc& desc)
+	componentManagerRef->RegisterCreate<Renderings::ICameraScreen>([](const ComponentDesc& desc)
 		{
 			return std::make_unique<Renderings::CameraScreen<Camera::QuaternionCamera>>(desc);
 		});
 	// アクション管理
-	componentManager->RegisterCreate<ActionManager>([iResources](const ComponentDesc& desc)
+	componentManagerRef->RegisterCreate<ActionManager>([iResourcesRef](const ComponentDesc& desc)
 		{
-			return std::make_unique<ActionManager>(desc, &iResources.Get());
+			return std::make_unique<ActionManager>(desc, &iResourcesRef.Get());
 		});
 
 	// トランスフォーム

@@ -36,7 +36,7 @@ namespace Renderings
 		~Model3D();
 
 		// 初期化処理
-		void Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder) override;
+		void Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinderRef) override;
 
 		// 色を設定
 		void SetColor(const Math::Color& color) { m_color = color; }

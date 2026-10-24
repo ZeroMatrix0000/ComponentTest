@@ -21,12 +21,12 @@ Renderings::Canvas::Canvas(const ComponentDesc& desc)
 }
 
 // 初期化処理
-void Renderings::Canvas::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
+void Renderings::Canvas::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinderRef)
 {
 	// 出力サイズ
 	Math::Vector2 outputSize{};
 
-	Systems::JsonSerializer serializer{ iGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinderRef };
 	serializer.AddParameter(&m_fixedSize, "FixedSize");
 	serializer.AddParameter(&outputSize, "Size");
 	serializer.Load(json);

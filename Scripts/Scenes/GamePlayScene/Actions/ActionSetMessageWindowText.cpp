@@ -19,22 +19,22 @@ ActionSetMessageWindowText::ActionSetMessageWindowText(const ComponentDesc& desc
 	: Action{ desc }
 	, m_text{}
 	, m_character{}
-	, m_refMessageWindow{ GetOwner()->GetNullReference<MessageWindow>() }
+	, m_refMessageWindow{ GetOwner()->GetNullComponent<MessageWindow>() }
 {
 }
 
 // 初期化処理
-void ActionSetMessageWindowText::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
+void ActionSetMessageWindowText::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinderRef)
 {
-	Systems::JsonSerializer serializer{ iGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinderRef };
 	serializer.AddParameter(&m_refMessageWindow, "MessageWindow");
 	serializer.Load(json);
 }
 
 // パラメータを設定
-void ActionSetMessageWindowText::SetParams(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
+void ActionSetMessageWindowText::SetParams(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinderRef)
 {
-	Systems::JsonSerializer serializer{ iGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinderRef };
 	serializer.AddParameter(&m_text, "Text");
 	serializer.AddParameter(&m_character, "Character");
 	serializer.Load(json);

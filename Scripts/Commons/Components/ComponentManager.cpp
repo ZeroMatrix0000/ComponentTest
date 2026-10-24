@@ -1,7 +1,7 @@
 /*
  * FileName:     ComponentManager.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/22
+ * Last Updated: 2026/10/24
  *
  * コンポーネント管理
  */
@@ -14,23 +14,23 @@
 #include "../GameObjects/IGameObjectInstantiator.h"
 
 // コンストラクタ
-Components::ComponentManager::ComponentManager(Ref<IGameObjectInstantiator> iGameObjectInstantiator)
+Components::ComponentManager::ComponentManager(Ref<IGameObjectInstantiator> iGameObjectInstantiatorRef)
 	: IComponentManager{}
 	, m_permit{}
 	, m_CreateComponentList{}
 	, m_nullReferences{}
-	, m_refIGameObjectInstantiator{ iGameObjectInstantiator }
+	, m_iGameObjectInstantiatorRef{ iGameObjectInstantiatorRef }
 {
 }
 
 // コンポーネントを作成
 std::unique_ptr<Component> Components::ComponentManager::Create(const std::type_index& index, Ref<GameObject> owner)
 {
-	return m_CreateComponentList.at(index)(ComponentDesc{ owner, m_refIGameObjectInstantiator, m_permit });
+	return m_CreateComponentList.at(index)(ComponentDesc{ owner, m_iGameObjectInstantiatorRef, m_permit });
 }
 
 // 未参照コンポーネントを取得
-Ref<Component> Components::ComponentManager::GetNullReference(const std::type_index& index, bool addErrorMessage)
+Ref<Component> Components::ComponentManager::GetNullComponent(const std::type_index& index, bool addErrorMessage)
 {
 	if (addErrorMessage)
 	{
@@ -48,8 +48,8 @@ Ref<Component> Components::ComponentManager::GetNullReference(const std::type_in
 		// コンポーネントを追加
 		m_nullReferences.emplace(index, m_CreateComponentList.at(index)(ComponentDesc
 			{
-				m_refIGameObjectInstantiator->GetNullReference(),
-				Ref{ m_refIGameObjectInstantiator },
+				m_iGameObjectInstantiatorRef->GetNullGameObject(),
+				Ref{ m_iGameObjectInstantiatorRef },
 				m_permit
 			}));
 		return Ref{ *m_nullReferences.at(index) };

@@ -1,7 +1,7 @@
 /*
  * FileName:     Resources.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/10/23
+ * Last Updated: 2026/10/24
  *
  * リソース管理
  */
@@ -84,7 +84,7 @@ void Systems::Resources::LoadImageSources(ID3D11Device5* device, const std::wstr
 		{
 			try
 			{
-				m_imageSources.emplace(entry.path().stem().string(), Renderings::ImageSource::Create(device, entry.path().wstring()));
+				m_imageSources.emplace(entry.path().stem().string(), Renderings::ImageSource::Create(Ref{ *device }, entry.path().wstring()));
 			}
 			catch (std::exception e)
 			{

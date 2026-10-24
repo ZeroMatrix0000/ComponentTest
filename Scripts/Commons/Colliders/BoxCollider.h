@@ -1,7 +1,7 @@
 /*
  * FileName:     BoxCollider.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/22
+ * Last Updated: 2026/10/24
  *
  * 長方形の当たり判定
  */
@@ -32,12 +32,12 @@ namespace Colliders
 		/* メンバ関数 */
 
 		// コンストラクタ
-		BoxCollider(const ComponentDesc& desc, Ref<Renderings::IColliderRenderer> iColliderRenderer);
+		BoxCollider(const ComponentDesc& desc, Ref<Renderings::IColliderRenderer> iColliderRendererRef);
 		// デストラクタ
 		~BoxCollider();
 
 		// 初期化処理
-		void Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder) override;
+		void Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinderRef) override;
 
 		// 座標を設定
 		void SetPosition(const Math::Vector3& position) { m_box.position = position; }
@@ -48,10 +48,10 @@ namespace Colliders
 		// 色を設定
 		void SetColor(const DirectX::XMVECTORF32& color) { m_color = color; }
 
-		// 映るカメラ画面を追加
-		void AddICameraScreen(Ref<const Renderings::ICameraScreen> iCameraScreen);
-		// 映るカメラ画面を削除
-		void RemoveICameraScreen(Ref<const Renderings::ICameraScreen> iCameraScreen);
+		// 映るカメラ画面の参照を追加
+		void AddICameraScreenRef(Ref<const Renderings::ICameraScreen> iCameraScreenRef);
+		// 映るカメラ画面の参照を削除
+		void RemoveICameraScreenRef(Ref<const Renderings::ICameraScreen> iCameraScreenRef);
 
 		// トランスフォームを適用
 		void ApplyTransform();
@@ -62,8 +62,8 @@ namespace Colliders
 		// 色を取得
 		const Math::Color& GetColor() const { return m_color; }
 
-		// 映るカメラ画面のポインタリストを取得
-		const std::vector<Ref<const Renderings::ICameraScreen>>& GetRefICameraScreens() const { return m_refICameraScreens; }
+		// 映るカメラ画面の参照リストを取得
+		const std::vector<Ref<const Renderings::ICameraScreen>>& GetICameraScreenRefs() const { return m_iCameraScreenRefs; }
 
 	private:
 
@@ -80,13 +80,13 @@ namespace Colliders
 		Math::Color m_color;
 
 		// トランスフォームの参照
-		Ref<Transform> m_refTransform;
+		Ref<Transform> m_transformRef;
 
 		// 映るカメラ画面の参照リスト
-		std::vector<Ref<const Renderings::ICameraScreen>> m_refICameraScreens;
+		std::vector<Ref<const Renderings::ICameraScreen>> m_iCameraScreenRefs;
 
 		// 当たり判定描画インタフェースの参照
-		Ref<Renderings::IColliderRenderer> m_refIColliderRenderer;
+		Ref<Renderings::IColliderRenderer> m_iColliderRendererRef;
 
 	};
 }

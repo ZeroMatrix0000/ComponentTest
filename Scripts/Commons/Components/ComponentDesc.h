@@ -1,7 +1,7 @@
 /*
  * FileName:     ComponentDesc.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/22
+ * Last Updated: 2026/10/24
  *
  * コンポーネント概要
  */
@@ -25,19 +25,19 @@ namespace Components
 		/* メンバ関数 */
 
 		// コンストラクタ
-		ComponentDesc(Ref<GameObject> owner, Ref<IGameObjectInstantiator> iGameObjectInstantiator, const ComponentCreatePermit&)
-			: refOwner{ owner }
-			, refIGameObjectInstantiator{ iGameObjectInstantiator }
+		ComponentDesc(Ref<GameObject> owner, Ref<IGameObjectInstantiator> iGameObjectInstantiatorRef, const ComponentCreatePermit&)
+			: owner{ owner }
+			, iGameObjectInstantiatorRef{ iGameObjectInstantiatorRef }
 		{
 		}
 
 
 		/* メンバ変数 */
 
-		// 所有者のポインタ
-		const Ref<GameObject> refOwner;
-		// ゲームオブジェクト生成インタフェース
-		const Ref<IGameObjectInstantiator> refIGameObjectInstantiator;
+		// 所有者の参照
+		const Ref<GameObject> owner;
+		// ゲームオブジェクト生成インタフェースの参照
+		const Ref<IGameObjectInstantiator> iGameObjectInstantiatorRef;
 
 	};
 }

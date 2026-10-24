@@ -1,7 +1,7 @@
 /*
  * FileName:     Renderer.h
  * Author:       Takao Hayata
- * Last Updated: 2026/09/30
+ * Last Updated: 2026/10/24
  *
  * 描画
  */
@@ -35,7 +35,7 @@ void Renderings::Renderer::Initialize
 	// モデル描画の初期化
 	m_modelRenderer.Initialize(pDevice, pContext, commonStates);
 	// 画像描画の初期化
-	m_imageRenderer.Initialize(pDevice, pContext, commonStates);
+	m_imageRenderer.Initialize(Ref{ *pDevice }, Ref{ *pContext }, Ref{ commonStates });
 	// 当たり判定描画の初期化
 	m_colliderRenderer.Initialize(pDevice, pContext, commonStates);
 }
@@ -57,7 +57,7 @@ void Renderings::Renderer::Render()
 	// 画像のポインタリストをソート
 	m_imageRenderer.SortPImages();
 	// 画像のポインタリスト
-	const auto& pImages = m_imageRenderer.GetPImages();
+	const auto& imageRefs = m_imageRenderer.GetImageRefs();
 
 	// テキストのポインタリストをソート
 	m_textRenderer.SortPTexts();
@@ -65,7 +65,7 @@ void Renderings::Renderer::Render()
 	const auto& pTexts = m_textRenderer.GetPTexts();
 
 	// 画像イテレータ
-	auto itImage = pImages.begin();
+	auto itImage = imageRefs.begin();
 	// テキストイテレータ
 	auto itText = pTexts.begin();
 
@@ -77,10 +77,10 @@ void Renderings::Renderer::Render()
 	m_textRenderer.Begin();
 
 	// どちらも描画し切るまで
-	while (itImage != pImages.end() || itText != pTexts.end())
+	while (itImage != imageRefs.end() || itText != pTexts.end())
 	{
 		// 画像を描画し終わったなら
-		if (itImage == pImages.end())
+		if (itImage == imageRefs.end())
 		{
 			wasDrawText = true;
 			m_textRenderer.Draw(*itText, m_renderMode != RenderMode::Model);

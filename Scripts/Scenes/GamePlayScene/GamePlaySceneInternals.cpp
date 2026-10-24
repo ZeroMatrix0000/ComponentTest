@@ -21,18 +21,18 @@ GamePlaySceneInternals::GamePlaySceneInternals
 	: gameObjectsRef{ gameObjectsRef }
 	, gameContextRef{ gameContextRef }
 	, ownerRef{ ownerRef }
-	, playerRef{ ownerRef->GetNullReference<Player>() }
-	, playerCameraRef{ ownerRef->GetNullReference<PlayerCamera>() }
-	, nPCManagerRef{ ownerRef->GetNullReference<NPCManager>() }
-	, groundMeshRef{ ownerRef->GetNullReference<Colliders::MeshCollider>() }
-	, groundModelRef{ ownerRef->GetNullReference<Renderings::Model3D>() }
-	, reticleRef{ ownerRef->GetNullReference<Renderings::Image>() }
-	, z2TalkRef{ ownerRef->GetNullReference<Z2Talk>() }
-	, blackBeltRef{ ownerRef->GetNullReference<BlackBelt>() }
-	, messageWindowRef{ ownerRef->GetNullReference<MessageWindow>() }
-	, targetPointRef{ ownerRef->GetNullReference<TargetPoint>() }
-	, iCameraScreenRef{ ownerRef->GetNullReference<Renderings::ICameraScreen>() }
-	, canvasRef{ ownerRef->GetNullReference<Renderings::Canvas>() }
-	, actionManagerRef{ ownerRef->GetNullReference<ActionManager>() }
+	, playerRef{ ownerRef->GetNullComponent<Player>() }
+	, playerCameraRef{ ownerRef->GetNullComponent<PlayerCamera>() }
+	, nPCManagerRef{ ownerRef->GetNullComponent<NPCManager>() }
+	, groundMeshRef{ ownerRef->GetNullComponent<Colliders::MeshCollider>() }
+	, groundModelRef{ ownerRef->GetNullComponent<Renderings::Model3D>() }
+	, reticleRef{ ownerRef->GetNullComponent<Renderings::Image>() }
+	, z2TalkRef{ ownerRef->GetNullComponent<Z2Talk>() }
+	, blackBeltRef{ ownerRef->GetNullComponent<BlackBelt>() }
+	, messageWindowRef{ ownerRef->GetNullComponent<MessageWindow>() }
+	, targetPointRef{ ownerRef->GetNullComponent<TargetPoint>() }
+	, iCameraScreenRef{ ownerRef->GetNullComponent<Renderings::ICameraScreen>() }
+	, canvasRef{ ownerRef->GetNullComponent<Renderings::Canvas>() }
+	, actionManagerRef{ ownerRef->GetNullComponent<ActionManager>() }
 {
 }

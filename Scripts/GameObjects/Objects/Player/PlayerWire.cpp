@@ -42,14 +42,14 @@ PlayerWire::PlayerWire(const ComponentDesc& desc)
 	, m_toAir{}
 	, m_particleTimer{}
 	, m_isDisplay{}
-	, m_refTransform{ GetOwner()->GetNullReference<Transform>() }
-	, m_refParticleManager{ GetOwner()->GetNullReference<Renderings::ParticleManager>() }
-	, m_refParticleManagerTransform{ GetOwner()->GetNullReference<Transform>() }
+	, m_refTransform{ GetOwner()->GetNullComponent<Transform>() }
+	, m_refParticleManager{ GetOwner()->GetNullComponent<Renderings::ParticleManager>() }
+	, m_refParticleManagerTransform{ GetOwner()->GetNullComponent<Transform>() }
 {
 }
 
 // 初期化処理
-void PlayerWire::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinder)
+void PlayerWire::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFinder> iGameObjectFinderRef)
 {
 	m_refTransform = GetOwner()->GetComponent<Transform>();
 
@@ -57,7 +57,7 @@ void PlayerWire::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFi
 
 	m_currentState = State::None;
 
-	Systems::JsonSerializer serializer{ iGameObjectFinder };
+	Systems::JsonSerializer serializer{ iGameObjectFinderRef };
 	serializer.AddParameter(&THICKNESS, "Thickness");
 	serializer.AddParameter(&EXPAND_SPEED, "ExpandSpeed");
 	serializer.AddParameter(&ROTATION_SPEED, "RotationSpeed");
@@ -67,7 +67,7 @@ void PlayerWire::Initalize(const nlohmann::ordered_json& json, Ref<IGameObjectFi
 	serializer.Load(json);
 
 	// パーティクル管理生成
-	if (m_refParticleManager == GetOwner()->GetNullReference<Renderings::ParticleManager>())
+	if (m_refParticleManager == GetOwner()->GetNullComponent<Renderings::ParticleManager>())
 	{
 		Ref obj = Instantiate("Prefab_PlayerWireParticleManager");
 		m_refParticleManager = obj->GetComponent<Renderings::ParticleManager>();

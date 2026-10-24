@@ -1,7 +1,7 @@
 /*
  * FileName:     IComponentManager.h
  * Author:       Takao Hayata
- * Last Updated: 2026/10/23
+ * Last Updated: 2026/10/24
  *
  * コンポーネント管理のインタフェース
  */
@@ -34,14 +34,14 @@ namespace Components
 		template<typename TComponent> requires IsDerived<TComponent, Component>
 		std::unique_ptr<Component> Create(Ref<GameObject> owner)
 		{
-			return Create(typeid(TComponent*), owner);
+			return Create(typeid(Ref<TComponent>), owner);
 		};
 
 		// 未参照コンポーネントを取得
 		template<typename TComponent> requires IsDerived<TComponent, Component>
-		Ref<TComponent> GetNullReference(bool addErrorMessage = false)
+		Ref<TComponent> GetNullComponent(bool addErrorMessage = false)
 		{
-			return GetNullReference(typeid(TComponent*), addErrorMessage).ReinterpretCast<TComponent>();
+			return GetNullComponent(typeid(Ref<TComponent>), addErrorMessage).ReinterpretCast<TComponent>();
 		};
 
 
@@ -54,7 +54,7 @@ namespace Components
 		virtual std::unique_ptr<Component> Create(const std::type_index& index, Ref<GameObject> owner) = 0;
 
 		// 未参照コンポーネントを取得
-		virtual Ref<Component> GetNullReference(const std::type_index& index, bool addErrorMessage) = 0;
+		virtual Ref<Component> GetNullComponent(const std::type_index& index, bool addErrorMessage) = 0;
 
 
 	};

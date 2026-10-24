@@ -1,7 +1,7 @@
 /*
  * FileName:     ImageSource.cpp
  * Author:       Takao Hayata
- * Last Updated: 2026/07/06
+ * Last Updated: 2026/10/24
  *
  * 画像ソース
  */
@@ -17,14 +17,14 @@ Renderings::ImageSource::ImageSource()
 }
 
 // 初期化処理
-void Renderings::ImageSource::Initialize(ID3D11Device5* device, const std::wstring& filePath)
+void Renderings::ImageSource::Initialize(Ref<ID3D11Device5> deviceRef, const std::wstring& filePath)
 {
 	// テクスチャ
 	Microsoft::WRL::ComPtr<ID3D11Resource> texture;
 
 	Utility::ThrowIfFailed(DirectX::CreateDDSTextureFromFile
 	(
-		device,
+		&deviceRef.Get(),
 		filePath.c_str(),
 		texture.GetAddressOf(),
 		m_texture.ReleaseAndGetAddressOf()
@@ -33,9 +33,9 @@ void Renderings::ImageSource::Initialize(ID3D11Device5* device, const std::wstri
 }
 
 // 生成
-Renderings::ImageSource Renderings::ImageSource::Create(ID3D11Device5* device, const std::wstring& filePath)
+Renderings::ImageSource Renderings::ImageSource::Create(Ref<ID3D11Device5> deviceRef, const std::wstring& filePath)
 {
 	ImageSource image;
-	image.Initialize(device, filePath);
+	image.Initialize(deviceRef, filePath);
 	return image;
 }
